@@ -18,8 +18,17 @@
           ‘Electricity production’ could be a good labeling.
           </p>
       </div>
+      <div >
+        <SecondaryEnergySum :width="width" :height="height" :mobile="mobile"/>
+      </div>
       <div class="vis-wrapper secondaryenergy">
         <SecondaryEnergy :width="width" :height="height" :mobile="mobile"/>
+      </div>
+      <div class="vis-wrapper coststructure">
+        <CostStructure :width="width" :height="height" :mobile="mobile"/>
+      </div>
+      <div class="vis-wrapper coststructureAgg">
+        <CostStructureAgg :width="width" :height="height" :mobile="mobile"/>
       </div>
       <div class="text-wrapper">
         <h2 class="chapter-title" id="costs">
@@ -71,7 +80,10 @@
 <script>
 import SensesMenu from 'library/src/components/SensesMenu.vue'
 import RiskPathway from './components/RiskPathway.vue'
+import SecondaryEnergySum from './components/SecondaryEnergySum.vue'
 import SecondaryEnergy from './components/SecondaryEnergy.vue'
+import CostStructure from './components/CostStructure.vue'
+import CostStructureAgg from './components/CostStructureAgg.vue'
 import EmiCostsRisk from './components/EmiCostsRisk.vue'
 import StructureRisk from './components/StructureRisk.vue'
 import SensesMeta from 'library/src/components/SensesMeta.vue'
@@ -81,7 +93,10 @@ export default {
   components: {
     SensesMenu,
     RiskPathway,
+    SecondaryEnergySum,
     SecondaryEnergy,
+    CostStructure,
+    CostStructureAgg,
     EmiCostsRisk,
     StructureRisk,
     SensesMeta
@@ -162,6 +177,12 @@ export default {
 
       &.secondaryenergy  {
         height: 200vh;
+      }
+      &.coststructure  {
+        height: 85vh;
+      }
+      &.CostStructureAgg  {
+        height: 85vh;
       }
     }
 

@@ -1,12 +1,13 @@
-<template>
-  <div class="secondary-energy" ref="inWrapper">
+Final<template>
+  <div class="final-energy" ref="inWrapper">
     <div class="key" :class=" mobile ? 'mobile' : 'desktop'">
       <h4>Volume in <SensesTooltip :tooltip="tooltip">secondary energy</SensesTooltip> production (Ej/year)</h4>
       <p class="highlight">{{ model[0] }}</p>
       <p class="selectors">
-        Select a scenario and a region:
+        Select:
         <SensesSelect class="scenario_selector" :options="scenarios" v-model="currentScenario"/>
         <SensesSelect class="region_selector" :options="regions" v-model="currentRegion"/>
+        <SensesSelect class="enduse_selector" :options="enduse" v-model="currentEnduse"/>
       </p>
     </div>
     <div></div>
@@ -20,6 +21,7 @@
         <!-- draws dots for energy carrier with index g   -->
         <circle v-for="(dot, d) in group" v-bind:key="d + 'dot'" @mouseover="[active = true, over = d + labels[g]]" @mouseleave="active = false" :class="labels[g]" :cx="dot.year" cy="5" :r="dot.value"/>
         <!-- labels for energy carrier g-->
+      <!-- labels for energy carrier -->
         <text :x="scale.x(2009)" y="40">{{ labels[g] }}</text>
       </g>
       <g v-for="(group, g) in world" v-bind:key="g + 'wgroup'" :class="`${labels[g]}-wgroup`" :transform="`translate(0, ${groupPosition[g]})`">
@@ -47,7 +49,7 @@
 import _ from 'lodash'
 import * as d3 from 'd3'
 
-import SecondaryEnergy from 'dsv-loader!@/assets/data/SecondaryEnergy.csv' // eslint-disable-line import/no-webpack-loader-syntax
+import FinalEnergy from 'dsv-loader!@/assets/data/FinalEnergy.csv' // eslint-disable-line import/no-webpack-loader-syntax
 import SensesSelect from 'library/src/components/SensesSelect.vue'
 import SensesTooltip from 'library/src/components/SensesTooltip.vue'
 
@@ -73,28 +75,31 @@ export default {
   },
   data () {
     return {
-      // Dataset SecondaryEnergy is array with objects
+      // Dataset FinalEnergy is array with objects
       // [{},...,{}]
-      SecondaryEnergy,
+      FinalEnergy,
       // groupBy creates object composed of keys (coal, wind, ...)
       // generated from the results of running each
-      // element of SecondaryEnergy thru iteratee d = {}
+      // element of FinalEnergy thru iteratee d = {}
       // {"coal": [{},{}...],
       //   "wind": [{},{}...],
       //    ...
       //  }
-      energy: _.groupBy(SecondaryEnergy, d => d.Variable),
+      energy: _.groupBy(FinalEnergy, d => d.EnergySource),
       // map erstellt einen Array mit allen values des keys model
       // set erstellt einen Array mit allen einzigartigen Einträgen für Model
-      model: [...new Set(SecondaryEnergy.map(r => r.Model))],
-      years: [...new Set(SecondaryEnergy.map(r => r.Year))],
-      labels: [...new Set(SecondaryEnergy.map(r => r.Variable))],
-      scenarios: [...new Set(SecondaryEnergy.map(r => r.Scenario))],
-      regions: [...new Set(SecondaryEnergy.map(r => r.Region))],
-      allValues: [...new Set(SecondaryEnergy.map(r => r.Value))],
-      tooltip: 'Here a description of what Secondary Energy is!',
+      // Model,Scenario,Region,Unit,Year,Value,Enduse,EnergySource
+      model: [...new Set(FinalEnergy.map(r => r.Model))],
+      years: [...new Set(FinalEnergy.map(r => r.Year))],
+      labels: [...new Set(FinalEnergy.map(r => r.EnergySource))],
+      scenarios: [...new Set(FinalEnergy.map(r => r.Scenario))],
+      enduse: [...new Set(FinalEnergy.map(r => r.Enduse))],
+      regions: [...new Set(FinalEnergy.map(r => r.Region))],
+      allValues: [...new Set(FinalEnergy.map(r => r.Value))],
+      tooltip: 'Here a description of what Final Energy is!',
       currentScenario: 'NPi_v3',
       currentRegion: 'World',
+      currentEnduse: 'Industry',
       active: false,
       over: '',
       margin: {
@@ -114,10 +119,12 @@ export default {
     //    ...
     //  ]
     scenarioFilter () { return _.map(this.energy, (sc, s) => _.filter(sc, d => d.Scenario === this.currentScenario)) },
+    // filters over regioFilter Array, returns same array only with objects with CurrentEnduse
+    enduseFilter () { return _.map(this.scenarioFilter, (end, e) => _.filter(end, d => d.Enduse === this.currentEnduse)) },
     // filters over scenrioFilter Array, returns same array only with objects with CurrentRegion
-    regionFilter () { return _.map(this.scenarioFilter, (re, r) => _.filter(re, d => d.Region === this.currentRegion)) },
+    regionFilter () { return _.map(this.enduseFilter, (re, r) => _.filter(re, d => d.Region === this.currentRegion)) },
     // filters over scenrioFilter Array, returns same array only with objects with region = World
-    worldFilter () { return _.map(this.scenarioFilter, (re, r) => _.filter(re, d => d.Region === 'World')) },
+    worldFilter () { return _.map(this.enduseFilter, (re, r) => _.filter(re, d => d.Region === 'World')) },
     scale () {
       // domain-> observartio EJ/yr, range-> visual variable px
       return {
@@ -155,13 +162,14 @@ export default {
       // length of dotsArray is 8 = nr of energy carrier
       // returns array with the position for each energy carrier
       const dotsArray = this.dots
-      let pos = 50
+      let pos = 80
       return _.map(this.regionFilter, (energy, e, l) => {
         if (e !== 0) { pos = pos + this.innerHeight / dotsArray.length }
         return pos
       })
     }
   },
+
   methods: {
     calcSizes () {
       const { inWrapper: el } = this.$refs
@@ -187,7 +195,7 @@ export default {
 @import "library/src/style/variables.scss";
 $margin-space: $spacing / 2;
 
-.secondary-energy {
+.final-energy {
   height: 170vh;
 
   .key {
@@ -279,37 +287,29 @@ $margin-space: $spacing / 2;
         transition: opacity 0.5s;
       }
     }
-    .Coal {
+    .Electricity {
       fill: getColor(gray, 80);
       stroke: getColor(gray, 40);
     }
-    .Gas {
+    .Gases {
       fill: getColor(red, 80);
       stroke: getColor(red, 40);
     }
-    .Oil {
+    .Heat {
       fill: getColor(orange, 80);
       stroke: getColor(orange, 40);
     }
-    .Nuclear {
+    .Liquids {
       fill: getColor(blue, 80);
       stroke: getColor(blue, 40);
     }
-    .Hydro {
+    .Hydrogen {
       fill: getColor(violet, 80);
       stroke: getColor(violet, 40);
     }
-    .Geothermal {
+    .Solids {
       fill: lighten(#663333, 40);
       stroke: darken(#663333, 30);
-    }
-    .Solar {
-      fill: getColor(yellow, 80);
-      stroke: getColor(yellow, 40);
-    }
-    .Wind {
-      fill: lighten(#336666, 40);
-      stroke: darken(#336666, 30);
     }
   }
 }

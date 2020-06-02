@@ -1,8 +1,7 @@
-<template>
+n<template>
   <div class="secondary-energy" ref="inWrapper">
     <div class="key" :class=" mobile ? 'mobile' : 'desktop'">
-      <h4>Volume in <SensesTooltip :tooltip="tooltip">secondary energy</SensesTooltip> production (Ej/year)</h4>
-      <p class="highlight">{{ model[0] }}</p>
+      <h4>Cost Structure</h4>
       <p class="selectors">
         Select a scenario and a region:
         <SensesSelect class="scenario_selector" :options="scenarios" v-model="currentScenario"/>
@@ -18,8 +17,30 @@
       groupposition is an array with 8 positions, one for each energy carrier-->
       <g v-for="(group, g) in dots" v-bind:key="g + 'group'" :class="`${labels[g]}-group`" :transform="`translate(0, ${groupPosition[g]})`">
         <!-- draws dots for energy carrier with index g   -->
-        <circle v-for="(dot, d) in group" v-bind:key="d + 'dot'" @mouseover="[active = true, over = d + labels[g]]" @mouseleave="active = false" :class="labels[g]" :cx="dot.year" cy="5" :r="dot.value"/>
-        <!-- labels for energy carrier g-->
+        <g v-for="(dot, d) in group" v-bind:key="d + 'dot'">
+          <circle :class="labels[g]" :cx="dot.year" cy="5" r="30"/>
+        <!-- builds pie chart-->
+          <circle :class="'omcost_per'"
+          v-bind:r="15" :cx="dot.year" cy="5" fill="transparent"
+          :stroke-width="30"
+          :stroke-dasharray= "`calc(` + dot.perOM + `*3.142*30/100) calc(3.142*2*15)`"
+          :transform="transform(dot, 0)"
+          />
+          <circle :class="'fuelcost_per'"
+          v-bind:r="15" :cx="dot.year" cy="5" fill="transparent"
+          :stroke-width="30"
+          :stroke-dasharray= "`calc(` + dot.perFuel + `*3.142*30/100) calc(3.142*2*15)`"
+          :transform="transform(dot, 1)"
+          />
+          <circle :class="'capcost_per'"
+          v-bind:r="15" :cx="dot.year" cy="5" fill="transparent"
+          :stroke-width="30"
+          :stroke-dasharray= "`calc(` + dot.perCap + `*3.142*30/100) calc(3.142*2*15)`"
+          :transform="transform(dot, 2)"
+          />
+          <!-- white circle on top to create donut chart-->
+          <circle :class="'WhiteCirc'" :cx="dot.year" cy="5" v-bind:r="`calc(30/1.5)`"/>
+        </g>        <!-- :transform="`rotate(-10 ${dot.year + margin.left } ${ margin.left + 5 })`"-->
         <text :x="scale.x(2009)" y="40">{{ labels[g] }}</text>
       </g>
       <g v-for="(group, g) in world" v-bind:key="g + 'wgroup'" :class="`${labels[g]}-wgroup`" :transform="`translate(0, ${groupPosition[g]})`">
@@ -29,15 +50,6 @@
           <circle class="axis-dot" :cx="scale.x(2010)" cy="5" r="2.5"/>
           <circle class="axis-dot" :cx="scale.x(2100)" cy="5" r="2.5"/>
         </g>
-        <g v-for="(text, t) in group" v-bind:key="t + 'text'" :class="active === true & over === t + labels[g] ? 'visible' : 'invisible'">
-          <!-- draws little line with dot to indicate value and year of each dot -->
-          <circle class="year-dot" :cx="text.year" cy="5" r="2.5"/>
-          <text class="year-label" :x="text.year" y="20">{{ years[t] }}</text>
-          <text class="year-label" :x="text.year" y="-35">{{ Math.round(text.value) }} Ej/year</text>
-          <line class="line-label" :x1="text.year" :x2="text.year" y1="-25" y2="5"/>
-        </g>
-        <!-- draws dashed dots for world region -->
-        <circle v-for="(dot, d) in group" v-bind:key="d + 'wdot'" @mouseover="[active = true, over = d + labels[g]]" @mouseleave="active = false" class="world" :class="labels[g]" :cx="dot.year" cy="5" :r="dot.value"/>
       </g>
     </svg>
   </div>
@@ -47,15 +59,13 @@
 import _ from 'lodash'
 import * as d3 from 'd3'
 
-import SecondaryEnergy from 'dsv-loader!@/assets/data/SecondaryEnergy.csv' // eslint-disable-line import/no-webpack-loader-syntax
+import CostStructureAgg from 'dsv-loader!@/assets/data/CostStructureAgg.csv' // eslint-disable-line import/no-webpack-loader-syntax
 import SensesSelect from 'library/src/components/SensesSelect.vue'
-import SensesTooltip from 'library/src/components/SensesTooltip.vue'
 
 export default {
   name: 'RiskPathway',
   components: {
-    SensesSelect,
-    SensesTooltip
+    SensesSelect
   },
   props: {
     width: {
@@ -73,28 +83,22 @@ export default {
   },
   data () {
     return {
+      CostStructureAgg,
       // Dataset SecondaryEnergy is array with objects
       // [{},...,{}]
-      SecondaryEnergy,
-      // groupBy creates object composed of keys (coal, wind, ...)
-      // generated from the results of running each
-      // element of SecondaryEnergy thru iteratee d = {}
-      // {"coal": [{},{}...],
-      //   "wind": [{},{}...],
-      //    ...
-      //  }
-      energy: _.groupBy(SecondaryEnergy, d => d.Variable),
+      energy: _.groupBy(CostStructureAgg, d => d.Variable),
       // map erstellt einen Array mit allen values des keys model
       // set erstellt einen Array mit allen einzigartigen Einträgen für Model
-      model: [...new Set(SecondaryEnergy.map(r => r.Model))],
-      years: [...new Set(SecondaryEnergy.map(r => r.Year))],
-      labels: [...new Set(SecondaryEnergy.map(r => r.Variable))],
-      scenarios: [...new Set(SecondaryEnergy.map(r => r.Scenario))],
-      regions: [...new Set(SecondaryEnergy.map(r => r.Region))],
-      allValues: [...new Set(SecondaryEnergy.map(r => r.Value))],
+      model: [...new Set(CostStructureAgg.map(r => r.Model))],
+      years: [...new Set(CostStructureAgg.map(r => r.Year))],
+      labels: [...new Set(CostStructureAgg.map(r => r.Variable))],
+      perLabels: ['perCap', 'perFuel', 'perOM'],
+      scenarios: [...new Set(CostStructureAgg.map(r => r.Scenario))],
+      regions: [...new Set(CostStructureAgg.map(r => r.Region))],
+      allValues: [...new Set(CostStructureAgg.map(r => r.Value))],
       tooltip: 'Here a description of what Secondary Energy is!',
       currentScenario: 'NPi_v3',
-      currentRegion: 'World',
+      currentRegion: 'Asia (No Japan)',
       active: false,
       over: '',
       margin: {
@@ -129,14 +133,18 @@ export default {
           .domain([d3.min(this.allValues), d3.max(this.allValues)])
       }
     },
-    // dots returns an array with the size of regionFilter
-    // with just that values for year and value in pixel
+    // dots returns values for year and value in pixel, and Costs in percentage
     dots () {
+      const regionFilter = this.regionFilter
+      console.log('regionFilter')
+      console.log(regionFilter)
       return _.map(this.regionFilter, (energy, e) => {
         return _.map(energy, (single, s) => {
           return {
             year: this.scale.x(single.Year),
-            value: this.scale.y(Math.sqrt(single.Value))
+            perCap: single.CAPCOST_p,
+            perFuel: single.FUELCOST_p,
+            perOM: single.OMCOST_p
           }
         })
       })
@@ -152,17 +160,34 @@ export default {
       })
     },
     groupPosition () {
-      // length of dotsArray is 8 = nr of energy carrier
+      // length of dotsArray is  = nr of energy carrier
       // returns array with the position for each energy carrier
       const dotsArray = this.dots
-      let pos = 50
+      console.log('dotsArrayAGG')
+      console.log(dotsArray)
+      let pos = 70
       return _.map(this.regionFilter, (energy, e, l) => {
-        if (e !== 0) { pos = pos + this.innerHeight / dotsArray.length }
+        if (e !== 0) { pos = pos + this.innerHeight / dotsArray.length - 100 }
         return pos
       })
     }
   },
   methods: {
+    // compute rotation for each pieces of pie chart
+    transform (dot, ind) {
+      let perIni = 0
+      let deg = 0
+      if (ind === 0) {
+        perIni = 0
+      } else if (ind === 1) {
+        perIni = dot.perOM
+      } else if (ind === 2) {
+        perIni = parseFloat(dot.perOM) + parseFloat(dot.perFuel)
+      }
+      // conversion of percentage to degree
+      deg = perIni / 100 * 360 - 90
+      return `rotate(${deg} ${dot.year} ${5})`
+    },
     calcSizes () {
       const { inWrapper: el } = this.$refs
       const innerHeight = el.clientHeight || el.parentNode.clientHeight
@@ -188,19 +213,17 @@ export default {
 $margin-space: $spacing / 2;
 
 .secondary-energy {
-  height: 170vh;
+  height: 85vh;
 
   .key {
     z-index: 9;
     width: 100%;
     height: 100px;
-    margin-bottom: 10%;
-    padding: 10px 0px;
+    margin-bottom: 5%;
+    padding: 20px 0px;
 
-    position:sticky;
     top: 50px;
 
-    border-bottom:0.5px solid blue;
     background: hsla(0,0%,100%,.90);
 
     .highlight {
@@ -219,7 +242,7 @@ $margin-space: $spacing / 2;
     }
 
     h4 {
-      padding-left: 10px;
+      margin-bottom: 10px;
     }
 
     .v-popover {
@@ -240,12 +263,12 @@ $margin-space: $spacing / 2;
   }
 
   svg {
+
     .axis {
       stroke: $color-gray;
     }
     circle {
       fill: $color-gray;
-      fill-opacity: 0.6;
       transition: r 0.5s;
     }
     .axis-dot {
@@ -279,37 +302,30 @@ $margin-space: $spacing / 2;
         transition: opacity 0.5s;
       }
     }
-    .Coal {
-      fill: getColor(gray, 80);
+    .Aggregate {
+      fill: getColor(gray, 100);
       stroke: getColor(gray, 40);
-    }
-    .Gas {
-      fill: getColor(red, 80);
-      stroke: getColor(red, 40);
-    }
-    .Oil {
-      fill: getColor(orange, 80);
-      stroke: getColor(orange, 40);
-    }
-    .Nuclear {
-      fill: getColor(blue, 80);
-      stroke: getColor(blue, 40);
-    }
-    .Hydro {
-      fill: getColor(violet, 80);
-      stroke: getColor(violet, 40);
-    }
-    .Geothermal {
-      fill: lighten(#663333, 40);
-      stroke: darken(#663333, 30);
-    }
-    .Solar {
-      fill: getColor(yellow, 80);
-      stroke: getColor(yellow, 40);
     }
     .Wind {
       fill: lighten(#336666, 40);
       stroke: darken(#336666, 30);
+    }
+    .WhiteCirc {
+      fill: getColor(gray, 100);
+      opacity: 1;
+      stroke: getColor(gray, 40);
+    }
+    .omcost_per{
+      stroke: getColor(yellow, 60);
+      fill-opacity: 0.6;
+    }
+    .capcost_per{
+      stroke: #8d88ff;
+      fill-opacity: 0.6;
+    }
+    .fuelcost_per{
+      stroke: getColor(green, 60);
+      fill-opacity: 0.6;
     }
   }
 }
