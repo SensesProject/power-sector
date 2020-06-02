@@ -21,19 +21,19 @@
           <circle :class="labels[g]" :cx="dot.year" cy="5" :r="dot.value"/>
         <!-- builds pie chart-->
           <circle :class="'omcost_per'"
-          v-bind:r="`calc(` + dot.value + `/2)`" :cx="dot.year" cy="5" fill="transparent"
+          v-bind:r="dot.value/2" :cx="dot.year" cy="5" fill="transparent"
           :stroke-width="dot.value"
           :stroke-dasharray= "`calc(` + dot.perOM + `*3.142*`+ dot.value+ `/100) calc(3.142*` + dot.value + `)`"
           :transform="transform(dot, 0)"
           />
           <circle :class="'fuelcost_per'"
-          v-bind:r="`calc(` + dot.value + `/2)`" :cx="dot.year" cy="5" fill="transparent"
+          v-bind:r="dot.value/2" :cx="dot.year" cy="5" fill="transparent"
           :stroke-width="dot.value"
           :stroke-dasharray= "`calc(` + dot.perFuel + `*3.142*`+ dot.value+ `/100) calc(3.142*` + dot.value + `)`"
           :transform="transform(dot, 1)"
           />
           <circle :class="'capcost_per'"
-          v-bind:r="`calc(` + dot.value + `/2)`" :cx="dot.year" cy="5" fill="transparent"
+          v-bind:r="dot.value/2" :cx="dot.year" cy="5" fill="transparent"
           :stroke-width="dot.value"
           :stroke-dasharray= "`calc(` + dot.perCap + `*3.142*`+ dot.value+ `/100) calc(3.142*` + dot.value + `)`"
           :transform="transform(dot, 2)"
