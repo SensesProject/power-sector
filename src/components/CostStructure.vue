@@ -1,7 +1,7 @@
 <template>
   <div class="secondary-energy" ref="inWrapper">
     <div class="key" :class=" mobile ? 'mobile' : 'desktop'">
-      <h4>Cost Structure</h4>
+      <h4>Energy Production (in EJ/yr) and Cost Structure (in %)</h4>
       <p class="selectors">
         Select a scenario and a region:
         <SensesSelect class="scenario_selector" :options="scenarios" v-model="currentScenario"/>
@@ -14,26 +14,27 @@
       v-bind key provides a unique key attribute for each item
       a class is defined for each energy carrier-group
       transform:translate moves the dots 0 px (x-value) and y-value:groupposition(g)
-      groupposition is an array with 8 positions, one for each energy carrier-->
+      groupposition is an array with 8 positions, one for each energy carrier
+    -->
       <g v-for="(group, g) in dots" v-bind:key="g + 'group'" :class="`${labels[g]}-group`" :transform="`translate(0, ${groupPosition[g]})`">
         <!-- draws dots for energy carrier with index g   -->
         <g v-for="(dot, d) in group" v-bind:key="d + 'dot'">
           <circle :class="labels[g]" :cx="dot.year" cy="5" :r="dot.value"/>
         <!-- builds pie chart-->
           <circle :class="'omcost_per'"
-          v-bind:r="dot.value/2" :cx="dot.year" cy="5" fill="transparent"
+          :r="dot.value/2" :cx="dot.year" cy="5" fill="transparent"
           :stroke-width="dot.value"
           :stroke-dasharray= "`calc(` + dot.perOM + `*3.142*`+ dot.value+ `/100) calc(3.142*` + dot.value + `)`"
           :transform="transform(dot, 0)"
           />
           <circle :class="'fuelcost_per'"
-          v-bind:r="dot.value/2" :cx="dot.year" cy="5" fill="transparent"
+          :r="dot.value/2" :cx="dot.year" cy="5" fill="transparent"
           :stroke-width="dot.value"
           :stroke-dasharray= "`calc(` + dot.perFuel + `*3.142*`+ dot.value+ `/100) calc(3.142*` + dot.value + `)`"
           :transform="transform(dot, 1)"
           />
           <circle :class="'capcost_per'"
-          v-bind:r="dot.value/2" :cx="dot.year" cy="5" fill="transparent"
+          :r="dot.value/2" :cx="dot.year" cy="5" fill="transparent"
           :stroke-width="dot.value"
           :stroke-dasharray= "`calc(` + dot.perCap + `*3.142*`+ dot.value+ `/100) calc(3.142*` + dot.value + `)`"
           :transform="transform(dot, 2)"
@@ -41,13 +42,13 @@
           <!-- white circle on top to create donut chart-->
           <circle :class="'WhiteCirc'" :cx="dot.year" cy="5" v-bind:r="`calc(` + dot.value + `/1.5)`"/>
         </g>        <!-- :transform="`rotate(-10 ${dot.year + margin.left } ${ margin.left + 5 })`"-->
-        <text :x="scale.x(2009)" y="40">{{ labels[g] }}</text>
+        <text :x="scale.x(2019)" y="40">{{ labels[g] }}</text>
       </g>
       <g v-for="(group, g) in world" v-bind:key="g + 'wgroup'" :class="`${labels[g]}-wgroup`" :transform="`translate(0, ${groupPosition[g]})`">
           <!--draws hotizontal axis line through dots and small circles at the beginning and end of axis -->
         <g class="axis_group">
-          <line class="axis" y1="5" y2="5" :x1="scale.x(2010)" :x2="scale.x(2100)"/>
-          <circle class="axis-dot" :cx="scale.x(2010)" cy="5" r="2.5"/>
+          <line class="axis" y1="5" y2="5" :x1="scale.x(2020)" :x2="scale.x(2100)"/>
+          <circle class="axis-dot" :cx="scale.x(2020)" cy="5" r="2.5"/>
           <circle class="axis-dot" :cx="scale.x(2100)" cy="5" r="2.5"/>
         </g>
       </g>
@@ -134,7 +135,7 @@ export default {
       return {
         x: d3.scaleLinear()
           .range([50, this.innerWidth - (this.margin.right * 10)])
-          .domain([2010, 2100]),
+          .domain([2020, 2100]),
         y: d3.scaleLinear()
           .range([2, 500])
           .domain([d3.min(this.allValues), d3.max(this.allValues)])
@@ -142,9 +143,9 @@ export default {
     },
     // dots returns values for year and value in pixel, and Costs in percentage
     dots () {
-      const regions = this.regions
-      console.log('regions')
-      console.log(regions)
+      const scenarios = this.scenarios
+      console.log('scenarios')
+      console.log(scenarios)
       return _.map(this.regionFilter, (energy, e) => {
         return _.map(energy, (single, s) => {
           return {
@@ -315,10 +316,6 @@ $margin-space: $spacing / 2;
     .Renewables {
       fill: getColor(gray, 100);
       stroke: getColor(gray, 40);
-    }
-    .Wind {
-      fill: lighten(#336666, 40);
-      stroke: darken(#336666, 30);
     }
     .WhiteCirc {
       fill: getColor(gray, 100);

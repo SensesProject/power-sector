@@ -1,7 +1,7 @@
 n<template>
   <div class="secondary-energy" ref="inWrapper">
     <div class="key" :class=" mobile ? 'mobile' : 'desktop'">
-      <h4>Cost Structure</h4>
+      <h4>Total Cost Structure for Power Sector</h4>
       <p class="selectors">
         Select a scenario and a region:
         <SensesSelect class="scenario_selector" :options="scenarios" v-model="currentScenario"/>
@@ -18,36 +18,44 @@ n<template>
       <g v-for="(group, g) in dots" v-bind:key="g + 'group'" :class="`${labels[g]}-group`" :transform="`translate(0, ${groupPosition[g]})`">
         <!-- draws dots for energy carrier with index g   -->
         <g v-for="(dot, d) in group" v-bind:key="d + 'dot'">
-          <circle :class="labels[g]" :cx="dot.year" cy="5" r="30"/>
-        <!-- builds pie chart-->
+          <!-- if loop to display only preselected years form data set, every second year-->
+          <g v-if="selectYears(dot.year) == 1">
+          <circle :class="labels[g]" :cx="dot.year" cy="5" r="50"/>
+          <!-- build pie chart-->
           <circle :class="'omcost_per'"
-          v-bind:r="15" :cx="dot.year" cy="5" fill="transparent"
-          :stroke-width="30"
-          :stroke-dasharray= "`calc(` + dot.perOM + `*3.142*30/100) calc(3.142*2*15)`"
+          :r="25" :cx="dot.year" cy="5" fill="transparent"
+          :stroke-width="50"
+          :stroke-dasharray= "`calc(` + dot.perOM + `*3.142*50/100) calc(3.142*2*25)`"
           :transform="transform(dot, 0)"
           />
           <circle :class="'fuelcost_per'"
-          v-bind:r="15" :cx="dot.year" cy="5" fill="transparent"
-          :stroke-width="30"
-          :stroke-dasharray= "`calc(` + dot.perFuel + `*3.142*30/100) calc(3.142*2*15)`"
+          :r="25" :cx="dot.year" cy="5" fill="transparent"
+          :stroke-width="50"
+          :stroke-dasharray= "`calc(` + dot.perFuel + `*3.142*50/100) calc(3.142*2*25)`"
           :transform="transform(dot, 1)"
           />
           <circle :class="'capcost_per'"
-          v-bind:r="15" :cx="dot.year" cy="5" fill="transparent"
-          :stroke-width="30"
-          :stroke-dasharray= "`calc(` + dot.perCap + `*3.142*30/100) calc(3.142*2*15)`"
+          :r="25" :cx="dot.year" cy="5" fill="transparent"
+          :stroke-width="50"
+          :stroke-dasharray= "`calc(` + dot.perCap + `*3.142*50/100) calc(3.142*2*25)`"
           :transform="transform(dot, 2)"
           />
           <!-- white circle on top to create donut chart-->
-          <circle :class="'WhiteCirc'" :cx="dot.year" cy="5" v-bind:r="`calc(30/1.5)`"/>
-        </g>        <!-- :transform="`rotate(-10 ${dot.year + margin.left } ${ margin.left + 5 })`"-->
-        <text :x="scale.x(2009)" y="40">{{ labels[g] }}</text>
+          <circle :class="'WhiteCirc'" :cx="dot.year" cy="5" :r="`calc(50/1.5)`"/>
+          </g>
+        </g>
+        <!-- year labels for every second year in dataset-->
+        <g v-for="(text, t) in group" :key="t + 'text'" >
+          <g v-if="t == 0 || t == 2 || t == 4 || t == 6|| t == 8">
+          <text class="year-label" :x="text.year" y="75">{{ years[t] }}</text>
+          </g>
+        </g>
       </g>
       <g v-for="(group, g) in world" v-bind:key="g + 'wgroup'" :class="`${labels[g]}-wgroup`" :transform="`translate(0, ${groupPosition[g]})`">
           <!--draws hotizontal axis line through dots and small circles at the beginning and end of axis -->
         <g class="axis_group">
-          <line class="axis" y1="5" y2="5" :x1="scale.x(2010)" :x2="scale.x(2100)"/>
-          <circle class="axis-dot" :cx="scale.x(2010)" cy="5" r="2.5"/>
+          <line class="axis" y1="5" y2="5" :x1="scale.x(2020)" :x2="scale.x(2100)"/>
+          <circle class="axis-dot" :cx="scale.x(2020)" cy="5" r="2.5"/>
           <circle class="axis-dot" :cx="scale.x(2100)" cy="5" r="2.5"/>
         </g>
       </g>
@@ -98,7 +106,7 @@ export default {
       allValues: [...new Set(CostStructureAgg.map(r => r.Value))],
       tooltip: 'Here a description of what Secondary Energy is!',
       currentScenario: 'NPi_v3',
-      currentRegion: 'Asia (No Japan)',
+      currentRegion: 'World',
       active: false,
       over: '',
       margin: {
@@ -127,7 +135,7 @@ export default {
       return {
         x: d3.scaleLinear()
           .range([50, this.innerWidth - (this.margin.right * 10)])
-          .domain([2010, 2100]),
+          .domain([2020, 2100]),
         y: d3.scaleLinear()
           .range([2, 500])
           .domain([d3.min(this.allValues), d3.max(this.allValues)])
@@ -135,6 +143,9 @@ export default {
     },
     // dots returns values for year and value in pixel, and Costs in percentage
     dots () {
+      const scenarios = this.scenarios
+      console.log('scenariosAgg')
+      console.log(scenarios)
       const regionFilter = this.regionFilter
       console.log('regionFilter')
       console.log(regionFilter)
@@ -187,6 +198,15 @@ export default {
       // conversion of percentage to degree
       deg = perIni / 100 * 360 - 90
       return `rotate(${deg} ${dot.year} ${5})`
+    },
+    // defines which years to display in the svg
+    selectYears (year) {
+      let yearsArray = [this.scale.x(2020), this.scale.x(2040), this.scale.x(2060), this.scale.x(2080), this.scale.x(2100)]
+      if (yearsArray.includes(year)) {
+        return 1
+      } else {
+        return 0
+      }
     },
     calcSizes () {
       const { inWrapper: el } = this.$refs

@@ -18,13 +18,13 @@
         <!-- draws dots for energy carrier with index g   -->
         <circle v-for="(dot, d) in group" v-bind:key="d + 'dot'" @mouseover="[active = true, over = d + labels[g]]" @mouseleave="active = false" :class="labels[g]" :cx="dot.year" cy="5" :r="dot.value"/>
         <!-- labels for energy carrier g-->
-        <text :x="scale.x(2009)" y="40">{{ labels[g] }}</text>
+        <text :x="scale.x(2019)" y="40">{{ labels[g] }}</text>
       </g>
       <g v-for="(group, g) in world" v-bind:key="g + 'wgroup'" :class="`${labels[g]}-wgroup`" :transform="`translate(0, ${groupPosition[g]})`">
           <!--draws hotizontal axis line through dots and small circles at the beginning and end of axis -->
         <g class="axis_group">
-          <line class="axis" y1="5" y2="5" :x1="scale.x(2010)" :x2="scale.x(2100)"/>
-          <circle class="axis-dot" :cx="scale.x(2010)" cy="5" r="2.5"/>
+          <line class="axis" y1="5" y2="5" :x1="scale.x(2020)" :x2="scale.x(2100)"/>
+          <circle class="axis-dot" :cx="scale.x(2020)" cy="5" r="2.5"/>
           <circle class="axis-dot" :cx="scale.x(2100)" cy="5" r="2.5"/>
         </g>
       </g>
@@ -110,7 +110,7 @@ export default {
       return {
         x: d3.scaleLinear()
           .range([50, this.innerWidth - (this.margin.right * 10)])
-          .domain([2010, 2100]),
+          .domain([2020, 2100]),
         y: d3.scaleLinear()
           .range([2, 500])
           .domain([d3.min(this.allValues), d3.max(this.allValues)])

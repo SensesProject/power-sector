@@ -10,13 +10,22 @@
       <RiskPathway :mobile="mobile"/>
       <div class="text-wrapper">
         <h2 class="chapter-title" id="introduction">
-          What kind of risks are we talking about?
+          What risks will be discussed?
         </h2>
-        <p>The power sector goes through a transition from largely fossil-based
-          power production to renewable electricity production.(...)
-          ---- Be careful to make the distinction clear between Primary and Secondary,
-          ‘Electricity production’ could be a good labeling.
-          </p>
+        <p>The Paris agreement aims to limit global warming to 2°C and pursue
+          efforts to limit to 1.5°C. An essential step for this is to decarbonize
+          electricity production. As can be easily seen below, when comparing energy
+          production from fossil fuels with renewables, energy is currently
+          still mainly being produced from fossil fuels. However if a carbon tax is
+          introduced, fuel costs will rise and at some point it will become
+          unprofitable to generate electricity from fossil fuels resulting in a
+          shift towards renewable energies.
+          <br>
+          <br>
+          In this module we show the risks and opportunities that
+          result from the decarbonization of the power sector and explain why investors
+          should consider climate policy in their decisions.
+        </p>
       </div>
       <div >
         <SecondaryEnergySum :width="width" :height="height" :mobile="mobile"/>
@@ -24,15 +33,9 @@
       <div class="vis-wrapper secondaryenergy">
         <SecondaryEnergy :width="width" :height="height" :mobile="mobile"/>
       </div>
-      <div class="vis-wrapper coststructure">
-        <CostStructure :width="width" :height="height" :mobile="mobile"/>
-      </div>
-      <div class="vis-wrapper coststructureAgg">
-        <CostStructureAgg :width="width" :height="height" :mobile="mobile"/>
-      </div>
       <div class="text-wrapper">
         <h2 class="chapter-title" id="costs">
-          Emissions - Cost Risk
+          Fuel Cost Risk
         </h2>
         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
           eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
@@ -47,22 +50,26 @@
       </div>
       <div class="text-wrapper">
         <h2 class="chapter-title" id="structure">
-          Change in structure risk
+          Changing Cost Structure risk
         </h2>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-          minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-          ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
-          voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur
-          sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-          mollit anim id est laborum.</p>
+        <p>As seen above low-carbon energy technologies, such as solar and wind,
+        but also nuclear, require higher capital investments than fossil power
+        plants. However, they do not (or barely) need any fuel to operate making
+        these technologies less vulnerable to changes in fuel prices.</p>
+        <p>Therefore when determining the risk profile in the overall power sector,
+        investors need to be aware that the risk structure of the power sector
+        will change from capital and fuel-based towards almost purely capital
+        based.</p>
       </div>
-      <div class="vis-wrapper">
-        <StructureRisk :width="width" :height="height"/>
+      <div class="vis-wrapper CostStructure">
+        <CostStructure :width="width" :height="height" :mobile="mobile"/>
+      </div>
+      <div class="vis-wrapper CostStructureAgg">
+        <CostStructureAgg :width="width" :height="height" :mobile="mobile"/>
       </div>
       <div class="text-wrapper" id="last-text">
         <h2 class="chapter-title" id="conclusion">
-          Change in structure risk
+          Changing Cost Structure risk
         </h2>
         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
           eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
@@ -70,7 +77,11 @@
           ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
           voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur
           sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-          mollit anim id est laborum.</p>
+          mollit anim id est laborum.
+          </p>
+      </div>
+      <div >
+        <SecondaryEnergywlinechart :width="width" :height="height" :mobile="mobile"/>
       </div>
       <SensesMeta :id="'power-sector'"/>
     </div>
@@ -81,11 +92,11 @@
 import SensesMenu from 'library/src/components/SensesMenu.vue'
 import RiskPathway from './components/RiskPathway.vue'
 import SecondaryEnergySum from './components/SecondaryEnergySum.vue'
+import SecondaryEnergywlinechart from './components/SecondaryEnergywlinechart.vue'
 import SecondaryEnergy from './components/SecondaryEnergy.vue'
 import CostStructure from './components/CostStructure.vue'
 import CostStructureAgg from './components/CostStructureAgg.vue'
 import EmiCostsRisk from './components/EmiCostsRisk.vue'
-import StructureRisk from './components/StructureRisk.vue'
 import SensesMeta from 'library/src/components/SensesMeta.vue'
 
 export default {
@@ -98,7 +109,7 @@ export default {
     CostStructure,
     CostStructureAgg,
     EmiCostsRisk,
-    StructureRisk,
+    SecondaryEnergywlinechart,
     SensesMeta
   },
   data () {

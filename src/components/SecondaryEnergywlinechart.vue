@@ -1,13 +1,10 @@
-Final<template>
-  <div class="final-energy" ref="inWrapper">
+<template>
+  <div class="secondary-energy" ref="inWrapper">
     <div class="key" :class=" mobile ? 'mobile' : 'desktop'">
-      <h4>Volume in <SensesTooltip :tooltip="tooltip">secondary energy</SensesTooltip> production (Ej/year)</h4>
-      <p class="highlight">{{ model[0] }}</p>
+      <h4>Electricity production</h4>
       <p class="selectors">
-        Select:
+        Select a scenario:
         <SensesSelect class="scenario_selector" :options="scenarios" v-model="currentScenario"/>
-        <SensesSelect class="region_selector" :options="regions" v-model="currentRegion"/>
-        <SensesSelect class="enduse_selector" :options="enduse" v-model="currentEnduse"/>
       </p>
     </div>
     <div></div>
@@ -21,26 +18,29 @@ Final<template>
         <!-- draws dots for energy carrier with index g   -->
         <circle v-for="(dot, d) in group" v-bind:key="d + 'dot'" @mouseover="[active = true, over = d + labels[g]]" @mouseleave="active = false" :class="labels[g]" :cx="dot.year" cy="5" :r="dot.value"/>
         <!-- labels for energy carrier g-->
-      <!-- labels for energy carrier -->
-        <text :x="scale.x(2009)" y="40">{{ labels[g] }}</text>
+        <text :x="scale.x(2019)" y="40">{{ labels[g] }}</text>
       </g>
       <g v-for="(group, g) in world" v-bind:key="g + 'wgroup'" :class="`${labels[g]}-wgroup`" :transform="`translate(0, ${groupPosition[g]})`">
           <!--draws hotizontal axis line through dots and small circles at the beginning and end of axis -->
         <g class="axis_group">
-          <line class="axis" y1="5" y2="5" :x1="scale.x(2010)" :x2="scale.x(2100)"/>
-          <circle class="axis-dot" :cx="scale.x(2010)" cy="5" r="2.5"/>
+          <line class="axis" y1="5" y2="5" :x1="scale.x(2020)" :x2="scale.x(2100)"/>
+          <circle class="axis-dot" :cx="scale.x(2020)" cy="5" r="2.5"/>
           <circle class="axis-dot" :cx="scale.x(2100)" cy="5" r="2.5"/>
         </g>
-        <g v-for="(text, t) in group" v-bind:key="t + 'text'" :class="active === true & over === t + labels[g] ? 'visible' : 'invisible'">
-          <!-- draws little line with dot to indicate value and year of each dot -->
-          <circle class="year-dot" :cx="text.year" cy="5" r="2.5"/>
-          <text class="year-label" :x="text.year" y="20">{{ years[t] }}</text>
-          <text class="year-label" :x="text.year" y="-35">{{ Math.round(text.value) }} Ej/year</text>
-          <line class="line-label" :x1="text.year" :x2="text.year" y1="-25" y2="5"/>
-        </g>
-        <!-- draws dashed dots for world region -->
-        <circle v-for="(dot, d) in group" v-bind:key="d + 'wdot'" @mouseover="[active = true, over = d + labels[g]]" @mouseleave="active = false" class="world" :class="labels[g]" :cx="dot.year" cy="5" :r="dot.value"/>
       </g>
+    </svg>
+    <!--Cost Line Chart -->
+    <svg :width="innerWidth" :height="innerHeight" :transform="`translate(${margin.left}, 0)`">
+        <!--x axis -->
+        <line class="axis" :y1="scale.y(2000)" :y2="scale.y(2000)" :x1="scale.x(2020)" :x2="scale.x(2100)"/>
+        <!--y axis -->
+        <line class="axis" :y1="scale.y(0)" y2="25" :x1="scale.x(2020)" :x2="scale.x(2020)"/>
+        <g v-for="(group, g) in dots" v-bind:key="g + 'group'" >
+          <!-- draws dots for energy carrier with index g   -->
+          <circle v-for="(dot, d) in group" v-bind:key="d + 'dot'" :cx="dot.year" :cy="dot.costs" :r="2"/>
+          <!-- labels for energy carrier g-->
+          <text :x="scale.x(2019)" y="40">{{ labels[g] }}</text>
+        </g>
     </svg>
   </div>
 </template>
@@ -49,15 +49,13 @@ Final<template>
 import _ from 'lodash'
 import * as d3 from 'd3'
 
-import FinalEnergy from 'dsv-loader!@/assets/data/FinalEnergy.csv' // eslint-disable-line import/no-webpack-loader-syntax
+import SecondaryEnergySum from 'dsv-loader!@/assets/data/SecondaryEnergySum.csv' // eslint-disable-line import/no-webpack-loader-syntax
 import SensesSelect from 'library/src/components/SensesSelect.vue'
-import SensesTooltip from 'library/src/components/SensesTooltip.vue'
 
 export default {
   name: 'RiskPathway',
   components: {
-    SensesSelect,
-    SensesTooltip
+    SensesSelect
   },
   props: {
     width: {
@@ -75,31 +73,30 @@ export default {
   },
   data () {
     return {
-      // Dataset FinalEnergy is array with objects
+      // Dataset SecondaryEnergy is array with objects
       // [{},...,{}]
-      FinalEnergy,
+      SecondaryEnergySum,
       // groupBy creates object composed of keys (coal, wind, ...)
       // generated from the results of running each
-      // element of FinalEnergy thru iteratee d = {}
+      // element of SecondaryEnergySum thru iteratee d = {}
       // {"coal": [{},{}...],
       //   "wind": [{},{}...],
       //    ...
       //  }
-      energy: _.groupBy(FinalEnergy, d => d.EnergySource),
+      energy: _.groupBy(SecondaryEnergySum, d => d.Variable),
       // map erstellt einen Array mit allen values des keys model
       // set erstellt einen Array mit allen einzigartigen Einträgen für Model
-      // Model,Scenario,Region,Unit,Year,Value,Enduse,EnergySource
-      model: [...new Set(FinalEnergy.map(r => r.Model))],
-      years: [...new Set(FinalEnergy.map(r => r.Year))],
-      labels: [...new Set(FinalEnergy.map(r => r.EnergySource))],
-      scenarios: [...new Set(FinalEnergy.map(r => r.Scenario))],
-      enduse: [...new Set(FinalEnergy.map(r => r.Enduse))],
-      regions: [...new Set(FinalEnergy.map(r => r.Region))],
-      allValues: [...new Set(FinalEnergy.map(r => r.Value))],
-      tooltip: 'Here a description of what Final Energy is!',
+      model: [...new Set(SecondaryEnergySum.map(r => r.Model))],
+      years: [...new Set(SecondaryEnergySum.map(r => r.Year))],
+      labels: [...new Set(SecondaryEnergySum.map(r => r.Variable))],
+      scenarios: [...new Set(SecondaryEnergySum.map(r => r.Scenario))],
+      regions: [...new Set(SecondaryEnergySum.map(r => r.Region))],
+      allValues: [...new Set(SecondaryEnergySum.map(r => r.Value))],
+      // new Array for all "Total Cost in mwh" values to create yAxis
+      allCostTotal: [...new Set(SecondaryEnergySum.map(r => r.CostTotal))],
+      tooltip: 'Here a description of what Secondary Energy is!',
       currentScenario: 'NPi_v3',
       currentRegion: 'World',
-      currentEnduse: 'Industry',
       active: false,
       over: '',
       margin: {
@@ -119,21 +116,23 @@ export default {
     //    ...
     //  ]
     scenarioFilter () { return _.map(this.energy, (sc, s) => _.filter(sc, d => d.Scenario === this.currentScenario)) },
-    // filters over regioFilter Array, returns same array only with objects with CurrentEnduse
-    enduseFilter () { return _.map(this.scenarioFilter, (end, e) => _.filter(end, d => d.Enduse === this.currentEnduse)) },
     // filters over scenrioFilter Array, returns same array only with objects with CurrentRegion
-    regionFilter () { return _.map(this.enduseFilter, (re, r) => _.filter(re, d => d.Region === this.currentRegion)) },
+    regionFilter () { return _.map(this.scenarioFilter, (re, r) => _.filter(re, d => d.Region === this.currentRegion)) },
     // filters over scenrioFilter Array, returns same array only with objects with region = World
-    worldFilter () { return _.map(this.enduseFilter, (re, r) => _.filter(re, d => d.Region === 'World')) },
+    worldFilter () { return _.map(this.scenarioFilter, (re, r) => _.filter(re, d => d.Region === 'World')) },
     scale () {
       // domain-> observartio EJ/yr, range-> visual variable px
       return {
         x: d3.scaleLinear()
           .range([50, this.innerWidth - (this.margin.right * 10)])
-          .domain([2010, 2100]),
+          .domain([2020, 2100]),
         y: d3.scaleLinear()
           .range([2, 500])
-          .domain([d3.min(this.allValues), d3.max(this.allValues)])
+          .domain([d3.min(this.allValues), d3.max(this.allValues)]),
+        // yCo to create Line chart based on Total Costs
+        yCo: d3.scaleLinear()
+          .range([2, 500])
+          .domain([d3.min(this.allCostTotal), d3.max(this.allCostTotal)])
       }
     },
     // dots returns an array with the size of regionFilter
@@ -143,7 +142,9 @@ export default {
         return _.map(energy, (single, s) => {
           return {
             year: this.scale.x(single.Year),
-            value: this.scale.y(Math.sqrt(single.Value))
+            value: this.scale.y(Math.sqrt(single.Value)),
+            // should return costs, scaled based on yCo not y
+            costs: this.scale.y(single.CostTotal)
           }
         })
       })
@@ -159,17 +160,16 @@ export default {
       })
     },
     groupPosition () {
-      // length of dotsArray is 8 = nr of energy carrier
+      // length of dotsArray is  = nr of energy carrier
       // returns array with the position for each energy carrier
       const dotsArray = this.dots
-      let pos = 80
+      let pos = 70
       return _.map(this.regionFilter, (energy, e, l) => {
-        if (e !== 0) { pos = pos + this.innerHeight / dotsArray.length }
+        if (e !== 0) { pos = pos + this.innerHeight / dotsArray.length - 100 }
         return pos
       })
     }
   },
-
   methods: {
     calcSizes () {
       const { inWrapper: el } = this.$refs
@@ -195,20 +195,18 @@ export default {
 @import "library/src/style/variables.scss";
 $margin-space: $spacing / 2;
 
-.final-energy {
-  height: 170vh;
+.secondary-energy {
+  height: 110vh;
 
   .key {
     z-index: 9;
     width: 100%;
     height: 100px;
-    margin-bottom: 10%;
-    padding: 10px 0px;
+    margin-bottom: 5%;
+    padding: 20px 0px;
 
-    position:sticky;
     top: 50px;
 
-    border-bottom:0.5px solid blue;
     background: hsla(0,0%,100%,.90);
 
     .highlight {
@@ -287,29 +285,17 @@ $margin-space: $spacing / 2;
         transition: opacity 0.5s;
       }
     }
-    .Electricity {
+    .Fossils {
       fill: getColor(gray, 80);
       stroke: getColor(gray, 40);
     }
-    .Gases {
-      fill: getColor(red, 80);
-      stroke: getColor(red, 40);
+    .Renewables {
+      fill: getColor(yellow, 80);
+      stroke: getColor(yellow, 40);
     }
-    .Heat {
-      fill: getColor(orange, 80);
-      stroke: getColor(orange, 40);
-    }
-    .Liquids {
-      fill: getColor(blue, 80);
-      stroke: getColor(blue, 40);
-    }
-    .Hydrogen {
-      fill: getColor(violet, 80);
-      stroke: getColor(violet, 40);
-    }
-    .Solids {
-      fill: lighten(#663333, 40);
-      stroke: darken(#663333, 30);
+    .Wind {
+      fill: lighten(#336666, 40);
+      stroke: darken(#336666, 30);
     }
   }
 }
