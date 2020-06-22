@@ -1,14 +1,14 @@
 <template>
   <div class="secondary-energy" ref="inWrapper">
     <div class="key" :class=" mobile ? 'mobile' : 'desktop'">
-      <h4>Electricity production</h4>
+      <h4>Energy production (Ej/year) and production costs (log) ($/MWh) </h4>
       <p class="selectors">
         Select a scenario:
         <SensesSelect class="scenario_selector" :options="scenarios" v-model="currentScenario"/>
       </p>
     </div>
     <div></div>
-    <svg :width="innerWidth" :height="innerHeight" :transform="`translate(${margin.left}, 0)`">
+    <svg :width="(2*innerWidth/3)" :height="innerHeight" :transform="`translate(${margin.left}, 0)`">
       <!-- dots is array with 8 key value pairs, one for each energy carrier, g is index 0-7
       v-bind key provides a unique key attribute for each item
       a class is defined for each energy carrier-group
@@ -16,31 +16,43 @@
       groupposition is an array with 8 positions, one for each energy carrier-->
       <g v-for="(group, g) in dots" v-bind:key="g + 'group'" :class="`${labels[g]}-group`" :transform="`translate(0, ${groupPosition[g]})`">
         <!-- draws dots for energy carrier with index g   -->
+        <g>
         <circle v-for="(dot, d) in group" v-bind:key="d + 'dot'" @mouseover="[active = true, over = d + labels[g]]" @mouseleave="active = false" :class="labels[g]" :cx="dot.year" cy="5" :r="dot.value"/>
         <!-- labels for energy carrier g-->
-        <text :x="scale.x(2019)" y="40">{{ labels[g] }}</text>
+        <text :x="scale.x(2029)" y="40">{{ labels[g] }}</text>
+        </g>
+        <!-- year labels for first and last year in dataset-->
+        <g v-for="(text, t) in group" :key="t + 'text'" >
+          <g v-if="t == 0 || t == 7">
+          <text class="year-label" :x="text.year" y="20">{{ years[t] }}</text>
+          </g>
+        </g>
       </g>
       <g v-for="(group, g) in world" v-bind:key="g + 'wgroup'" :class="`${labels[g]}-wgroup`" :transform="`translate(0, ${groupPosition[g]})`">
           <!--draws hotizontal axis line through dots and small circles at the beginning and end of axis -->
         <g class="axis_group">
-          <line class="axis" y1="5" y2="5" :x1="scale.x(2020)" :x2="scale.x(2100)"/>
-          <circle class="axis-dot" :cx="scale.x(2020)" cy="5" r="2.5"/>
+          <line class="axis" y1="5" y2="5" :x1="scale.x(2030)" :x2="scale.x(2100)"/>
+          <circle class="axis-dot" :cx="scale.x(2030)" cy="5" r="2.5"/>
           <circle class="axis-dot" :cx="scale.x(2100)" cy="5" r="2.5"/>
         </g>
       </g>
     </svg>
-    <!--Cost Line Chart -->
-    <svg :width="innerWidth" :height="innerHeight" :transform="`translate(${margin.left}, 0)`">
-        <!--x axis -->
-        <line class="axis" :y1="scale.y(2000)" :y2="scale.y(2000)" :x1="scale.x(2020)" :x2="scale.x(2100)"/>
-        <!--y axis -->
-        <line class="axis" :y1="scale.y(0)" y2="25" :x1="scale.x(2020)" :x2="scale.x(2020)"/>
-        <g v-for="(group, g) in dots" v-bind:key="g + 'group'" >
-          <!-- draws dots for energy carrier with index g   -->
-          <circle v-for="(dot, d) in group" v-bind:key="d + 'dot'" :cx="dot.year" :cy="dot.costs" :r="2"/>
-          <!-- labels for energy carrier g-->
-          <text :x="scale.x(2019)" y="40">{{ labels[g] }}</text>
-        </g>
+    <!--Cost Line Chart on the right side of bubble chart-->
+    <svg :width="(innerWidth/3)" :height="innerHeight" :transform="`translate(${margin.left}, ${innerHeight/20})`">
+      <!-- x-Axis -->
+      <line class="axis" :y1="scaleCo.y(10)" :y2="scaleCo.y(10)" :x1="scaleCo.x(2030)" :x2="scaleCo.x(2105)"/>
+      <!-- year labels for x-Axis -->
+      <g >
+      <text class="year-label" :x="scaleCo.x(2033)" :y="scaleCo.y(8)">2030</text>
+      <text class="year-label" :x="scaleCo.x(2098)" :y="scaleCo.y(8)">2100</text>
+      </g>
+      <!-- y-Axis
+      <line class="axis" :y1="scaleCo.y(CostTotalExtremes.max)" :y2="scaleCo.y(10)" :x1="scaleCo.x(2030)" :x2="scaleCo.x(2030)"/> -->
+      <!-- label y-Axis
+      <text :x="scaleCo.x(2030)" :y="scaleCo.y(0.3*CostTotalExtremes.max)" >Costs (log)</text>  -->
+      <!-- Areas for fossils and renewables -->
+      <path class="FossilsArea" :d="fossilCostArea" />
+      <path class="RenewablesArea" :d="renewableCostArea" />
     </svg>
   </div>
 </template>
@@ -49,7 +61,7 @@
 import _ from 'lodash'
 import * as d3 from 'd3'
 
-import SecondaryEnergySum from 'dsv-loader!@/assets/data/SecondaryEnergySum.csv' // eslint-disable-line import/no-webpack-loader-syntax
+import SecondaryEnergyAndTotalCostWorld from 'dsv-loader!@/assets/data/SecondaryEnergyAndTotalCostWorld.csv' // eslint-disable-line import/no-webpack-loader-syntax
 import SensesSelect from 'library/src/components/SensesSelect.vue'
 
 export default {
@@ -75,7 +87,7 @@ export default {
     return {
       // Dataset SecondaryEnergy is array with objects
       // [{},...,{}]
-      SecondaryEnergySum,
+      SecondaryEnergyAndTotalCostWorld,
       // groupBy creates object composed of keys (coal, wind, ...)
       // generated from the results of running each
       // element of SecondaryEnergySum thru iteratee d = {}
@@ -83,17 +95,17 @@ export default {
       //   "wind": [{},{}...],
       //    ...
       //  }
-      energy: _.groupBy(SecondaryEnergySum, d => d.Variable),
+      energy: _.groupBy(SecondaryEnergyAndTotalCostWorld, d => d.Variable),
       // map erstellt einen Array mit allen values des keys model
       // set erstellt einen Array mit allen einzigartigen Einträgen für Model
-      model: [...new Set(SecondaryEnergySum.map(r => r.Model))],
-      years: [...new Set(SecondaryEnergySum.map(r => r.Year))],
-      labels: [...new Set(SecondaryEnergySum.map(r => r.Variable))],
-      scenarios: [...new Set(SecondaryEnergySum.map(r => r.Scenario))],
-      regions: [...new Set(SecondaryEnergySum.map(r => r.Region))],
-      allValues: [...new Set(SecondaryEnergySum.map(r => r.Value))],
+      model: [...new Set(SecondaryEnergyAndTotalCostWorld.map(r => r.Model))],
+      years: [...new Set(SecondaryEnergyAndTotalCostWorld.map(r => r.Year))],
+      labels: [...new Set(SecondaryEnergyAndTotalCostWorld.map(r => r.Variable))],
+      scenarios: [...new Set(SecondaryEnergyAndTotalCostWorld.map(r => r.Scenario))],
+      regions: [...new Set(SecondaryEnergyAndTotalCostWorld.map(r => r.Region))],
+      allValues: [...new Set(SecondaryEnergyAndTotalCostWorld.map(r => r.Value))],
       // new Array for all "Total Cost in mwh" values to create yAxis
-      allCostTotal: [...new Set(SecondaryEnergySum.map(r => r.CostTotal))],
+      allCostTotal: [...new Set(SecondaryEnergyAndTotalCostWorld.map(r => r.CostTotal))],
       tooltip: 'Here a description of what Secondary Energy is!',
       currentScenario: 'NPi_v3',
       currentRegion: 'World',
@@ -120,34 +132,75 @@ export default {
     regionFilter () { return _.map(this.scenarioFilter, (re, r) => _.filter(re, d => d.Region === this.currentRegion)) },
     // filters over scenrioFilter Array, returns same array only with objects with region = World
     worldFilter () { return _.map(this.scenarioFilter, (re, r) => _.filter(re, d => d.Region === 'World')) },
+    // dots returns an array with the size of regionFilter
+    // with just that values for year and value in pixel
     scale () {
       // domain-> observartio EJ/yr, range-> visual variable px
       return {
         x: d3.scaleLinear()
-          .range([50, this.innerWidth - (this.margin.right * 10)])
-          .domain([2020, 2100]),
+          .range([50, 1.7 * this.innerWidth / 3])
+          .domain([2030, 2100]),
         y: d3.scaleLinear()
-          .range([2, 500])
-          .domain([d3.min(this.allValues), d3.max(this.allValues)]),
-        // yCo to create Line chart based on Total Costs
-        yCo: d3.scaleLinear()
-          .range([2, 500])
-          .domain([d3.min(this.allCostTotal), d3.max(this.allCostTotal)])
+          .range([2, 2000])
+          .domain([d3.min(this.allValues, s => +s), d3.max(this.allValues, s => +s)])
       }
     },
-    // dots returns an array with the size of regionFilter
-    // with just that values for year and value in pixel
+    // ScaleCo to create Line chart based on Total Costs
+    scaleCo () {
+      return {
+        x: d3.scaleLinear()
+          .range([this.margin.left, 0.8 * this.innerWidth / 3])
+          .domain([2025, 2100]),
+        y: d3.scaleLog()
+          .range([0.5 * this.innerHeight, this.margin.top])
+          .domain([d3.min(this.allCostTotal, s => +s), d3.max(this.allCostTotal, s => +s)])
+      }
+    },
     dots () {
+      // console.log('maxallcosts', d3.max(this.allCostTotal))
       return _.map(this.regionFilter, (energy, e) => {
         return _.map(energy, (single, s) => {
           return {
+            yearOrig: single.Year,
             year: this.scale.x(single.Year),
             value: this.scale.y(Math.sqrt(single.Value)),
             // should return costs, scaled based on yCo not y
-            costs: this.scale.y(single.CostTotal)
+            yearCO: this.scaleCo.x(single.Year),
+            // costs: (single.CostTotal)
+            costs: this.scaleCo.y(single.CostTotal)
           }
         })
       })
+    },
+    CostTotalExtremes () {
+      return {
+        min: d3.min(this.allCostTotal, s => +s),
+        max: d3.max(this.allCostTotal, s => +s)
+      }
+    },
+    // define area for Fossils
+    fossilCostArea () {
+      const yVals = _.map(this.dots[0], (dot, d) => dot.costs)
+      const xVals = _.map(this.dots[0], (dot, d) => dot.yearCo)
+      console.log('xvals', xVals)
+      console.log('yvals', yVals)
+      const areaplot = d3.area()
+        .x(d => { return d.yearCO })
+        .y0(this.scaleCo.y(10))
+        .y1(d => d.costs)
+      return areaplot(this.dots[0])
+    },
+    // define area for Renewables
+    renewableCostArea () {
+      const yVals = _.map(this.dots[1], (dot, d) => dot.costs)
+      const xVals = _.map(this.dots[1], (dot, d) => dot.yearCO)
+      console.log('xvals', xVals)
+      console.log('yvals', yVals)
+      const areaplot = d3.area()
+        .x(d => { return d.yearCO })
+        .y0(this.scaleCo.y(10))
+        .y1(d => d.costs)
+      return areaplot(this.dots[1])
     },
     world () {
       return _.map(this.worldFilter, (energy, e) => {
@@ -165,7 +218,7 @@ export default {
       const dotsArray = this.dots
       let pos = 70
       return _.map(this.regionFilter, (energy, e, l) => {
-        if (e !== 0) { pos = pos + this.innerHeight / dotsArray.length - 100 }
+        if (e !== 0) { pos = pos + (1.1 * this.innerHeight) / dotsArray.length - 100 }
         return pos
       })
     }
@@ -178,7 +231,9 @@ export default {
     }
   },
   mounted () {
+    console.log(`thisdots`, this.dots)
     this.calcSizes()
+    console.log(this.areachart)
     window.addEventListener('resize', this.calcSizes, false)
   },
   updated () {
@@ -196,7 +251,7 @@ export default {
 $margin-space: $spacing / 2;
 
 .secondary-energy {
-  height: 110vh;
+  height: 80vh;
 
   .key {
     z-index: 9;
@@ -225,7 +280,7 @@ $margin-space: $spacing / 2;
     }
 
     h4 {
-      padding-left: 10px;
+      padding-left: 0px;
     }
 
     .v-popover {
@@ -244,7 +299,9 @@ $margin-space: $spacing / 2;
       }
     }
   }
-
+  .achart {
+    background-color: getColor(yellow, 80);
+  }
   svg {
     .axis {
       stroke: $color-gray;
@@ -293,9 +350,15 @@ $margin-space: $spacing / 2;
       fill: getColor(yellow, 80);
       stroke: getColor(yellow, 40);
     }
-    .Wind {
-      fill: lighten(#336666, 40);
-      stroke: darken(#336666, 30);
+    .FossilsArea {
+      fill: getColor(gray, 80);
+      stroke: getColor(gray, 40);
+      opacity: 0.6;
+    }
+    .RenewablesArea {
+      fill: getColor(yellow, 80);
+      stroke: getColor(yellow, 40);
+      opacity: 0.6;
     }
   }
 }

@@ -125,8 +125,8 @@ export default {
           .range([50, this.innerWidth - (this.margin.right * 10)])
           .domain([2020, 2100]),
         y: d3.scaleLinear()
-          .range([2, 500])
-          .domain([d3.min(this.allValues), d3.max(this.allValues)])
+          .range([2, 2000])
+          .domain([d3.min(this.allValues, s => +s), d3.max(this.allValues, s => +s)])
       }
     },
     // dots returns an array with the size of regionFilter
@@ -152,6 +152,7 @@ export default {
       })
     },
     groupPosition () {
+      console.log('secEndots', this.dots)
       // length of dotsArray is 8 = nr of energy carrier
       // returns array with the position for each energy carrier
       const dotsArray = this.dots

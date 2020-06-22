@@ -2,6 +2,7 @@
   <div class="secondary-energy" ref="inWrapper">
     <div class="key" :class=" mobile ? 'mobile' : 'desktop'">
       <h4>Electricity production</h4>
+      <p class="highlight">{{ model[0] }}</p>
       <p class="selectors">
         Select a scenario:
         <SensesSelect class="scenario_selector" :options="scenarios" v-model="currentScenario"/>
@@ -112,13 +113,14 @@ export default {
           .range([50, this.innerWidth - (this.margin.right * 10)])
           .domain([2020, 2100]),
         y: d3.scaleLinear()
-          .range([2, 500])
-          .domain([d3.min(this.allValues), d3.max(this.allValues)])
+          .range([2, 2000])
+          .domain([d3.min(this.allValues, s => +s), d3.max(this.allValues, s => +s)])
       }
     },
     // dots returns an array with the size of regionFilter
     // with just that values for year and value in pixel
     dots () {
+      console.log('SESScale', d3.max(this.allValues, s => +s), this.scale.y(d3.max(this.allValues, s => +s)))
       return _.map(this.regionFilter, (energy, e) => {
         return _.map(energy, (single, s) => {
           return {

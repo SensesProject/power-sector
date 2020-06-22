@@ -28,49 +28,25 @@
         </p>
       </div>
       <div >
-        <SecondaryEnergywlinechart :width="width" :height="height" :mobile="mobile"/>
-      </div>
-      <div class="text-wrapper">
-        <p>Let’s have a look at the volume in energy production of different energy carrier:</p>
+        <SecondaryEnergySum :width="width" :height="height" :mobile="mobile"/>
       </div>
       <div class="vis-wrapper secondaryenergy">
         <SecondaryEnergy :width="width" :height="height" :mobile="mobile"/>
       </div>
-
       <div class="text-wrapper">
         <h2 class="chapter-title" id="costs">
           Fuel Cost Risk
         </h2>
-        <p>One risk we observe in the power sector is the Fuel cost risk. With the
-          introduction of the tax, fuel costs will consequently rise and a conversion
-          of the power sector from fossil fuel based generation to renewables will take
-          place. This shift is also reflected in the fuel costs changes: despite
-          increasing costs in the energy production from fossils, the total fuel
-          costs decrease at some point because the energy production from fossil
-          fuels goes down.
-          <br>
-          <br>
-          Therefor investors face the risk that fossil-based assets, such as coal
-          or gas-fired power plants reduce their value under climate policy. </p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+          minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
+          ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
+          voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur
+          sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt
+          mollit anim id est laborum.</p>
       </div>
       <div class="vis-wrapper">
         <EmiCostsRisk :width="width" :height="height"/>
-      </div>
-      <div class="text-wrapper">
-        <h2 class="chapter-title" id="structure">
-          Investment need
-        </h2>
-        <p>If a Tax is introduced, generating low-carbon energy will become more
-          profitable which will lead to a shift in the Power Sector towards
-          renewables.
-          However this low-carbon transition is expensive for the power sector,
-          as both renewables and nuclear are more capital intensive than traditional
-          fossil fuel power production.</p>
-        <p>Therefore, the transition will cause a large investment need in low-carbon
-          electricity production. For investors this opens investment opportunities.</p>
-      </div>
-      <div class="vis-wrapper">
-        <InvestmentNeed :width="width" :height="height"/>
       </div>
       <div class="text-wrapper">
         <h2 class="chapter-title" id="structure">
@@ -85,17 +61,28 @@
         will change from capital and fuel-based towards almost purely capital
         based.</p>
       </div>
+
+      <LayoutScrollytelling>
+        <template v-slot:vis="{ width, height, step }">
+          <div
+          :style="{
+            width: `${width}px`,
+            height: `${height}px`
+            }"
+            >
       <div class="vis-wrapper CostStructure">
-        <CostStructure :width="width" :height="height" :mobile="mobile"/>
+        <CostStructure :step="step" :width="width" :height="height" :mobile="mobile"/>
       </div>
+      <IntersectionObserver :step="1">
       <div class="vis-wrapper CostStructureAgg">
         <CostStructureAgg :width="width" :height="height" :mobile="mobile"/>
       </div>
+    </IntersectionObserver>
       <div class="text-wrapper" id="last-text">
         <h2 class="chapter-title" id="conclusion">
-          Assessing risks with the help of climate scenarios
+          Changing Cost Structure risk
         </h2>
-        <p>We have seen that some final sententences here Lorem ipsum dolor sit amet
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
           eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
           minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
           ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
@@ -103,6 +90,12 @@
           sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt
           mollit anim id est laborum.
           </p>
+      </div>
+    </div>
+    </template>
+    </LayoutScrollytelling>
+      <div >
+        <SecondaryEnergywlinechart :width="width" :height="height" :mobile="mobile"/>
       </div>
       <SensesMeta :id="'power-sector'"/>
     </div>
@@ -112,23 +105,25 @@
 <script>
 import SensesMenu from 'library/src/components/SensesMenu.vue'
 import RiskPathway from './components/RiskPathway.vue'
-// import SecondaryEnergySum from './components/SecondaryEnergySum.vue'
+import SecondaryEnergySum from './components/SecondaryEnergySum.vue'
 import SecondaryEnergywlinechart from './components/SecondaryEnergywlinechart.vue'
 import SecondaryEnergy from './components/SecondaryEnergy.vue'
-import InvestmentNeed from './components/InvestmentNeed.vue'
 import CostStructure from './components/CostStructure.vue'
 import CostStructureAgg from './components/CostStructureAgg.vue'
 import EmiCostsRisk from './components/EmiCostsRisk.vue'
 import SensesMeta from 'library/src/components/SensesMeta.vue'
+import LayoutScrollytelling from 'library/src/components/LayoutScrollytelling.vue'
+import IntersectionObserver from 'library/src/components/IntersectionObserver.vue'
 
 export default {
   name: 'App',
   components: {
+    LayoutScrollytelling,
+    IntersectionObserver,
     SensesMenu,
     RiskPathway,
-    // SecondaryEnergySum,
+    SecondaryEnergySum,
     SecondaryEnergy,
-    InvestmentNeed,
     CostStructure,
     CostStructureAgg,
     EmiCostsRisk,

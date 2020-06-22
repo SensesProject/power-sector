@@ -1,4 +1,4 @@
-n<template>
+<template>
   <div class="secondary-energy" ref="inWrapper">
     <div class="key" :class=" mobile ? 'mobile' : 'desktop'">
       <h4>Total Cost Structure for Power Sector</h4>
@@ -25,23 +25,23 @@ n<template>
           <circle :class="'omcost_per'"
           :r="25" :cx="dot.year" cy="5" fill="transparent"
           :stroke-width="50"
-          :stroke-dasharray= "`calc(` + dot.perOM + `*3.142*50/100) calc(3.142*2*25)`"
+          :stroke-dasharray= "(dot.perOM*3.142/2)+', '+(3.142*50)"
           :transform="transform(dot, 0)"
           />
           <circle :class="'fuelcost_per'"
           :r="25" :cx="dot.year" cy="5" fill="transparent"
           :stroke-width="50"
-          :stroke-dasharray= "`calc(` + dot.perFuel + `*3.142*50/100) calc(3.142*2*25)`"
+          :stroke-dasharray= "(dot.perFuel*3.142/2)+', '+(3.142*50)"
           :transform="transform(dot, 1)"
           />
           <circle :class="'capcost_per'"
           :r="25" :cx="dot.year" cy="5" fill="transparent"
           :stroke-width="50"
-          :stroke-dasharray= "`calc(` + dot.perCap + `*3.142*50/100) calc(3.142*2*25)`"
+          :stroke-dasharray= "(dot.perCap*3.142/2)+', '+(3.142*50)"
           :transform="transform(dot, 2)"
           />
           <!-- white circle on top to create donut chart-->
-          <circle :class="'WhiteCirc'" :cx="dot.year" cy="5" :r="`calc(50/1.5)`"/>
+          <circle :class="'WhiteCirc'" :cx="dot.year" cy="5" :r="(50/1.5)"/>
           </g>
         </g>
         <!-- year labels for every second year in dataset-->
@@ -59,6 +59,15 @@ n<template>
           <circle class="axis-dot" :cx="scale.x(2100)" cy="5" r="2.5"/>
         </g>
       </g>
+      <!--legend for pie chart -->
+      <svg>
+        <text :x="scale.x(2020)" y="200" >Fuel Cost</text>
+        <circle :cx="scale.x(2018)" cy="196" r="8" :class="'fuelcost'"/>
+        <text :x="scale.x(2034)" y="200" >Capital Cost</text>
+        <circle :cx="scale.x(2032)" cy="196" r="8" :class="'capcost'"/>
+        <text :x="scale.x(2051)" y="200" >Operational Cost</text>
+        <circle :cx="scale.x(2049)" cy="196" r="8" :class="'omcost'" />
+      </svg>
     </svg>
   </div>
 </template>
@@ -138,7 +147,7 @@ export default {
           .domain([2020, 2100]),
         y: d3.scaleLinear()
           .range([2, 500])
-          .domain([d3.min(this.allValues), d3.max(this.allValues)])
+          .domain([d3.min(this.allValues, s => +s), d3.max(this.allValues, s => +s)])
       }
     },
     // dots returns values for year and value in pixel, and Costs in percentage
@@ -346,6 +355,18 @@ $margin-space: $spacing / 2;
     .fuelcost_per{
       stroke: getColor(green, 60);
       fill-opacity: 0.6;
+    }
+    .omcost{
+      fill: getColor(yellow, 60);
+      stroke: #5d5d63;
+    }
+    .capcost{
+      fill: #8d88ff;
+      stroke: #5d5d63;
+    }
+    .fuelcost{
+      fill: getColor(green, 60);
+      stroke: #5d5d63;
     }
   }
 }

@@ -24,23 +24,23 @@
           <circle :class="'omcost_per'"
           :r="dot.value/2" :cx="dot.year" cy="5" fill="transparent"
           :stroke-width="dot.value"
-          :stroke-dasharray= "`calc(` + dot.perOM + `*3.142*`+ dot.value+ `/100) calc(3.142*` + dot.value + `)`"
+          :stroke-dasharray= "(dot.perOM *3.142* dot.value/100)+', '+(3.142*dot.value)"
           :transform="transform(dot, 0)"
           />
           <circle :class="'fuelcost_per'"
           :r="dot.value/2" :cx="dot.year" cy="5" fill="transparent"
           :stroke-width="dot.value"
-          :stroke-dasharray= "`calc(` + dot.perFuel + `*3.142*`+ dot.value+ `/100) calc(3.142*` + dot.value + `)`"
+          :stroke-dasharray= "(dot.perFuel *3.142* dot.value/100)+', '+(3.142*dot.value)"
           :transform="transform(dot, 1)"
           />
           <circle :class="'capcost_per'"
           :r="dot.value/2" :cx="dot.year" cy="5" fill="transparent"
           :stroke-width="dot.value"
-          :stroke-dasharray= "`calc(` + dot.perCap + `*3.142*`+ dot.value+ `/100) calc(3.142*` + dot.value + `)`"
+          :stroke-dasharray= "(dot.perCap *3.142* dot.value/100)+', '+(3.142*dot.value)"
           :transform="transform(dot, 2)"
           />
           <!-- white circle on top to create donut chart-->
-          <circle :class="'WhiteCirc'" :cx="dot.year" cy="5" v-bind:r="`calc(` + dot.value + `/1.5)`"/>
+          <circle :class="'WhiteCirc'" :cx="dot.year" cy="5" v-bind:r="(dot.value/1.5)"/>
         </g>        <!-- :transform="`rotate(-10 ${dot.year + margin.left } ${ margin.left + 5 })`"-->
         <text :x="scale.x(2019)" y="40">{{ labels[g] }}</text>
       </g>
@@ -51,6 +51,15 @@
           <circle class="axis-dot" :cx="scale.x(2020)" cy="5" r="2.5"/>
           <circle class="axis-dot" :cx="scale.x(2100)" cy="5" r="2.5"/>
         </g>
+      </g>
+      <!--legend for pie chart -->
+      <g>
+        <text :x="scale.x(2020)" y="500" >Fuel Cost</text>
+        <circle :cx="scale.x(2018)" cy="496" r="8" :class="'fuelcost'"/>
+        <text :x="scale.x(2034)" y="500" >Capital Cost</text>
+        <circle :cx="scale.x(2032)" cy="496" r="8" :class="'capcost'"/>
+        <text :x="scale.x(2051)" y="500" >Operational Cost</text>
+        <circle :cx="scale.x(2049)" cy="496" r="8" :class="'omcost'" />
       </g>
     </svg>
   </div>
@@ -137,15 +146,13 @@ export default {
           .range([50, this.innerWidth - (this.margin.right * 10)])
           .domain([2020, 2100]),
         y: d3.scaleLinear()
-          .range([2, 500])
-          .domain([d3.min(this.allValues), d3.max(this.allValues)])
+          .range([2, 2000])
+          .domain([d3.min(this.allValues, s => +s), d3.max(this.allValues, s => +s)])
       }
     },
     // dots returns values for year and value in pixel, and Costs in percentage
     dots () {
-      const scenarios = this.scenarios
-      console.log('scenarios')
-      console.log(scenarios)
+      console.log('CostScale', this.scale.y(2000))
       return _.map(this.regionFilter, (energy, e) => {
         return _.map(energy, (single, s) => {
           return {
@@ -182,6 +189,7 @@ export default {
   methods: {
     // compute rotation for each pieces of pie chart
     transform (dot, ind) {
+      console.log('costruc', this.scale.y(100))
       let perIni = 0
       let deg = 0
       if (ind === 0) {
@@ -333,6 +341,18 @@ $margin-space: $spacing / 2;
     .fuelcost_per{
       stroke: getColor(green, 60);
       fill-opacity: 0.6;
+    }
+    .omcost{
+      fill: getColor(yellow, 60);
+      stroke: #5d5d63;
+    }
+    .capcost{
+      fill: #8d88ff;
+      stroke: #5d5d63;
+    }
+    .fuelcost{
+      fill: getColor(green, 60);
+      stroke: #5d5d63;
     }
   }
 }
