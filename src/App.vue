@@ -54,7 +54,7 @@
           or gas-fired power plants reduce their value under climate policy. </p>
       </div>
       <div class="vis-wrapper">
-        <EmiCostsRisk :width="width" :height="height"/>
+        <FossilCosts :width="width" :height="height"/>
       </div>
       <div class="text-wrapper">
         <h2 class="chapter-title" id="structure">
@@ -118,7 +118,7 @@ import SecondaryEnergy from './components/SecondaryEnergy.vue'
 import InvestmentNeed from './components/InvestmentNeed.vue'
 import CostStructure from './components/CostStructure.vue'
 import CostStructureAgg from './components/CostStructureAgg.vue'
-import EmiCostsRisk from './components/EmiCostsRisk.vue'
+import FossilCosts from './components/FossilCosts.vue'
 import SensesMeta from 'library/src/components/SensesMeta.vue'
 
 export default {
@@ -131,7 +131,7 @@ export default {
     InvestmentNeed,
     CostStructure,
     CostStructureAgg,
-    EmiCostsRisk,
+    FossilCosts,
     SecondaryEnergywlinechart,
     SensesMeta
   },

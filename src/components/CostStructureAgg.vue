@@ -152,12 +152,12 @@ export default {
     },
     // dots returns values for year and value in pixel, and Costs in percentage
     dots () {
-      const scenarios = this.scenarios
-      console.log('scenariosAgg')
-      console.log(scenarios)
-      const regionFilter = this.regionFilter
-      console.log('regionFilter')
-      console.log(regionFilter)
+      // const scenarios = this.scenarios
+      // console.log('scenariosAgg')
+      // console.log(scenarios)
+      // const regionFilter = this.regionFilter
+      // console.log('regionFilter')
+      // console.log(regionFilter)
       return _.map(this.regionFilter, (energy, e) => {
         return _.map(energy, (single, s) => {
           return {
@@ -183,8 +183,8 @@ export default {
       // length of dotsArray is  = nr of energy carrier
       // returns array with the position for each energy carrier
       const dotsArray = this.dots
-      console.log('dotsArrayAGG')
-      console.log(dotsArray)
+      // console.log('dotsArrayAGG')
+      // console.log(dotsArray)
       let pos = 70
       return _.map(this.regionFilter, (energy, e, l) => {
         if (e !== 0) { pos = pos + this.innerHeight / dotsArray.length - 100 }
@@ -210,7 +210,7 @@ export default {
     },
     // defines which years to display in the svg
     selectYears (year) {
-      let yearsArray = [this.scale.x(2020), this.scale.x(2040), this.scale.x(2060), this.scale.x(2080), this.scale.x(2100)]
+      const yearsArray = [this.scale.x(2020), this.scale.x(2040), this.scale.x(2060), this.scale.x(2080), this.scale.x(2100)]
       if (yearsArray.includes(year)) {
         return 1
       } else {
