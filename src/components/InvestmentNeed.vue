@@ -1,16 +1,32 @@
 <template>
-  <div class="emissions-costs" ref="inWrapper">
-    <div class="key">
+  <section class="investments" ref="inWrapper">
+    <header class="key">
       Legend or selectors if any
+      <label><input type="checkbox" v-model="isStacked">is stacked?</label>
+    </header>
+    <div v-for="(scenario, key) in dataByScenario" :key="key" class="scenario">
+      <InvestmentNeedsStackedBarChart
+          :isStacked="isStacked"
+          :gap="20"
+          :data="scenario"
+          :scenario="key"
+          :extents="extents"
+          :variables="variables"
+        />
     </div>
-    <svg :width="innerWidth" :height="innerHeight" :transform="`translate(${margin.left}, 0)`">
-    </svg>
-  </div>
+  </section>
 </template>
 
 <script>
+import { groupBy, filter, map, forEach, get } from 'lodash'
+import datum from 'dsv-loader!@/assets/data/Investments.csv' // eslint-disable-line import/no-webpack-loader-syntax
+import InvestmentNeedsStackedBarChart from './InvestmentNeeds-StackedBarChart'
+
 export default {
   name: 'EmiCostsRisk',
+  components: {
+    InvestmentNeedsStackedBarChart
+  },
   props: {
     width: {
       type: Number,
@@ -19,6 +35,10 @@ export default {
     height: {
       type: Number,
       default: 0
+    },
+    mobile: {
+      type: Boolean,
+      default: true
     }
   },
   data () {
@@ -29,12 +49,55 @@ export default {
         right: 10,
         left: 10
       },
-      innerHeight: 0
+      innerHeight: 0,
+      isStacked: true,
+      variables: [
+        'Coal|w/ CCS',
+        'Coal|w/o CCS',
+        'Gas|w/ CCS',
+        'Gas|w/o CCS',
+        'Oil|w/ CCS',
+        'Biomass|w/ CCS',
+        'Biomass|w/o CCS',
+        'Nuclear',
+        'Hydro',
+        'Solar',
+        'Wind',
+        'Geothermal',
+        'Ocean',
+        'Transmission and Distribution',
+        'Electricity Storage'
+      ]
     }
   },
   computed: {
+    data () {
+      return map(datum, (d) => {
+        const obj = {}
+        forEach(this.variables, (key) => {
+          obj[key] = parseFloat(get(datum, key, 0))
+        })
+        return {
+          ...d,
+          ...obj
+        }
+      })
+    },
     innerWidth () {
       return this.width - (this.margin.left + this.margin.right)
+    },
+    dataByScenario () {
+      return groupBy(this.data, 'scenario')
+    },
+    extents () {
+      // We need the maximum value for each variable for the unstacked chart
+      const maxes = {}
+      forEach(this.variables, (variable) => {
+        const runs = filter(this.data, { variable })
+        // Set the max value
+        maxes[variable] = Math.max(...map(runs, 'value'))
+      })
+      return maxes
     }
   },
   methods: {
@@ -61,7 +124,7 @@ export default {
 <style scoped lang="scss">
 @import "library/src/style/variables.scss";
 
-.emissions-costs {
+.investments {
   height: 85vh;
 
   .key {
