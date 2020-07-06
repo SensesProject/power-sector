@@ -60,7 +60,7 @@
         <h2 class="chapter-title" id="structure">
           Investment need
         </h2>
-        <p>If a Tax is introduced, generating low-carbon energy will become more
+        <p>As seen above, if a Tax is introduced, generating low-carbon energy will become more
           profitable which will lead to a shift in the Power Sector towards
           renewables.
           However this low-carbon transition is expensive for the power sector,
