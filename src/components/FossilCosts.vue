@@ -3,7 +3,7 @@
     <div class="key" :class=" mobile ? 'mobile' : 'desktop'">
       <h4>Fuel Costs Changes (BN/$) in relation to Volume (Ej/year)</h4>
       <p class="selectors">
-        Select a scenario and a region:
+        Select a scenario:
         <SensesSelect class="scenario_selector" :options="scenarios" v-model="currentScenario"/>
       </p>
     </div>
@@ -13,8 +13,41 @@
         <text :x="5" y="5" text-anchor="end">{{tick}}</text>
       </g>
       <g v-for="(arc, a) in arcs" :key="`${a}-arc`">
-        <line class="yaxis" :x1="scales.x(2020)" :x2="arc.year" :y1="arc.yPos" :y2="arc.yPos" stroke="black"/>
-        <path :transform="`translate(${arc.year}, ${arc.yPos})`" :class="arc.klass" :d="arc.shape"/>
+        <line
+        class="yaxis"
+        :class="{selected: currentSelection === a}"
+        :x1="scales.x(2020)"
+        :x2="arc.year"
+        :y1="arc.yPos"
+        :y2="arc.yPos"
+         stroke="black"
+         />
+        <path
+        :transform="`translate(${arc.year}, ${arc.yPos})`"
+        @mouseover="currentSelection = a"
+        @mouseleave="currentSelection = null"
+        :class="[arc.klass, {
+          invisible: arc.klass[1] !== currentFuel,
+          selected: currentSelection === a
+          }]"
+        :d="arc.shape"
+        />
+        <text
+        :class="currentSelection === a ? 'selected' : 'not-selected'"
+        :x="arc.year !== scales.x(2020) ? arc.year - 10 : arc.year + 45"
+        :y="arc.yPos - 5"
+        :text-anchor="arc.year !== scales.x(2020) ? 'end' : 'start'"
+        >
+        {{arc.ej}} Ej/yr
+      </text>
+      <text
+      :class="currentSelection === a ? 'selected' : 'not-selected'"
+      :x="arc.year !== scales.x(2020) ? arc.year - 10 : arc.year + 45"
+      :y="arc.yPos + 15"
+      :text-anchor="arc.year !== scales.x(2020) ? 'end' : 'start'"
+      >
+      {{arc.price}} BN/$
+    </text>
       </g>
       <g class="xaxis" v-for="year in years" :key="year" :transform="`translate(${scales.x(year)}, 0)`">
         <line x1="0" x2="0" y1="10" :y2="innerGraph.height" stroke="black"/>
@@ -32,10 +65,10 @@
               <path d="M159,80 C181.09139,80 199,62.09139 199,40 C199,17.90861 181.09139,1.42108547e-14 159,1.42108547e-14 L159,40 L159,80 Z" id="Path-Copy-11" fill="#6A7687" fill-rule="nonzero"></path>
               <path d="M115.481481,70.1488428 C132.050024,70.1488428 145.481481,56.7173853 145.481481,40.1488428 C145.481481,23.5803003 132.050024,10.1488428 115.481481,10.1488428 L115.481481,40.1488428 L115.481481,70.1488428 Z" id="Path-Copy-13" fill="#6A7687" fill-rule="nonzero"></path>
               <text id="&lt;1-Bn/$" fill="#000000">
-                  <tspan x="0" y="106">&lt;1 Bn/$</tspan>
+                  <tspan x="-20" y="106">&lt; 450.000 Bn/$</tspan>
               </text>
               <text id="88.2-Bn/$" fill="#000000">
-                  <tspan x="132" y="106">88.2 Bn/$</tspan>
+                  <tspan x="132" y="106">&gt; 900.000 Bn/$</tspan>
               </text>
               <line x1="22.5" y1="31.5" x2="22" y2="89" id="Path-12" stroke="#000000" stroke-width="0.5"></line>
               <line x1="159.5" y1="0.5" x2="159.5" y2="89.5" id="Path-12-Copy" stroke="#000000" stroke-width="0.5"></line>
@@ -44,10 +77,38 @@
       <text transform="translate(380, -1)">Energy Carriers</text>
             <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(380, 20)">
                 <g id="Group-11" transform="translate(1.000000, 0.625241)">
-                    <path d="M0,32 C8.836556,32 16,24.836556 16,16 C16,7.163444 8.836556,7.10542736e-15 0,7.10542736e-15 L0,16 L0,32 Z" id="Path-Copy-16" stroke="#75757A" fill="#D8D8E4" fill-rule="nonzero"></path>
-                    <path d="M110,32 C118.836556,32 126,24.836556 126,16 C126,7.163444 118.836556,7.10542736e-15 110,7.10542736e-15 L110,16 L110,32 Z" id="Path-Copy-17" stroke="#931547" fill="#ED96AB" fill-rule="nonzero"></path>
-                    <path d="M221,32 C229.836556,32 237,24.836556 237,16 C237,7.163444 229.836556,7.10542736e-15 221,7.10542736e-15 L221,16 L221,32 Z" id="Path-Copy-18" stroke="#84341C" fill="#F39172" fill-rule="nonzero"></path>
-                    <path d="M326,32 C334.836556,32 342,24.836556 342,16 C342,7.163444 334.836556,7.10542736e-15 326,7.10542736e-15 L326,16 L326,32 Z" id="Path-Copy-19" stroke="#36323C" fill="#6A7687" fill-rule="nonzero"></path>
+                    <path
+                    :class="{invisible: currentFuel !== 'Coal'}"
+                    @mouseover="currentFuel = 'Coal'"
+                    d="M0,32 C8.836556,32 16,24.836556 16,16 C16,7.163444 8.836556,7.10542736e-15 0,7.10542736e-15 L0,16 L0,32 Z"
+                    id="Path-Copy-16"
+                    stroke="#75757A"
+                    fill="#D8D8E4"
+                    fill-rule="nonzero"/>
+                    <path
+                    :class="{invisible: currentFuel !== 'Gas'}"
+                    @mouseover="currentFuel = 'Gas'"
+                    d="M110,32 C118.836556,32 126,24.836556 126,16 C126,7.163444 118.836556,7.10542736e-15 110,7.10542736e-15 L110,16 L110,32 Z"
+                    id="Path-Copy-17"
+                    stroke="#931547"
+                    fill="#ED96AB"
+                    fill-rule="nonzero"/>
+                    <path
+                    :class="{invisible: currentFuel !== 'Oil'}"
+                    @mouseover="currentFuel = 'Oil'"
+                    d="M221,32 C229.836556,32 237,24.836556 237,16 C237,7.163444 229.836556,7.10542736e-15 221,7.10542736e-15 L221,16 L221,32 Z"
+                    id="Oil"
+                    stroke="#84341C"
+                    fill="#F39172"
+                    fill-rule="nonzero"/>
+                    <path
+                    :class="{invisible: currentFuel !== 'Fossils'}"
+                    @mouseover="currentFuel = 'Fossils'"
+                    d="M326,32 C334.836556,32 342,24.836556 342,16 C342,7.163444 334.836556,7.10542736e-15 326,7.10542736e-15 L326,16 L326,32 Z"
+                    id="Fossils"
+                    stroke="#36323C"
+                    fill="#6A7687"
+                    fill-rule="nonzero"/>
                     <text id="Coal" fill="#000000"><tspan x="29" y="20.374759">Coal</tspan></text>
                     <text id="Gas" fill="#000000"><tspan x="143" y="20.374759">Gas</tspan></text>
                     <text id="Oil" fill="#000000"><tspan x="254" y="20.374759">Oil</tspan></text>
@@ -93,6 +154,8 @@ export default {
       FossilCosts,
       currentScenario: 'NPi_v3',
       currentRegion: 'World',
+      currentFuel: 'Fossils',
+      currentSelection: null,
       active: false,
       over: '',
       margin: {
@@ -145,6 +208,8 @@ export default {
       return map(this.filteredData, (f, i) => {
         return {
           klass: [f.Scenario, f.Variable],
+          price: Math.round(f['Indirect Emission Costs']),
+          ej: Math.round(f.Value),
           year: scales.x(f.Year),
           yPos: scales.y(f.Value),
           shape: arcGenerator(f)
@@ -155,7 +220,6 @@ export default {
   methods: {
     calcSizes () {
       const { inCosts: el } = this.$refs
-      console.log(this.filteredData)
       const innerHeight = el.clientHeight || el.parentNode.clientHeight
       this.innerHeight = Math.max(innerHeight, 500)
     }
@@ -184,15 +248,42 @@ $margin-space: $spacing / 2;
     margin-bottom: 2%;
   }
 
+  .selectors {
+    margin-top: 10px;
+  }
+
   svg {
     // background-color: lightblue;
     .yaxis {
+      stroke-opacity: 0;
         stroke: $color-gray;
         stroke-dasharray: 1 1;
 
         text {
           stroke: none;
         }
+    }
+
+    path.invisible {
+      fill-opacity: 0;
+    }
+
+    path.selected {
+      fill-opacity: 1;
+    }
+
+    .legend {
+      .invisible {
+        fill-opacity: 0.2;
+      }
+    }
+
+    line.selected {
+      stroke-opacity: 1;
+    }
+
+    text.not-selected {
+      visibility: hidden;
     }
 
     .NPi_v3 {
@@ -209,6 +300,7 @@ $margin-space: $spacing / 2;
 
     path {
       stroke: black;
+      transition: transform 1s ease;
 
       &.Fossils {
         fill: #6A7687;
