@@ -61,7 +61,7 @@
 import _ from 'lodash'
 import * as d3 from 'd3'
 
-import SecondaryEnergyAndTotalCostWorld from 'dsv-loader!@/assets/data/SecondaryEnergyAndTotalCostWorld.csv' // eslint-disable-line import/no-webpack-loader-syntax
+import SecondaryEnergyAndTotalCostWorld from 'dsv-loader!@/assets/data/SecondaryEnergy_FossilCosts.csv' // eslint-disable-line import/no-webpack-loader-syntax
 import SensesSelect from 'library/src/components/SensesSelect.vue'
 
 export default {
@@ -180,10 +180,10 @@ export default {
     },
     // define area for Fossils
     fossilCostArea () {
-      const yVals = _.map(this.dots[0], (dot, d) => dot.costs)
-      const xVals = _.map(this.dots[0], (dot, d) => dot.yearCo)
-      console.log('xvals', xVals)
-      console.log('yvals', yVals)
+      // const yVals = _.map(this.dots[0], (dot, d) => dot.costs)
+      // const xVals = _.map(this.dots[0], (dot, d) => dot.yearCo)
+      // console.log('xvals', xVals)
+      // console.log('yvals', yVals)
       const areaplot = d3.area()
         .x(d => { return d.yearCO })
         .y0(this.scaleCo.y(10))
@@ -192,10 +192,10 @@ export default {
     },
     // define area for Renewables
     renewableCostArea () {
-      const yVals = _.map(this.dots[1], (dot, d) => dot.costs)
-      const xVals = _.map(this.dots[1], (dot, d) => dot.yearCO)
-      console.log('xvals', xVals)
-      console.log('yvals', yVals)
+      // const yVals = _.map(this.dots[1], (dot, d) => dot.costs)
+      // const xVals = _.map(this.dots[1], (dot, d) => dot.yearCO)
+      // console.log('xvals', xVals)
+      // console.log('yvals', yVals)
       const areaplot = d3.area()
         .x(d => { return d.yearCO })
         .y0(this.scaleCo.y(10))
@@ -231,9 +231,9 @@ export default {
     }
   },
   mounted () {
-    console.log(`thisdots`, this.dots)
+    // console.log('thisdots', this.dots)
     this.calcSizes()
-    console.log(this.areachart)
+    // console.log(this.areachart)
     window.addEventListener('resize', this.calcSizes, false)
   },
   updated () {
