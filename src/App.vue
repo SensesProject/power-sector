@@ -143,15 +143,13 @@ export default {
   },
   computed: {
     mobile () {
-      let isMobile = false
-      if (this.width < 750) { isMobile = true }
-      return isMobile
+      return this.width < 750
     }
   },
   methods: {
     calcSizes () {
       const { container: el } = this.$refs
-      const totalWidth = el.clientWidth
+      const totalWidth = el.clientWidth || el.parentNode.clientWidth
       const totalHeight = el.clientHeight || el.parentNode.clientHeight
       this.width = Math.max(totalWidth, 400)
       this.height = Math.max(totalHeight, 400)

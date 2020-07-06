@@ -1,0 +1,842 @@
+[
+  {
+    "model": "MESSAGEix-GLOBIOM",
+    "scenario": "CPol",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Coal|w/ CCS",
+    "value": 0.0
+  },
+  {
+    "model": "MESSAGEix-GLOBIOM",
+    "scenario": "CPol",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Coal|w/o CCS",
+    "value": 41.16713747
+  },
+  {
+    "model": "MESSAGEix-GLOBIOM",
+    "scenario": "CPol",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Gas|w/ CCS",
+    "value": 0.0
+  },
+  {
+    "model": "MESSAGEix-GLOBIOM",
+    "scenario": "CPol",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Gas|w/o CCS",
+    "value": 63.96328256
+  },
+  {
+    "model": "MESSAGEix-GLOBIOM",
+    "scenario": "CPol",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Oil|w/ CCS",
+    "value": 0.0
+  },
+  {
+    "model": "MESSAGEix-GLOBIOM",
+    "scenario": "CPol",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Biomass|w/ CCS",
+    "value": 0.0
+  },
+  {
+    "model": "MESSAGEix-GLOBIOM",
+    "scenario": "CPol",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Biomass|w/o CCS",
+    "value": 7.375503472
+  },
+  {
+    "model": "MESSAGEix-GLOBIOM",
+    "scenario": "CPol",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Nuclear",
+    "value": 13.06596336
+  },
+  {
+    "model": "MESSAGEix-GLOBIOM",
+    "scenario": "CPol",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Hydro",
+    "value": 60.12008009
+  },
+  {
+    "model": "MESSAGEix-GLOBIOM",
+    "scenario": "CPol",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Solar",
+    "value": 85.5198958
+  },
+  {
+    "model": "MESSAGEix-GLOBIOM",
+    "scenario": "CPol",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Wind",
+    "value": 81.34528403
+  },
+  {
+    "model": "MESSAGEix-GLOBIOM",
+    "scenario": "CPol",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Geothermal",
+    "value": 0.530835342
+  },
+  {
+    "model": "MESSAGEix-GLOBIOM",
+    "scenario": "CPol",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Ocean",
+    "value": 0.0
+  },
+  {
+    "model": "MESSAGEix-GLOBIOM",
+    "scenario": "CPol",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Transmission and Distribution",
+    "value": 360.8671671
+  },
+  {
+    "model": "MESSAGEix-GLOBIOM",
+    "scenario": "CPol",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Electricity Storage",
+    "value": 0.0
+  },
+  {
+    "model": "MESSAGEix-GLOBIOM",
+    "scenario": "NDC",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Coal|w/ CCS",
+    "value": 0.521055647
+  },
+  {
+    "model": "MESSAGEix-GLOBIOM",
+    "scenario": "NDC",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Coal|w/o CCS",
+    "value": 38.34977145
+  },
+  {
+    "model": "MESSAGEix-GLOBIOM",
+    "scenario": "NDC",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Gas|w/ CCS",
+    "value": 0.746784835
+  },
+  {
+    "model": "MESSAGEix-GLOBIOM",
+    "scenario": "NDC",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Gas|w/o CCS",
+    "value": 64.03993413
+  },
+  {
+    "model": "MESSAGEix-GLOBIOM",
+    "scenario": "NDC",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Oil|w/ CCS",
+    "value": 0.0
+  },
+  {
+    "model": "MESSAGEix-GLOBIOM",
+    "scenario": "NDC",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Biomass|w/ CCS",
+    "value": 0.0
+  },
+  {
+    "model": "MESSAGEix-GLOBIOM",
+    "scenario": "NDC",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Biomass|w/o CCS",
+    "value": 7.375503472
+  },
+  {
+    "model": "MESSAGEix-GLOBIOM",
+    "scenario": "NDC",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Nuclear",
+    "value": 20.88991655
+  },
+  {
+    "model": "MESSAGEix-GLOBIOM",
+    "scenario": "NDC",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Hydro",
+    "value": 62.84152427
+  },
+  {
+    "model": "MESSAGEix-GLOBIOM",
+    "scenario": "NDC",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Solar",
+    "value": 97.34640997
+  },
+  {
+    "model": "MESSAGEix-GLOBIOM",
+    "scenario": "NDC",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Wind",
+    "value": 85.49436655
+  },
+  {
+    "model": "MESSAGEix-GLOBIOM",
+    "scenario": "NDC",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Geothermal",
+    "value": 0.589380321
+  },
+  {
+    "model": "MESSAGEix-GLOBIOM",
+    "scenario": "NDC",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Ocean",
+    "value": 0.0
+  },
+  {
+    "model": "MESSAGEix-GLOBIOM",
+    "scenario": "NDC",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Transmission and Distribution",
+    "value": 354.3561742
+  },
+  {
+    "model": "MESSAGEix-GLOBIOM",
+    "scenario": "NDC",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Electricity Storage",
+    "value": 0.0
+  },
+  {
+    "model": "MESSAGEix-GLOBIOM",
+    "scenario": "2C",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Coal|w/ CCS",
+    "value": 0.330180828
+  },
+  {
+    "model": "MESSAGEix-GLOBIOM",
+    "scenario": "2C",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Coal|w/o CCS",
+    "value": 37.65987897
+  },
+  {
+    "model": "MESSAGEix-GLOBIOM",
+    "scenario": "2C",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Gas|w/ CCS",
+    "value": 5.726322907
+  },
+  {
+    "model": "MESSAGEix-GLOBIOM",
+    "scenario": "2C",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Gas|w/o CCS",
+    "value": 66.66049799
+  },
+  {
+    "model": "MESSAGEix-GLOBIOM",
+    "scenario": "2C",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Oil|w/ CCS",
+    "value": 0.0
+  },
+  {
+    "model": "MESSAGEix-GLOBIOM",
+    "scenario": "2C",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Biomass|w/ CCS",
+    "value": 0.0
+  },
+  {
+    "model": "MESSAGEix-GLOBIOM",
+    "scenario": "2C",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Biomass|w/o CCS",
+    "value": 7.254781537
+  },
+  {
+    "model": "MESSAGEix-GLOBIOM",
+    "scenario": "2C",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Nuclear",
+    "value": 33.83411164
+  },
+  {
+    "model": "MESSAGEix-GLOBIOM",
+    "scenario": "2C",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Hydro",
+    "value": 74.34664
+  },
+  {
+    "model": "MESSAGEix-GLOBIOM",
+    "scenario": "2C",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Solar",
+    "value": 100.6916201
+  },
+  {
+    "model": "MESSAGEix-GLOBIOM",
+    "scenario": "2C",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Wind",
+    "value": 97.53413832
+  },
+  {
+    "model": "MESSAGEix-GLOBIOM",
+    "scenario": "2C",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Geothermal",
+    "value": 0.530835342
+  },
+  {
+    "model": "MESSAGEix-GLOBIOM",
+    "scenario": "2C",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Ocean",
+    "value": 0.0
+  },
+  {
+    "model": "MESSAGEix-GLOBIOM",
+    "scenario": "2C",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Transmission and Distribution",
+    "value": 353.0815598
+  },
+  {
+    "model": "MESSAGEix-GLOBIOM",
+    "scenario": "2C",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Electricity Storage",
+    "value": 0.0
+  },
+  {
+    "model": "MESSAGEix-GLOBIOM",
+    "scenario": "1.5C",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Coal|w/ CCS",
+    "value": 2.27131334
+  },
+  {
+    "model": "MESSAGEix-GLOBIOM",
+    "scenario": "1.5C",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Coal|w/o CCS",
+    "value": 42.04488157
+  },
+  {
+    "model": "MESSAGEix-GLOBIOM",
+    "scenario": "1.5C",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Gas|w/ CCS",
+    "value": 12.55585084
+  },
+  {
+    "model": "MESSAGEix-GLOBIOM",
+    "scenario": "1.5C",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Gas|w/o CCS",
+    "value": 63.61325365
+  },
+  {
+    "model": "MESSAGEix-GLOBIOM",
+    "scenario": "1.5C",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Oil|w/ CCS",
+    "value": 0.0
+  },
+  {
+    "model": "MESSAGEix-GLOBIOM",
+    "scenario": "1.5C",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Biomass|w/ CCS",
+    "value": 0.0
+  },
+  {
+    "model": "MESSAGEix-GLOBIOM",
+    "scenario": "1.5C",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Biomass|w/o CCS",
+    "value": 8.644663855
+  },
+  {
+    "model": "MESSAGEix-GLOBIOM",
+    "scenario": "1.5C",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Nuclear",
+    "value": 52.24408167
+  },
+  {
+    "model": "MESSAGEix-GLOBIOM",
+    "scenario": "1.5C",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Hydro",
+    "value": 109.5599543
+  },
+  {
+    "model": "MESSAGEix-GLOBIOM",
+    "scenario": "1.5C",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Solar",
+    "value": 146.0609855
+  },
+  {
+    "model": "MESSAGEix-GLOBIOM",
+    "scenario": "1.5C",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Wind",
+    "value": 109.523168
+  },
+  {
+    "model": "MESSAGEix-GLOBIOM",
+    "scenario": "1.5C",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Geothermal",
+    "value": 6.042129127
+  },
+  {
+    "model": "MESSAGEix-GLOBIOM",
+    "scenario": "1.5C",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Ocean",
+    "value": 0.0
+  },
+  {
+    "model": "MESSAGEix-GLOBIOM",
+    "scenario": "1.5C",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Transmission and Distribution",
+    "value": 379.5485414
+  },
+  {
+    "model": "MESSAGEix-GLOBIOM",
+    "scenario": "1.5C",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Electricity Storage",
+    "value": 4.252288298
+  },
+  {
+    "model": "REMIND-MAgPIE",
+    "scenario": "CPol",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Coal|w/ CCS",
+    "value": 0.009340953
+  },
+  {
+    "model": "REMIND-MAgPIE",
+    "scenario": "CPol",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Coal|w/o CCS",
+    "value": 71.64340185
+  },
+  {
+    "model": "REMIND-MAgPIE",
+    "scenario": "CPol",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Gas|w/ CCS",
+    "value": 0.00128266
+  },
+  {
+    "model": "REMIND-MAgPIE",
+    "scenario": "CPol",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Gas|w/o CCS",
+    "value": 123.4335603
+  },
+  {
+    "model": "REMIND-MAgPIE",
+    "scenario": "CPol",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Oil|w/ CCS",
+    "value": 0.0
+  },
+  {
+    "model": "REMIND-MAgPIE",
+    "scenario": "CPol",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Biomass|w/ CCS",
+    "value": 0.005579933
+  },
+  {
+    "model": "REMIND-MAgPIE",
+    "scenario": "CPol",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Biomass|w/o CCS",
+    "value": 3.054158393
+  },
+  {
+    "model": "REMIND-MAgPIE",
+    "scenario": "CPol",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Nuclear",
+    "value": 92.01317313
+  },
+  {
+    "model": "REMIND-MAgPIE",
+    "scenario": "CPol",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Hydro",
+    "value": 147.9253661
+  },
+  {
+    "model": "REMIND-MAgPIE",
+    "scenario": "CPol",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Solar",
+    "value": 184.9835367
+  },
+  {
+    "model": "REMIND-MAgPIE",
+    "scenario": "CPol",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Wind",
+    "value": 124.5295462
+  },
+  {
+    "model": "REMIND-MAgPIE",
+    "scenario": "CPol",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Geothermal",
+    "value": 0.0
+  },
+  {
+    "model": "REMIND-MAgPIE",
+    "scenario": "CPol",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Ocean",
+    "value": 0.0
+  },
+  {
+    "model": "REMIND-MAgPIE",
+    "scenario": "CPol",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Transmission and Distribution",
+    "value": 450.5124763
+  },
+  {
+    "model": "REMIND-MAgPIE",
+    "scenario": "CPol",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Electricity Storage",
+    "value": 15.41530499
+  },
+  {
+    "model": "REMIND-MAgPIE",
+    "scenario": "NDC",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Coal|w/ CCS",
+    "value": 0.47138842
+  },
+  {
+    "model": "REMIND-MAgPIE",
+    "scenario": "NDC",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Coal|w/o CCS",
+    "value": 47.56122846
+  },
+  {
+    "model": "REMIND-MAgPIE",
+    "scenario": "NDC",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Gas|w/ CCS",
+    "value": 0.00128266
+  },
+  {
+    "model": "REMIND-MAgPIE",
+    "scenario": "NDC",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Gas|w/o CCS",
+    "value": 120.054186
+  },
+  {
+    "model": "REMIND-MAgPIE",
+    "scenario": "NDC",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Oil|w/ CCS",
+    "value": 0.0
+  },
+  {
+    "model": "REMIND-MAgPIE",
+    "scenario": "NDC",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Biomass|w/ CCS",
+    "value": 0.005579933
+  },
+  {
+    "model": "REMIND-MAgPIE",
+    "scenario": "NDC",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Biomass|w/o CCS",
+    "value": 3.054701893
+  },
+  {
+    "model": "REMIND-MAgPIE",
+    "scenario": "NDC",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Nuclear",
+    "value": 109.5916371
+  },
+  {
+    "model": "REMIND-MAgPIE",
+    "scenario": "NDC",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Hydro",
+    "value": 162.663115
+  },
+  {
+    "model": "REMIND-MAgPIE",
+    "scenario": "NDC",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Solar",
+    "value": 227.7862633
+  },
+  {
+    "model": "REMIND-MAgPIE",
+    "scenario": "NDC",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Wind",
+    "value": 147.7851865
+  },
+  {
+    "model": "REMIND-MAgPIE",
+    "scenario": "NDC",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Geothermal",
+    "value": 0.0
+  },
+  {
+    "model": "REMIND-MAgPIE",
+    "scenario": "NDC",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Ocean",
+    "value": 0.0
+  },
+  {
+    "model": "REMIND-MAgPIE",
+    "scenario": "NDC",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Transmission and Distribution",
+    "value": 449.2209681
+  },
+  {
+    "model": "REMIND-MAgPIE",
+    "scenario": "NDC",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Electricity Storage",
+    "value": 24.23151995
+  },
+  {
+    "model": "REMIND-MAgPIE",
+    "scenario": "2C",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Coal|w/ CCS",
+    "value": 4.7839957
+  },
+  {
+    "model": "REMIND-MAgPIE",
+    "scenario": "2C",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Coal|w/o CCS",
+    "value": 30.87905395
+  },
+  {
+    "model": "REMIND-MAgPIE",
+    "scenario": "2C",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Gas|w/ CCS",
+    "value": 3.5064446
+  },
+  {
+    "model": "REMIND-MAgPIE",
+    "scenario": "2C",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Gas|w/o CCS",
+    "value": 90.24892865
+  },
+  {
+    "model": "REMIND-MAgPIE",
+    "scenario": "2C",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Oil|w/ CCS",
+    "value": 0.0
+  },
+  {
+    "model": "REMIND-MAgPIE",
+    "scenario": "2C",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Biomass|w/ CCS",
+    "value": 0.178369453
+  },
+  {
+    "model": "REMIND-MAgPIE",
+    "scenario": "2C",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Biomass|w/o CCS",
+    "value": 2.977822007
+  },
+  {
+    "model": "REMIND-MAgPIE",
+    "scenario": "2C",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Nuclear",
+    "value": 130.5679182
+  },
+  {
+    "model": "REMIND-MAgPIE",
+    "scenario": "2C",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Hydro",
+    "value": 204.6968542
+  },
+  {
+    "model": "REMIND-MAgPIE",
+    "scenario": "2C",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Solar",
+    "value": 396.1038218
+  },
+  {
+    "model": "REMIND-MAgPIE",
+    "scenario": "2C",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Wind",
+    "value": 213.1953463
+  },
+  {
+    "model": "REMIND-MAgPIE",
+    "scenario": "2C",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Geothermal",
+    "value": 0.0
+  },
+  {
+    "model": "REMIND-MAgPIE",
+    "scenario": "2C",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Ocean",
+    "value": 0.0
+  },
+  {
+    "model": "REMIND-MAgPIE",
+    "scenario": "2C",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Transmission and Distribution",
+    "value": 443.8999075
+  },
+  {
+    "model": "REMIND-MAgPIE",
+    "scenario": "2C",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Electricity Storage",
+    "value": 69.75840617
+  },
+  {
+    "model": "REMIND-MAgPIE",
+    "scenario": "1.5C",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Coal|w/ CCS",
+    "value": 1.705517493
+  },
+  {
+    "model": "REMIND-MAgPIE",
+    "scenario": "1.5C",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Coal|w/o CCS",
+    "value": 30.87905395
+  },
+  {
+    "model": "REMIND-MAgPIE",
+    "scenario": "1.5C",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Gas|w/ CCS",
+    "value": 1.8669225
+  },
+  {
+    "model": "REMIND-MAgPIE",
+    "scenario": "1.5C",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Gas|w/o CCS",
+    "value": 74.65142797
+  },
+  {
+    "model": "REMIND-MAgPIE",
+    "scenario": "1.5C",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Oil|w/ CCS",
+    "value": 0.0
+  },
+  {
+    "model": "REMIND-MAgPIE",
+    "scenario": "1.5C",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Biomass|w/ CCS",
+    "value": 5.303857073
+  },
+  {
+    "model": "REMIND-MAgPIE",
+    "scenario": "1.5C",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Biomass|w/o CCS",
+    "value": 2.97757562
+  },
+  {
+    "model": "REMIND-MAgPIE",
+    "scenario": "1.5C",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Nuclear",
+    "value": 135.7141965
+  },
+  {
+    "model": "REMIND-MAgPIE",
+    "scenario": "1.5C",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Hydro",
+    "value": 220.8311807
+  },
+  {
+    "model": "REMIND-MAgPIE",
+    "scenario": "1.5C",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Solar",
+    "value": 503.6846248
+  },
+  {
+    "model": "REMIND-MAgPIE",
+    "scenario": "1.5C",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Wind",
+    "value": 237.0740116
+  },
+  {
+    "model": "REMIND-MAgPIE",
+    "scenario": "1.5C",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Geothermal",
+    "value": 0.0
+  },
+  {
+    "model": "REMIND-MAgPIE",
+    "scenario": "1.5C",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Ocean",
+    "value": 0.0
+  },
+  {
+    "model": "REMIND-MAgPIE",
+    "scenario": "1.5C",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Transmission and Distribution",
+    "value": 444.4049784
+  },
+  {
+    "model": "REMIND-MAgPIE",
+    "scenario": "1.5C",
+    "region": "World",
+    "variable": "Energy Supply|Electricity|Electricity Storage",
+    "value": 89.04194559
+  }
+]
