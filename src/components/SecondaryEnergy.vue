@@ -158,7 +158,7 @@ export default {
       const dotsArray = this.dots
       let pos = 50
       return _.map(this.regionFilter, (energy, e, l) => {
-        if (e !== 0) { pos = pos + this.innerHeight / dotsArray.length }
+        if (e !== 0) { pos = pos + this.innerHeight / dotsArray.length - 30 }
         return pos
       })
     }
