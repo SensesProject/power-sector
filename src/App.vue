@@ -41,7 +41,8 @@
         <h2 class="chapter-title" id="costs">
           Fuel Cost Risk
         </h2>
-        <p>One risk we observe in the power sector is the Fuel cost risk. With the
+        <p class="cost-risk-paragraph">
+          One risk we observe in the power sector is the Fuel cost risk. With the
           introduction of the tax, fuel costs will consequently rise and a conversion
           of the power sector from fossil fuel based generation to renewables will take
           place. This shift is also reflected in the fuel costs changes: despite
@@ -191,6 +192,10 @@ export default {
         font-size: 60px;
         margin-bottom: $spacing / 2;
         padding-top: $spacing;
+      }
+
+      .cost-risk-paragraph {
+        margin-bottom: $spacing * 2;
       }
 
       .chapter-title {
