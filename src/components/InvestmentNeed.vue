@@ -1,7 +1,7 @@
 <template>
   <section class="investments" ref="inWrapper">
     <header class="key">
-      Legend or selectors if any
+      <h4>Energy investment needs</h4>
       <label><input type="checkbox" v-model="isStacked">is stacked?</label>
     </header>
     <div v-for="(scenario, key) in dataByScenario" :key="key" class="scenario">
@@ -131,7 +131,7 @@ export default {
     width: 90%;
     height: 100px;
     margin: 0 auto;
-    padding: 0 20px;
+    padding: 0 0px;
     border-bottom:0.5px solid blue;
   }
 

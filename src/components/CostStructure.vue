@@ -69,7 +69,7 @@
 import _ from 'lodash'
 import * as d3 from 'd3'
 
-import SecondaryEnergySum from 'dsv-loader!@/assets/data/SecondaryEnergySum.csv' // eslint-disable-line import/no-webpack-loader-syntax
+import SecondaryEnergyAndTotalCostWorld from 'dsv-loader!@/assets/data/SecondaryEnergyAndTotalCostWorld.csv' // eslint-disable-line import/no-webpack-loader-syntax
 import SensesSelect from 'library/src/components/SensesSelect.vue'
 
 export default {
@@ -95,24 +95,24 @@ export default {
     return {
       // Dataset SecondaryEnergy is array with objects
       // [{},...,{}]
-      SecondaryEnergySum,
+      SecondaryEnergyAndTotalCostWorld,
       // groupBy creates object composed of keys (coal, wind, ...)
       // generated from the results of running each
-      // element of SecondaryEnergySum thru iteratee d = {}
+      // element of SecondaryEnergyAndAllCost thru iteratee d = {}
       // {"coal": [{},{}...],
       //   "wind": [{},{}...],
       //    ...
       //  }
-      energy: _.groupBy(SecondaryEnergySum, d => d.Variable),
+      energy: _.groupBy(SecondaryEnergyAndTotalCostWorld, d => d.Variable),
       // map erstellt einen Array mit allen values des keys model
       // set erstellt einen Array mit allen einzigartigen Einträgen für Model
-      model: [...new Set(SecondaryEnergySum.map(r => r.Model))],
-      years: [...new Set(SecondaryEnergySum.map(r => r.Year))],
-      labels: [...new Set(SecondaryEnergySum.map(r => r.Variable))],
+      model: [...new Set(SecondaryEnergyAndTotalCostWorld.map(r => r.Model))],
+      years: [...new Set(SecondaryEnergyAndTotalCostWorld.map(r => r.Year))],
+      labels: [...new Set(SecondaryEnergyAndTotalCostWorld.map(r => r.Variable))],
       perLabels: ['perCap', 'perFuel', 'perOM'],
-      scenarios: [...new Set(SecondaryEnergySum.map(r => r.Scenario))],
-      regions: [...new Set(SecondaryEnergySum.map(r => r.Region))],
-      allValues: [...new Set(SecondaryEnergySum.map(r => r.Value))],
+      scenarios: [...new Set(SecondaryEnergyAndTotalCostWorld.map(r => r.Scenario))],
+      regions: [...new Set(SecondaryEnergyAndTotalCostWorld.map(r => r.Region))],
+      allValues: [...new Set(SecondaryEnergyAndTotalCostWorld.map(r => r.Value))],
       tooltip: 'Here a description of what Secondary Energy is!',
       currentScenario: 'NPi_v3',
       currentRegion: 'World',

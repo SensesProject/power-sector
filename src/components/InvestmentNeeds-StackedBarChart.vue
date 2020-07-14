@@ -22,7 +22,7 @@
             :y="y + height + 10"
             dominant-baseline="hanging"
             class="label"
-          >{{ label }}</text>
+          >{{ label  }}{{ key  }}</text>
         </g>
       </g>
     </svg>

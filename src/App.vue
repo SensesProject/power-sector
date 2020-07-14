@@ -4,7 +4,7 @@
     <div class="content" :class="mobile ? 'isMobile' : 'isDesktop'" ref="container">
       <div class="text-wrapper">
         <h1 class="module-title">Power Sector</h1>
-        <p>This is the first chapter of the Finance Risks Pathway.
+        <p>This is the second chapter of the Finance Risks Pathway.
           You can select another chapter below.</p>
       </div>
       <RiskPathway :mobile="mobile"/>
@@ -27,8 +27,8 @@
           should consider climate policy in their decisions.
         </p>
       </div>
-      <div >
-        <SecondaryEnergywlinechart :width="width" :height="height" :mobile="mobile"/>
+      <div class="vis-wrapper">
+        <SecondaryEnergyAndTotalCost :width="width" :height="height" :mobile="mobile"/>
       </div>
       <div class="text-wrapper">
         <p>Let’s have a look at the volume in energy production of different energy carrier:</p>
@@ -68,6 +68,9 @@
           fossil fuel power production.</p>
         <p>Therefore, the transition will cause a large investment need in low-carbon
           electricity production. For investors this opens investment opportunities.</p>
+      </div>
+      <div class="vis-wrapper">
+        <SecondaryEnergyAndInvestment :width="width" :height="height"/>
       </div>
       <div class="vis-wrapper">
         <InvestmentNeed :width="width" :height="height"/>
@@ -113,13 +116,14 @@
 import SensesMenu from 'library/src/components/SensesMenu.vue'
 import RiskPathway from './components/RiskPathway.vue'
 // import SecondaryEnergySum from './components/SecondaryEnergySum.vue'
-import SecondaryEnergywlinechart from './components/SecondaryEnergywlinechart.vue'
+import SecondaryEnergyAndTotalCost from './components/SecondaryEnergyAndTotalCost.vue'
 import SecondaryEnergy from './components/SecondaryEnergy.vue'
 import InvestmentNeed from './components/InvestmentNeed.vue'
 import CostStructure from './components/CostStructure.vue'
 import CostStructureAgg from './components/CostStructureAgg.vue'
 import FossilCosts from './components/FossilCosts.vue'
 import SensesMeta from 'library/src/components/SensesMeta.vue'
+import SecondaryEnergyAndInvestment from './components/SecondaryEnergyAndInvestment.vue'
 
 export default {
   name: 'App',
@@ -132,8 +136,9 @@ export default {
     CostStructure,
     CostStructureAgg,
     FossilCosts,
-    SecondaryEnergywlinechart,
-    SensesMeta
+    SecondaryEnergyAndTotalCost,
+    SensesMeta,
+    SecondaryEnergyAndInvestment
   },
   data () {
     return {
