@@ -10,7 +10,7 @@
       </p>
     </div>
     <div></div>
-    <svg :width="innerWidth" :height="innerHeight" :transform="`translate(${margin.left}, 0)`">
+    <svg :width="innerWidth" :height="innerHeight - margin.bottom" :transform="`translate(${margin.left}, 0)`">
       <!-- dots is array with 8 key value pairs, one for each energy carrier, g is index 0-7
       v-bind key provides a unique key attribute for each item
       a class is defined for each energy carrier-group
@@ -99,7 +99,7 @@ export default {
       over: '',
       margin: {
         top: 10,
-        bottom: 10,
+        bottom: 400,
         right: 10,
         left: 10
       },
@@ -158,7 +158,7 @@ export default {
       const dotsArray = this.dots
       let pos = 50
       return _.map(this.regionFilter, (energy, e, l) => {
-        if (e !== 0) { pos = pos + this.innerHeight / dotsArray.length - 30 }
+        if (e !== 0) { pos = pos + this.innerHeight / dotsArray.length - 50 }
         return pos
       })
     }
@@ -189,7 +189,7 @@ export default {
 $margin-space: $spacing / 2;
 
 .secondary-energy {
-  height: 170vh;
+  height: 110%;
 
   .key {
     z-index: 9;
