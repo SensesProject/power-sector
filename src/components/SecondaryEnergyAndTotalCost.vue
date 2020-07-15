@@ -272,7 +272,7 @@ export default {
     yTicks () {
       const costMwhTicksArray = [['0', '100', '200', '300', '400', '500', '600'],
         [this.scaleCo_MWh.y(0), this.scaleCo_MWh.y(100), this.scaleCo_MWh.y(200), this.scaleCo_MWh.y(300), this.scaleCo_MWh.y(400), this.scaleCo_MWh.y(500), this.scaleCo_MWh.y(600)]]
-      const costTicksArray = [['0', '20', '40', '60', '80', '100', '120'],
+      const costTicksArray = [['0', '2', '4', '6', '8', '10', '12'],
         [this.scaleCo.y(0), this.scaleCo.y(2000000), this.scaleCo.y(4000000), this.scaleCo.y(6000000), this.scaleCo.y(8000000), this.scaleCo.y(10000000), this.scaleCo.y(12000000)]]
       let tickVal = this.currentMWhSel === 'Total Cost' ? costTicksArray : costMwhTicksArray
       return tickVal
