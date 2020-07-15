@@ -186,7 +186,7 @@ export default {
     margin: 0 auto;
 
     .text-wrapper {
-      margin-top: $spacing;
+      margin-top: $spacing*2;
 
       .module-title {
         font-size: 60px;

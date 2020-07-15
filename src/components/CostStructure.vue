@@ -54,12 +54,12 @@
       </g>
       <!--legend for pie chart -->
       <g>
-        <text :x="scale.x(2020)" y="500" >Fuel Cost</text>
-        <circle :cx="scale.x(2018)" cy="496" r="8" :class="'fuelcost'"/>
-        <text :x="scale.x(2034)" y="500" >Capital Cost</text>
-        <circle :cx="scale.x(2032)" cy="496" r="8" :class="'capcost'"/>
-        <text :x="scale.x(2051)" y="500" >Operational Cost</text>
-        <circle :cx="scale.x(2049)" cy="496" r="8" :class="'omcost'" />
+        <text :x="scale.x(2020)" :y="innerHeight*0.7" >Fuel Cost</text>
+        <circle :cx="scale.x(2018)" :cy="innerHeight*0.695" r="8" :class="'fuelcost'"/>
+        <text :x="scale.x(2034)" :y="innerHeight*0.7" >Capital Cost</text>
+        <circle :cx="scale.x(2032)" :cy="innerHeight*0.695" r="8" :class="'capcost'"/>
+        <text :x="scale.x(2051)" :y="innerHeight*0.7" >Operational Cost</text>
+        <circle :cx="scale.x(2049)" :cy="innerHeight*0.695" r="8" :class="'omcost'" />
       </g>
     </svg>
   </div>
@@ -228,7 +228,7 @@ export default {
 $margin-space: $spacing / 2;
 
 .secondary-energy {
-  height: 85vh;
+  height: 45vh;
 
   .key {
     z-index: 9;

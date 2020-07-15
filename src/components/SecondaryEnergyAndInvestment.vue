@@ -1,7 +1,7 @@
 <template>
   <div class="secondary-energy" ref="inWrapper">
     <div class="key" :class=" mobile ? 'mobile' : 'desktop'">
-      <h4>Energy production (Ej/year) and Capital costs ($/yr | $/MWh) </h4>
+      <h4>Energy production (Ej/year) and capital costs ($/yr | $/MWh) </h4>
       <p class="selectors">
         Select a scenario and cost type:
         <SensesSelect class="scenario_selector" :options="scenarios" v-model="currentScenario"/>
@@ -57,7 +57,18 @@
       <!--y Axis-->
       <g v-for="(val, v) in yTicks[0]" v-bind:key="v+'val'">
         <line class="axis" x1="35" :y1="(0.9 * innerHeight) - yTicks[1][v]" x2="50" :y2="(0.9 * innerHeight) - yTicks[1][v]"/>
-        <text class="year-label" x="24" :y="(0.9 * innerHeight) - yTicks[1][v] - 3" > {{ Math.round(val) }} </text>
+        <text class="year-label" x="24" :y="(0.9 * innerHeight) - yTicks[1][v] - 3" > {{ val }} </text>
+      </g>
+      <g>
+        <!--Units y Axis-->
+        <text class="year-label" x="27" :y="(0.9 * innerHeight) - yLabel[1]" > {{ yLabel[0] }} </text>
+      </g>
+      <!--legend  -->
+      <g>
+        <text :x="scale.x(2020)" :y="innerHeight*0.98" >Fossils</text>
+        <circle :cx="scale.x(2018)" :cy="innerHeight*0.974" r="8" :class="'Fossils'"/>
+        <text :x="scale.x(2034)" :y="innerHeight*0.98" >Renewables</text>
+        <circle :cx="scale.x(2032)" :cy="innerHeight*0.974" r="8" :class="'Renewables'"/>
       </g>
     </svg>
   </div>
@@ -185,31 +196,27 @@ export default {
     },
     // ScaleCo for Barchart for Costs
     scaleCo () {
-      console.log('MaxMin', d3.min(this.worldFilterAllCapcost, s => +s), d3.max(this.worldFilterAllCapcost, s => +s))
       return {
         x: d3.scaleLinear()
           .range([4 * this.margin.left, this.innerWidth - (this.margin.right * 4)])
           .domain([2020, 2110]),
         y: d3.scaleLinear()
-          .range([this.margin.top, 0.4 * this.innerHeight])
+          .range([0, 0.4 * this.innerHeight])
           .domain([0, d3.max(this.worldFilterAllCapcost, s => +s)])
       }
     },
     // ScaleCo_MWh for Barchart for Costs per MWh
     scaleCo_MWh () {
-      console.log('MWhMaxMin', d3.min(this.worldFilterAllCapcost_MWh, s => +s), d3.max(this.worldFilterAllCapcost_MWh, s => +s))
       return {
         x: d3.scaleLinear()
           .range([4 * this.margin.left, this.innerWidth - (this.margin.right * 4)])
           .domain([2020, 2110]),
         y: d3.scaleLinear()
-          .range([this.margin.top, 0.4 * this.innerHeight])
+          .range([0, 0.4 * this.innerHeight])
           .domain([0, d3.max(this.worldFilterAllCapcost_MWh, s => +s)])
       }
     },
     dots () {
-      console.log('scaleCo', this.scaleCo.y(0))
-      console.log('marginTop', this.margin.top)
       return _.map(this.worldFilter, (energy, e) => {
         return _.map(energy, (single, s) => {
           return {
@@ -258,20 +265,23 @@ export default {
     },
     // Calculation of values for y-Axis Scale
     yTicks () {
-      const marginT = this.margin.top
-      const ticks = 6
-      const maxCostMwh = d3.max(this.worldFilterAllCapcost_MWh, s => +s)
-      const maxCost = d3.max(this.worldFilterAllCapcost, s => +s)
-      const costMwhTicksArray = [[0, maxCostMwh / ticks, 2 * maxCostMwh / ticks, 3 * maxCostMwh / ticks, 4 * maxCostMwh / ticks, 5 * maxCostMwh / ticks, 6 * maxCostMwh / ticks],
-        [this.scaleCo_MWh.y(0) - marginT, this.scaleCo_MWh.y(maxCostMwh / ticks), this.scaleCo_MWh.y(2 * maxCostMwh / ticks), this.scaleCo_MWh.y(3 * maxCostMwh / ticks), this.scaleCo_MWh.y(4 * maxCostMwh / ticks), this.scaleCo_MWh.y(5 * maxCostMwh / ticks), this.scaleCo_MWh.y(6 * maxCostMwh / ticks)]]
-      const costTicksArray = [[0, maxCost / ticks, 2 * maxCost / ticks, 3 * maxCost / ticks, 4 * maxCost / ticks, 5 * maxCost / ticks, 6 * maxCost / ticks],
-        [this.scaleCo.y(0) - marginT, this.scaleCo.y(maxCost / ticks) + marginT / ticks, this.scaleCo.y(2 * maxCost / ticks) + marginT / ticks, this.scaleCo.y(3 * maxCost / ticks) + marginT / ticks, this.scaleCo.y(4 * maxCost / ticks) + marginT / ticks, this.scaleCo.y(5 * maxCost / ticks) + marginT / ticks, this.scaleCo.y(6 * maxCost / ticks)]]
+      const costMwhTicksArray = [['0', '50', '100', '150', '200'],
+        [this.scaleCo_MWh.y(0), this.scaleCo_MWh.y(50), this.scaleCo_MWh.y(100), this.scaleCo_MWh.y(150), this.scaleCo_MWh.y(200)]]
+      const costTicksArray = [['0', '20', '40', '60', '80', '100', '120'],
+        [this.scaleCo.y(0), this.scaleCo.y(2000000), this.scaleCo.y(4000000), this.scaleCo.y(6000000), this.scaleCo.y(8000000), this.scaleCo.y(10000000), this.scaleCo.y(12000000)]]
       let tickVal = this.currentMWhSel === 'Capital Cost' ? costTicksArray : costMwhTicksArray
       return tickVal
+    },
+    yLabel () {
+      const labelCost = ['BN$/yr', this.scaleCo.y(14000000)]
+      const labelCostMwh = ['$/MWh', this.scaleCo.y(14000000)]
+      let ylab = this.currentMWhSel === 'Capital Cost' ? labelCost : labelCostMwh
+      return ylab
     }
   },
   methods: {
     calcSizes () {
+      console.log('max', d3.max(this.worldFilterAllCapcost_MWh))
       console.log('tickval', this.yTicks)
       const { inWrapper: el } = this.$refs
       const innerHeight = el.clientHeight || el.parentNode.clientHeight
