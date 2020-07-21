@@ -9,12 +9,12 @@
       <p class="comparison_selector">
         <span
         class="comparison"
-        :class="comparison === 'absolute' ? 'active-comparison' : ''"
+        :class="comparison === 'absolute' ? '' : 'active-comparison'"
         v-on:click="comparison = 'absolute'"
         >Absolute</span>
         | <span
         class="comparison"
-        :class="comparison === 'relative' ? 'active-comparison' : ''"
+        :class="comparison === 'relative' ? '' : 'active-comparison'"
         v-on:click="comparison = 'relative'"
         >Relative to baseline</span>
       </p>
@@ -213,13 +213,11 @@ import { scaleLinear } from 'd3-scale'
 import { arc } from 'd3-shape'
 import FossilCosts from 'dsv-loader!@/assets/data/SecondaryEnergyAndEmissionCosts-new.csv' // eslint-disable-line import/no-webpack-loader-syntax
 import SensesSelect from 'library/src/components/SensesSelect.vue'
-// import SensesTooltip from 'library/src/components/SensesTooltip.vue'
 
 export default {
   name: 'FossilCosts',
   components: {
     SensesSelect
-    // SensesTooltip
   },
   props: {
     width: {
@@ -233,6 +231,10 @@ export default {
     mobile: {
       type: Boolean,
       default: false
+    },
+    step: {
+      type: Number,
+      default: 0
     }
   },
   data () {
@@ -340,6 +342,16 @@ export default {
       } else {
         this.scenarios = [...new Set(FossilCosts.map(r => r.Scenario))]
         this.currentScenario = 'NPi_v3'
+      }
+    },
+    step (currentStep, previousStep) {
+      if (currentStep === 1) {
+        this.currentScenario = 'NPi2020_1000_v3'
+      } if (currentStep === 2) {
+        this.comparison = 'relative'
+      } if (currentStep === 4) {
+        this.currentScenario = 'NPi_v3'
+        this.comparison = 'absolute'
       }
     }
   },

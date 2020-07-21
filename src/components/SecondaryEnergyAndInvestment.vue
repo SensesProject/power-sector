@@ -153,7 +153,7 @@ export default {
     // filters over scenrioFilter Array, returns same array only with objects with region = World
     worldFilter () { return _.map(this.scenarioFilter, (re, r) => _.filter(re, d => d.Region === 'World')) },
     worldFilterAllCapcost () {
-      let vals = []
+      const vals = []
       _.forEach(this.SecondaryEnergyAndTotalCostWorld, (data, d) => {
         if (data.Region === 'World') {
           vals.push(data.CAPCOST)
@@ -164,7 +164,7 @@ export default {
     // filters only the values of world from all costs per MWh
     // since there are "inf" or no values for certain regions in datsets
     worldFilterAllCapcost_MWh () {
-      let vals = []
+      const vals = []
       _.forEach(this.SecondaryEnergyAndTotalCostWorld, (data, d) => {
         if (data.Region === 'World') {
           vals.push(data.CAPCOST_MWh)
@@ -174,10 +174,10 @@ export default {
     },
     // calculates width between years to calculate width of single bar in dots
     sectWidth () {
-      let inwidth = this.innerWidth
-      let margleft = this.margin.left
-      let margright = this.margin.right
-      let yearcount = this.years.length
+      const inwidth = this.innerWidth
+      const margleft = this.margin.left
+      const margright = this.margin.right
+      const yearcount = this.years.length
       const sewidth = (inwidth - ((4 * margleft) + (margright * 4))) / yearcount
       return sewidth
     },
@@ -269,13 +269,13 @@ export default {
         [this.scaleCo_MWh.y(0), this.scaleCo_MWh.y(50), this.scaleCo_MWh.y(100), this.scaleCo_MWh.y(150), this.scaleCo_MWh.y(200)]]
       const costTicksArray = [['0', '20', '40', '60', '80', '100', '120'],
         [this.scaleCo.y(0), this.scaleCo.y(2000000), this.scaleCo.y(4000000), this.scaleCo.y(6000000), this.scaleCo.y(8000000), this.scaleCo.y(10000000), this.scaleCo.y(12000000)]]
-      let tickVal = this.currentMWhSel === 'Capital Cost' ? costTicksArray : costMwhTicksArray
+      const tickVal = this.currentMWhSel === 'Capital Cost' ? costTicksArray : costMwhTicksArray
       return tickVal
     },
     yLabel () {
       const labelCost = ['BN$/yr', this.scaleCo.y(14000000)]
       const labelCostMwh = ['$/MWh', this.scaleCo.y(14000000)]
-      let ylab = this.currentMWhSel === 'Capital Cost' ? labelCost : labelCostMwh
+      const ylab = this.currentMWhSel === 'Capital Cost' ? labelCost : labelCostMwh
       return ylab
     }
   },

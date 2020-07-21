@@ -36,7 +36,6 @@
       <div class="vis-wrapper secondaryenergy">
         <SecondaryEnergy :width="width" :height="height" :mobile="mobile"/>
       </div>
-
       <div class="text-wrapper">
         <h2 class="chapter-title" id="costs">
           Fuel Cost Risk
@@ -54,9 +53,30 @@
           Therefor investors face the risk that fossil-based assets, such as coal
           or gas-fired power plants reduce their value under climate policy. </p>
       </div>
-      <div class="vis-wrapper">
-        <FossilCosts :width="width" :height="height"/>
+      <LayoutScrollytelling>
+        <template v-slot:vis="{ width, height, step }">
+          <div class="vis-inner" :style="{width: `${width}px`, height: `${height}px`}">
+            <FossilCosts :width="width" :height="height" :step="step"/>
+          </div>
+        </template>
+        <div slot="text" class="observer">
+        <IntersectionObserver :step="0"  align="left">
+          <p>I do nothing.</p>
+        </IntersectionObserver>
+        <IntersectionObserver :step="1"  align="left">
+          <p>I am triggering a different scenario.</p>
+        </IntersectionObserver>
+        <IntersectionObserver :step="2"  align="center">
+          <p>I am triggering relative change.</p>
+        </IntersectionObserver>
+        <IntersectionObserver :step="3"  align="center">
+          <p>I do nothing.</p>
+        </IntersectionObserver>
+        <IntersectionObserver :step="4"  align="right" class="changeheight">
+          <p>I am restoring initial settings (and I have a special class to keep the vis in the viewport).</p>
+        </IntersectionObserver>
       </div>
+      </LayoutScrollytelling>
       <div class="text-wrapper">
         <h2 class="chapter-title" id="structure">
           Investment need
@@ -114,31 +134,36 @@
 </template>
 
 <script>
+// Library Components
 import SensesMenu from 'library/src/components/SensesMenu.vue'
+import SensesMeta from 'library/src/components/SensesMeta.vue'
+// Scrollytelling
+import LayoutScrollytelling from 'library/src/components/LayoutScrollytelling.vue'
+import IntersectionObserver from 'library/src/components/IntersectionObserver.vue'
+// Visualization Components
 import RiskPathway from './components/RiskPathway.vue'
-// import SecondaryEnergySum from './components/SecondaryEnergySum.vue'
 import SecondaryEnergyAndTotalCost from './components/SecondaryEnergyAndTotalCost.vue'
 import SecondaryEnergy from './components/SecondaryEnergy.vue'
 import InvestmentNeed from './components/InvestmentNeed.vue'
 import CostStructure from './components/CostStructure.vue'
 import CostStructureAgg from './components/CostStructureAgg.vue'
 import FossilCosts from './components/FossilCosts.vue'
-import SensesMeta from 'library/src/components/SensesMeta.vue'
 import SecondaryEnergyAndInvestment from './components/SecondaryEnergyAndInvestment.vue'
 
 export default {
   name: 'App',
   components: {
     SensesMenu,
+    LayoutScrollytelling,
+    IntersectionObserver,
+    SensesMeta,
     RiskPathway,
-    // SecondaryEnergySum,
     SecondaryEnergy,
     InvestmentNeed,
     CostStructure,
     CostStructureAgg,
     FossilCosts,
     SecondaryEnergyAndTotalCost,
-    SensesMeta,
     SecondaryEnergyAndInvestment
   },
   data () {
@@ -180,6 +205,10 @@ export default {
 
 #app {
   margin: 0 auto;
+
+  .changeheight {
+    padding-bottom: 2000px;
+  }
 
   .content {
     max-width: 900px;
