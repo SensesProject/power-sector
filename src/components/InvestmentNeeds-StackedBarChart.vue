@@ -38,7 +38,7 @@ export default {
   props: ['data', 'scenario', 'extents', 'variables', 'gap', 'isStacked'],
   data: () => {
     return {
-      colors: ['#a6cee3', '#1f78b4', '#b2df8a', '#33a02c', '#fb9a99', '#e31a1c', '#fdbf6f', '#ff7f00', '#cab2d6', '#6a3d9a', '#ffff99', '#b15928'],
+      colors: ['#8c8c94', '#d7d7e3', '#f8cbd4', '#ed96ab', '#fcb69f', '#e31a1c', '#dca0e5', '#a3d1ea', '#ac9bd9', '#ffd89a', '#99cccc', '#cc9999', '#8d88ff', '#47474c', '#a2e7c0'],
       width: 0,
       height: 100,
       margin: {
@@ -48,7 +48,7 @@ export default {
         bottom: 10
       },
       region: 'World',
-      showModels: false,
+      showModels: true,
       barDifference: false
     }
   },
@@ -109,6 +109,7 @@ export default {
     }
   },
   mounted () {
+    console.log('elements', this.elements)
     this.calcSizes()
     window.addEventListener('resize', this.calcSizes, false)
   },

@@ -78,7 +78,7 @@
 import _ from 'lodash'
 import * as d3 from 'd3'
 
-import SecondaryEnergyAndTotalCostWorld from 'dsv-loader!@/assets/data/SecondaryEnergyAndTotalCostWorld.csv' // eslint-disable-line import/no-webpack-loader-syntax
+import SecondaryEnergyAndAllCosts from 'dsv-loader!@/assets/data/SecondaryEnergyAndAllCosts.csv' // eslint-disable-line import/no-webpack-loader-syntax
 import SensesSelect from 'library/src/components/SensesSelect.vue'
 
 export default {
@@ -104,7 +104,7 @@ export default {
     return {
       // Dataset SecondaryEnergy is array with objects
       // [{},...,{}]
-      SecondaryEnergyAndTotalCostWorld,
+      SecondaryEnergyAndAllCosts,
       // groupBy creates object composed of keys (coal, wind, ...)
       // generated from the results of running each
       // element of SecondaryEnergySum thru iteratee d = {}
@@ -112,18 +112,18 @@ export default {
       //   "wind": [{},{}...],
       //    ...
       //  }
-      energy: _.groupBy(SecondaryEnergyAndTotalCostWorld, d => d.Variable),
+      energy: _.groupBy(SecondaryEnergyAndAllCosts, d => d.Variable),
       // map erstellt einen Array mit allen values des keys model
       // set erstellt einen Array mit allen einzigartigen Einträgen für Model
-      model: [...new Set(SecondaryEnergyAndTotalCostWorld.map(r => r.Model))],
-      years: [...new Set(SecondaryEnergyAndTotalCostWorld.map(r => r.Year))],
-      labels: [...new Set(SecondaryEnergyAndTotalCostWorld.map(r => r.Variable))],
-      scenarios: [...new Set(SecondaryEnergyAndTotalCostWorld.map(r => r.Scenario))],
-      regions: [...new Set(SecondaryEnergyAndTotalCostWorld.map(r => r.Region))],
-      allValues: [...new Set(SecondaryEnergyAndTotalCostWorld.map(r => r.Value))],
+      model: [...new Set(SecondaryEnergyAndAllCosts.map(r => r.Model))],
+      years: [...new Set(SecondaryEnergyAndAllCosts.map(r => r.Year))],
+      labels: [...new Set(SecondaryEnergyAndAllCosts.map(r => r.Variable))],
+      scenarios: [...new Set(SecondaryEnergyAndAllCosts.map(r => r.Scenario))],
+      regions: [...new Set(SecondaryEnergyAndAllCosts.map(r => r.Region))],
+      allValues: [...new Set(SecondaryEnergyAndAllCosts.map(r => r.Value))],
       // new Array for all "Total Cost in mwh" values to create yAxis
-      allCAPCOST: [...new Set(SecondaryEnergyAndTotalCostWorld.map(r => r.CAPCOST))],
-      allCAPCOST_MWh: [...new Set(SecondaryEnergyAndTotalCostWorld.map(r => r.CAPCOST_MWh))],
+      allCAPCOST: [...new Set(SecondaryEnergyAndAllCosts.map(r => r.CAPCOST))],
+      allCAPCOST_MWh: [...new Set(SecondaryEnergyAndAllCosts.map(r => r.CAPCOST_MWh))],
       MWhSel: ['Capital Cost', 'Capital Cost per MWh'],
       tooltip: 'Here a description of what Secondary Energy is!',
       currentMWhSel: 'Capital Cost',
@@ -154,7 +154,7 @@ export default {
     worldFilter () { return _.map(this.scenarioFilter, (re, r) => _.filter(re, d => d.Region === 'World')) },
     worldFilterAllCapcost () {
       let vals = []
-      _.forEach(this.SecondaryEnergyAndTotalCostWorld, (data, d) => {
+      _.forEach(this.SecondaryEnergyAndAllCosts, (data, d) => {
         if (data.Region === 'World') {
           vals.push(data.CAPCOST)
         }
@@ -165,7 +165,7 @@ export default {
     // since there are "inf" or no values for certain regions in datsets
     worldFilterAllCapcost_MWh () {
       let vals = []
-      _.forEach(this.SecondaryEnergyAndTotalCostWorld, (data, d) => {
+      _.forEach(this.SecondaryEnergyAndAllCosts, (data, d) => {
         if (data.Region === 'World') {
           vals.push(data.CAPCOST_MWh)
         }
@@ -190,7 +190,7 @@ export default {
           .range([50, this.innerWidth - (this.margin.right * 12)])
           .domain([2020, 2100]),
         y: d3.scaleLinear()
-          .range([2, 2000])
+          .range([2, 1500])
           .domain([d3.min(this.allValues, s => +s), d3.max(this.allValues, s => +s)])
       }
     },
@@ -251,7 +251,7 @@ export default {
       // length of dotsArray is  = nr of energy carrier
       // returns array with the position for each energy carrier
       const dotsArray = this.dots
-      let pos = 40
+      let pos = 50
       return _.map(this.regionFilter, (energy, e, l) => {
         if (e !== 0) { pos = pos + (1.1 * this.innerHeight) / dotsArray.length - 200 }
         return pos
@@ -267,7 +267,7 @@ export default {
     yTicks () {
       const costMwhTicksArray = [['0', '50', '100', '150', '200'],
         [this.scaleCo_MWh.y(0), this.scaleCo_MWh.y(50), this.scaleCo_MWh.y(100), this.scaleCo_MWh.y(150), this.scaleCo_MWh.y(200)]]
-      const costTicksArray = [['0', '20', '40', '60', '80', '100', '120'],
+      const costTicksArray = [['0', '2', '4', '6', '8', '10', '12'],
         [this.scaleCo.y(0), this.scaleCo.y(2000000), this.scaleCo.y(4000000), this.scaleCo.y(6000000), this.scaleCo.y(8000000), this.scaleCo.y(10000000), this.scaleCo.y(12000000)]]
       let tickVal = this.currentMWhSel === 'Capital Cost' ? costTicksArray : costMwhTicksArray
       return tickVal

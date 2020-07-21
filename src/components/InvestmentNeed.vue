@@ -87,6 +87,7 @@ export default {
       return this.width - (this.margin.left + this.margin.right)
     },
     dataByScenario () {
+      console.log('data', this.data)
       return groupBy(this.data, 'scenario')
     },
     extents () {
@@ -132,7 +133,7 @@ export default {
     height: 100px;
     margin: 0 auto;
     padding: 0 0px;
-    border-bottom:0.5px solid blue;
+    border-bottom:0.5px solid grey;
   }
 
   svg {

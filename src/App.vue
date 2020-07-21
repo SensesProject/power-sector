@@ -116,7 +116,6 @@
 <script>
 import SensesMenu from 'library/src/components/SensesMenu.vue'
 import RiskPathway from './components/RiskPathway.vue'
-// import SecondaryEnergySum from './components/SecondaryEnergySum.vue'
 import SecondaryEnergyAndTotalCost from './components/SecondaryEnergyAndTotalCost.vue'
 import SecondaryEnergy from './components/SecondaryEnergy.vue'
 import InvestmentNeed from './components/InvestmentNeed.vue'
@@ -131,7 +130,6 @@ export default {
   components: {
     SensesMenu,
     RiskPathway,
-    // SecondaryEnergySum,
     SecondaryEnergy,
     InvestmentNeed,
     CostStructure,
@@ -200,6 +198,8 @@ export default {
 
       .chapter-title {
         margin-bottom: $spacing;
+        border-top: 1px solid $color-gray;
+        padding-top: $spacing * 2;
       }
 
       &#last-text {
@@ -220,11 +220,11 @@ export default {
       &.secondaryenergy  {
         height: 200vh;
       }
-      &.coststructure  {
-        height: 85vh;
+      &.CostStructure  {
+        height: 75vh;
       }
       &.CostStructureAgg  {
-        height: 85vh;
+        height: 45vh;
       }
     }
 

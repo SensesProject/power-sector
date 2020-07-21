@@ -1,7 +1,7 @@
 <template>
   <div class="secondary-energy" ref="inWrapper">
     <div class="key" :class=" mobile ? 'mobile' : 'desktop'">
-      <h4>Volume in <SensesTooltip :tooltip="tooltip">secondary energy</SensesTooltip> production (Ej/year)</h4>
+      <h4>Electricity production (Ej/year)</h4>
       <p class="highlight">{{ model[0] }}</p>
       <p class="selectors">
         Select a scenario and a region:
@@ -49,13 +49,11 @@ import * as d3 from 'd3'
 
 import SecondaryEnergy from 'dsv-loader!@/assets/data/SecondaryEnergy.csv' // eslint-disable-line import/no-webpack-loader-syntax
 import SensesSelect from 'library/src/components/SensesSelect.vue'
-import SensesTooltip from 'library/src/components/SensesTooltip.vue'
 
 export default {
   name: 'RiskPathway',
   components: {
-    SensesSelect,
-    SensesTooltip
+    SensesSelect
   },
   props: {
     width: {
@@ -125,7 +123,7 @@ export default {
           .range([50, this.innerWidth - (this.margin.right * 10)])
           .domain([2020, 2100]),
         y: d3.scaleLinear()
-          .range([2, 2000])
+          .range([2, 1500])
           .domain([d3.min(this.allValues, s => +s), d3.max(this.allValues, s => +s)])
       }
     },

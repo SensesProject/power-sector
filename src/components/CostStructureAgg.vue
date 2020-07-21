@@ -7,6 +7,7 @@
         <SensesSelect class="scenario_selector" :options="scenarios" v-model="currentScenario"/>
         <SensesSelect class="region_selector" :options="regions" v-model="currentRegion"/>
       </p>
+      <p class="model-label"> MESSAGEix-GLOBIOM_1.0</p>
     </div>
     <div></div>
     <svg :width="innerWidth" :height="innerHeight" :transform="`translate(${margin.left}, 0)`">
@@ -260,9 +261,15 @@ $margin-space: $spacing / 2;
       margin-top: 5px;
       margin-left: 10px;
     }
+    .model-label    {
+      margin-right: $margin-space;
+      margin-top: 5px;
+      color: #424ab9;
+      font-weight: normal;
+      display: inline
+    }
     .selectors {
       display: inline-block;
-      width: 70%;
     }
     .scenario_selector {
       margin-top: $margin-space;
@@ -349,7 +356,7 @@ $margin-space: $spacing / 2;
       fill-opacity: 0.6;
     }
     .capcost_per{
-      stroke: #8d88ff;
+      stroke: #b8aeff;
       fill-opacity: 0.6;
     }
     .fuelcost_per{

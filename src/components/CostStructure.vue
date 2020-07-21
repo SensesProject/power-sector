@@ -1,12 +1,13 @@
 <template>
   <div class="secondary-energy" ref="inWrapper">
     <div class="key" :class=" mobile ? 'mobile' : 'desktop'">
-      <h4>Energy Production (in EJ/yr) and Cost Structure (in %)</h4>
+      <h4>Electricity Production (in EJ/yr) and Cost Structure (in %)</h4>
       <p class="selectors">
         Select a scenario and a region:
         <SensesSelect class="scenario_selector" :options="scenarios" v-model="currentScenario"/>
         <SensesSelect class="region_selector" :options="regions" v-model="currentRegion"/>
       </p>
+      <p class="model-label">{{ model[0] }}</p>
     </div>
     <div></div>
     <svg :width="innerWidth" :height="innerHeight" :transform="`translate(${margin.left}, 0)`">
@@ -69,7 +70,7 @@
 import _ from 'lodash'
 import * as d3 from 'd3'
 
-import SecondaryEnergyAndTotalCostWorld from 'dsv-loader!@/assets/data/SecondaryEnergyAndTotalCostWorld.csv' // eslint-disable-line import/no-webpack-loader-syntax
+import SecondaryEnergyAndAllCosts from 'dsv-loader!@/assets/data/SecondaryEnergyAndAllCosts.csv' // eslint-disable-line import/no-webpack-loader-syntax
 import SensesSelect from 'library/src/components/SensesSelect.vue'
 
 export default {
@@ -95,7 +96,7 @@ export default {
     return {
       // Dataset SecondaryEnergy is array with objects
       // [{},...,{}]
-      SecondaryEnergyAndTotalCostWorld,
+      SecondaryEnergyAndAllCosts,
       // groupBy creates object composed of keys (coal, wind, ...)
       // generated from the results of running each
       // element of SecondaryEnergyAndAllCost thru iteratee d = {}
@@ -103,16 +104,16 @@ export default {
       //   "wind": [{},{}...],
       //    ...
       //  }
-      energy: _.groupBy(SecondaryEnergyAndTotalCostWorld, d => d.Variable),
+      energy: _.groupBy(SecondaryEnergyAndAllCosts, d => d.Variable),
       // map erstellt einen Array mit allen values des keys model
       // set erstellt einen Array mit allen einzigartigen Einträgen für Model
-      model: [...new Set(SecondaryEnergyAndTotalCostWorld.map(r => r.Model))],
-      years: [...new Set(SecondaryEnergyAndTotalCostWorld.map(r => r.Year))],
-      labels: [...new Set(SecondaryEnergyAndTotalCostWorld.map(r => r.Variable))],
+      model: [...new Set(SecondaryEnergyAndAllCosts.map(r => r.Model))],
+      years: [...new Set(SecondaryEnergyAndAllCosts.map(r => r.Year))],
+      labels: [...new Set(SecondaryEnergyAndAllCosts.map(r => r.Variable))],
       perLabels: ['perCap', 'perFuel', 'perOM'],
-      scenarios: [...new Set(SecondaryEnergyAndTotalCostWorld.map(r => r.Scenario))],
-      regions: [...new Set(SecondaryEnergyAndTotalCostWorld.map(r => r.Region))],
-      allValues: [...new Set(SecondaryEnergyAndTotalCostWorld.map(r => r.Value))],
+      scenarios: [...new Set(SecondaryEnergyAndAllCosts.map(r => r.Scenario))],
+      regions: [...new Set(SecondaryEnergyAndAllCosts.map(r => r.Region))],
+      allValues: [...new Set(SecondaryEnergyAndAllCosts.map(r => r.Value))],
       tooltip: 'Here a description of what Secondary Energy is!',
       currentScenario: 'NPi_v3',
       currentRegion: 'World',
@@ -146,7 +147,7 @@ export default {
           .range([50, this.innerWidth - (this.margin.right * 10)])
           .domain([2020, 2100]),
         y: d3.scaleLinear()
-          .range([2, 2000])
+          .range([2, 1500])
           .domain([d3.min(this.allValues, s => +s), d3.max(this.allValues, s => +s)])
       }
     },
@@ -244,11 +245,17 @@ $margin-space: $spacing / 2;
     .highlight {
       margin-right: $margin-space;
       margin-top: 5px;
-      margin-left: 10px;
+    }
+
+    .model-label    {
+      margin-right: $margin-space;
+      margin-top: 5px;
+      color: #424ab9;
+      font-weight: normal;
+      display: inline
     }
     .selectors {
       display: inline-block;
-      width: 70%;
     }
     .scenario_selector {
       margin-top: $margin-space;
