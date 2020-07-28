@@ -1,37 +1,38 @@
 <template>
-  <div class="secondary-energy" ref="inWrapper">
-    <div class="key" :class=" mobile ? 'mobile' : 'desktop'">
-      <h4>Energy production (Ej/year) and production costs ($/yr | $/MWh) </h4>
+  <div  class="secondary-energy" ref="inWrapper">
+    <div v-if="step < 1">
+      <div class="key" :class=" mobile ? 'mobile' : 'desktop'">
+      <h4>Electricity production (Ej/year) </h4>
       <p class="selectors">
-        Select a scenario and cost type:
+        Select a scenario and a region:
         <SensesSelect class="scenario_selector" :options="scenarios" v-model="currentScenario"/>
-        <!-- selctor for bar chart between costs and costs per MWh -->
-        <SensesSelect class="MWh_selector" :options="MWhSel" v-model="currentMWhSel"/>
+        <SensesSelect class="region_selector" :options="regions" v-model="currentRegion"/>
       </p>
+      <p class="model-label">MESSAGEix-GLOBIOM_1.0</p>
     </div>
     <div></div>
-    <svg :width="(innerWidth)" :height="innerHeight" :transform="`translate(${margin.left}, 0)`">
+    <svg  :width="(innerWidth)" :height="innerHeight" :transform="`translate(${margin.left}, 0)`">
       <g v-for="(group, g) in dots" v-bind:key="g + 'group'" :class="`${labels[g]}-group`" :transform="`translate(0, ${groupPosition[g]})`">
         <!-- draws dots for energy carrier with index g   -->
         <g>
         <circle v-for="(dot, d) in group" v-bind:key="d + 'dot'" @mouseover="[active = true, over = d + labels[g]]" @mouseleave="active = false" :class="labels[g]" :cx="dot.year" cy="5" :r="dot.value"/>
         <!-- labels for energy carrier g-->
-      <!--  <text :x="scale.x(2019)" y="50">{{ labels[g] }}</text> -->
+        <text :x="scale.x(2019)" y="50">{{ labels[g] }}</text>
         </g>
-        <!-- year labels for first and last year in dataset
+        <!-- year labels for first and last year in dataset -->
         <g v-for="(text, t) in group" :key="t + 'text'" >
           <g v-if="t == 0 || t == 8">
           <text class="year-label" :x="text.year" y="20">{{ years[t] }}</text>
           </g>
-        </g> -->
+        </g>
       </g>
     <g v-for="(group, g) in world" v-bind:key="g + 'wgroup'" :class="`${labels[g]}-wgroup`" :transform="`translate(0, ${groupPosition[g]})`">
-      <!--   draws hotizontal axis line through dots and small circles at the beginning and end of axis
+      <!--   draws hotizontal axis line through dots and small circles at the beginning and end of axis  -->
         <g class="axis_group">
             <line class="axis" y1="5" y2="5" :x1="scale.x(2020)" :x2="scale.x(2100)"/>
           <circle class="axis-dot" :cx="scale.x(2020)" cy="5" r="2.5"/>
           <circle class="axis-dot" :cx="scale.x(2100)" cy="5" r="2.5"/>
-        </g>  -->
+        </g>
         <!-- Hover over, shows values for each dot -->
         <g v-for="(text, t) in group" v-bind:key="t + 'text'" :class="active === true & over === t + labels[g] ? 'visible' : 'invisible'">
           <circle class="year-dot" :cx="text.year" cy="5" r="2.5"/>
@@ -40,35 +41,14 @@
           <line class="line-label" :x1="text.year" :x2="text.year" y1="-25" y2="5"/>
         </g>
       </g>
-    <!--separation line-->
-    <line class="axis" :x1="0" :y1="(0.5*innerHeight)" :x2="0.95*innerWidth" :y2="(0.5*innerHeight)" />
-    <!--barchart-->
-      <g v-for="(group, g) in dots" v-bind:key="g + 'rgroup'" :class="`${labels[g]}-group`" >
-        <g>
-        <rect v-for="(rec, r) in group" v-bind:key="r + 'rect'" :class="`${labels[g]}`" :width="rec.barWidth" :x="(rec.year+barXshift[g])" :y="(rec.barY+0.5*innerHeight)" :height="rec.costs"/>
-        </g>
-      </g>
-      <!--x Axis-->
-      <g v-for="(year, j) in years" v-bind:key="j+'year'">
-        <line class="axis" :x1="scale.x(year)" y1="0" :x2="scale.x(year)" :y2="(0.9*innerHeight)"/>
-        <text class="year-label" :x="scale.x(year)" :y="(0.92*innerHeight)">{{ years[j] }}</text>
-      </g>
-      <!--y Axis-->
-      <g v-for="(val, v) in yTicks[0]" v-bind:key="v+'val'">
-        <line class="axis" x1="35" :y1="(0.9 * innerHeight) - yTicks[1][v]" x2="50" :y2="(0.9 * innerHeight) - yTicks[1][v]"/>
-        <text class="year-label" x="27" :y="(0.9 * innerHeight) - yTicks[1][v] -3" > {{ val }} </text>
-      </g>
-      <g>
-        <text class="year-label" x="27" :y="(0.9 * innerHeight) - yLabel[1]" > {{ yLabel[0] }} </text>
-      </g>
-      <!--legend  -->
-      <g>
-        <text :x="scale.x(2020)" :y="innerHeight*0.98" >Fossils</text>
-        <circle :cx="scale.x(2018)" :cy="innerHeight*0.974" r="8" :class="'Fossils'"/>
-        <text :x="scale.x(2034)" :y="innerHeight*0.98" >Renewables</text>
-        <circle :cx="scale.x(2032)" :cy="innerHeight*0.974" r="8" :class="'Renewables'"/>
-      </g>
     </svg>
+  </div>
+  <div v-if="step >= 1 && step < 2">
+    <CostStructure :width="width" :height="height"/>
+  </div>
+  <div v-if="step >= 2">
+    <CostStructureAgg :width="width" :height="height"/>
+  </div>
   </div>
 </template>
 
@@ -78,11 +58,15 @@ import * as d3 from 'd3'
 
 import SecondaryEnergyAndAllCosts from 'dsv-loader!@/assets/data/SecondaryEnergyAndAllCosts.csv' // eslint-disable-line import/no-webpack-loader-syntax
 import SensesSelect from 'library/src/components/SensesSelect.vue'
+import CostStructure from './CostStructure'
+import CostStructureAgg from './CostStructureAgg'
 
 export default {
   name: 'RiskPathway',
   components: {
-    SensesSelect
+    SensesSelect,
+    CostStructure,
+    CostStructureAgg
   },
   props: {
     width: {
@@ -96,6 +80,10 @@ export default {
     mobile: {
       type: Boolean,
       default: false
+    },
+    step: {
+      type: Number,
+      default: 0
     }
   },
   data () {
@@ -150,26 +138,6 @@ export default {
     regionFilter () { return _.map(this.scenarioFilter, (re, r) => _.filter(re, d => d.Region === this.currentRegion)) },
     // filters over scenrioFilter Array, returns same array only with objects with region = World
     worldFilter () { return _.map(this.scenarioFilter, (re, r) => _.filter(re, d => d.Region === 'World')) },
-    worldFilterAllCostTotal () {
-      let vals = []
-      _.forEach(this.SecondaryEnergyAndAllCosts, (data, d) => {
-        if (data.Region === 'World') {
-          vals.push(data.CostTotal)
-        }
-      })
-      return vals
-    },
-    // filters only the values of world from all costs per MWh
-    // since there are "inf" or no values for certain regions in datsets
-    worldFilterAllCostTotal_MWh () {
-      let vals = []
-      _.forEach(this.SecondaryEnergyAndAllCosts, (data, d) => {
-        if (data.Region === 'World') {
-          vals.push(data.CostTotal_MWh)
-        }
-      })
-      return vals
-    },
     // calculates width between years to calculate width of single bar in dots
     sectWidth () {
       const inwidth = this.innerWidth
@@ -192,56 +160,16 @@ export default {
           .domain([d3.min(this.allValues, s => +s), d3.max(this.allValues, s => +s)])
       }
     },
-    // ScaleCo for Barchart for Costs
-    scaleCo () {
-      console.log('MaxMin', d3.min(this.worldFilterAllCostTotal, s => +s), d3.max(this.worldFilterAllCostTotal, s => +s))
-      return {
-        x: d3.scaleLinear()
-          .range([4 * this.margin.left, this.innerWidth - (this.margin.right * 4)])
-          .domain([2020, 2110]),
-        y: d3.scaleLinear()
-          .range([0, 0.4 * this.innerHeight])
-          .domain([0, d3.max(this.worldFilterAllCostTotal, s => +s)])
-      }
-    },
-    // ScaleCo_MWh for Barchart for Costs per MWh
-    scaleCo_MWh () {
-      console.log('MWhMaxMin', d3.min(this.worldFilterAllCostTotal_MWh, s => +s), d3.max(this.worldFilterAllCostTotal_MWh, s => +s))
-      return {
-        x: d3.scaleLinear()
-          .range([4 * this.margin.left, this.innerWidth - (this.margin.right * 4)])
-          .domain([2020, 2110]),
-        y: d3.scaleLinear()
-          .range([0, 0.4 * this.innerHeight])
-          .domain([0, d3.max(this.worldFilterAllCostTotal_MWh, s => +s)])
-      }
-    },
     dots () {
       return _.map(this.worldFilter, (energy, e) => {
         return _.map(energy, (single, s) => {
           return {
             year: this.scale.x(single.Year),
             value: this.scale.y(Math.sqrt(single.Value)),
-            // should return costs, scaled based on yCo not y
-            yearCO: this.scaleCo.x(single.Year),
-            costs: this.currentMWhSel === 'Total Cost' ? this.scaleCo.y(single.CostTotal) : this.scaleCo_MWh.y(single.CostTotal_MWh),
-            // costs: this.scaleCo_MWh.y(single.CostTotal_MWh),
-            // costs: this.scaleCo.y(single.CostTotal),
-            costsTest: single.CostTotal,
-            barWidth: (0.8 * this.sectWidth) / 4,
-            // barY determines y value where to draw bar
-            barY: this.currentMWhSel === 'Total Cost' ? (0.4 * this.innerHeight) - this.scaleCo.y(single.CostTotal) : (0.4 * this.innerHeight) - this.scaleCo_MWh.y(single.CostTotal_MWh)
-            // barY: (0.4 * this.innerHeight) - this.scaleCo.y(single.CostTotal)
-            // barY: (0.4 * this.innerHeight) - this.scaleCo_MWh.y(single.CostTotal_MWh)
+            valueEJ: single.Value
           }
         })
       })
-    },
-    CostTotalExtremes () {
-      return {
-        min: d3.min(this.allCostTotal, s => +s),
-        max: d3.max(this.allCostTotal, s => +s)
-      }
     },
     world () {
       return _.map(this.worldFilter, (energy, e) => {
@@ -255,35 +183,15 @@ export default {
       })
     },
     groupPosition () {
+      console.log('dots', this.dots)
       // length of dotsArray is  = nr of energy carrier
       // returns array with the position for each energy carrier
       const dotsArray = this.dots
-      let pos = 50
+      let pos = 70
       return _.map(this.regionFilter, (energy, e, l) => {
-        if (e !== 0) { pos = pos + (1.1 * this.innerHeight) / dotsArray.length - 200 }
+        if (e !== 0) { pos = pos + this.innerHeight / dotsArray.length - 100 }
         return pos
       })
-    },
-    barXshift () {
-      // length of dotsArray is  = nr of energy carrier
-      // returns array with the position for each energy carrier
-      const shiftarray = [0, (0.8 * this.sectWidth) / 3.3]
-      return shiftarray
-    },
-    // Calculation of values for y-Axis Scale
-    yTicks () {
-      const costMwhTicksArray = [['0', '100', '200', '300', '400', '500', '600'],
-        [this.scaleCo_MWh.y(0), this.scaleCo_MWh.y(100), this.scaleCo_MWh.y(200), this.scaleCo_MWh.y(300), this.scaleCo_MWh.y(400), this.scaleCo_MWh.y(500), this.scaleCo_MWh.y(600)]]
-      const costTicksArray = [['0', '2', '4', '6', '8', '10', '12'],
-        [this.scaleCo.y(0), this.scaleCo.y(2000000), this.scaleCo.y(4000000), this.scaleCo.y(6000000), this.scaleCo.y(8000000), this.scaleCo.y(10000000), this.scaleCo.y(12000000)]]
-      const tickVal = this.currentMWhSel === 'Total Cost' ? costTicksArray : costMwhTicksArray
-      return tickVal
-    },
-    yLabel () {
-      const labelCost = ['BN$/yr', this.scaleCo.y(14000000)]
-      const labelCostMwh = ['$/MWh', this.scaleCo.y(14000000)]
-      const ylab = this.currentMWhSel === 'Total Cost' ? labelCost : labelCostMwh
-      return ylab
     }
   },
   methods: {
@@ -294,7 +202,9 @@ export default {
     }
   },
   mounted () {
+    // console.log('thisdots', this.dots)
     this.calcSizes()
+    // console.log(this.areachart)
     window.addEventListener('resize', this.calcSizes, false)
   },
   updated () {
@@ -312,14 +222,14 @@ export default {
 $margin-space: $spacing / 2;
 
 .secondary-energy {
-  height: 80vh;
+  height: 85vh;
 
   .key {
     z-index: 9;
     width: 100%;
     height: 100px;
     margin-bottom: 1%;
-    padding: 80px 0px;
+    padding: 40px 0px;
 
     top: 50px;
 
@@ -328,11 +238,15 @@ $margin-space: $spacing / 2;
     .highlight {
       margin-right: $margin-space;
       margin-top: 5px;
-      margin-left: 10px;
     }
     .selectors {
       display: inline-block;
-      width: 70%;
+    }
+    .model-label    {
+      margin-top: 5px;
+      color: #424ab9;
+      font-weight: normal;
+      display: inline
     }
     .scenario_selector {
       margin-top: $margin-space;
@@ -341,7 +255,7 @@ $margin-space: $spacing / 2;
     }
 
     h4 {
-      padding-left: 0px;
+      margin-bottom: 10px;
     }
 
     .v-popover {
@@ -403,16 +317,6 @@ $margin-space: $spacing / 2;
     .Renewables {
       fill: getColor(green, 80);
       stroke: getColor(green, 40);
-    }
-    .FossilsArea {
-      fill: #6A7687;
-      stroke: darken(#6A7687, 40);
-      opacity: 0.6;
-    }
-    .RenewablesArea {
-      fill: getColor(green, 80);
-      stroke: getColor(green, 40);
-      opacity: 0.6;
     }
   }
 }

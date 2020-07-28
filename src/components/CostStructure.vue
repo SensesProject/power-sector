@@ -1,7 +1,7 @@
 <template>
   <div class="secondary-energy" ref="inWrapper">
     <div class="key" :class=" mobile ? 'mobile' : 'desktop'">
-      <h4>Electricity Production (in EJ/yr) and Cost Structure (in %)</h4>
+      <h4>Electricity production (Ej/year) and costs structure (in %)</h4>
       <p class="selectors">
         Select a scenario and a region:
         <SensesSelect class="scenario_selector" :options="scenarios" v-model="currentScenario"/>
@@ -11,16 +11,15 @@
     </div>
     <div></div>
     <svg :width="innerWidth" :height="innerHeight" :transform="`translate(${margin.left}, 0)`">
-      <!-- dots is array with 8 key value pairs, one for each energy carrier, g is index 0-7
-      v-bind key provides a unique key attribute for each item
-      a class is defined for each energy carrier-group
-      transform:translate moves the dots 0 px (x-value) and y-value:groupposition(g)
-      groupposition is an array with 8 positions, one for each energy carrier
-    -->
       <g v-for="(group, g) in dots" v-bind:key="g + 'group'" :class="`${labels[g]}-group`" :transform="`translate(0, ${groupPosition[g]})`">
         <!-- draws dots for energy carrier with index g   -->
         <g v-for="(dot, d) in group" v-bind:key="d + 'dot'">
           <circle :class="labels[g]" :cx="dot.year" cy="5" :r="dot.value"/>
+          <!-- year labels for first and last year in dataset -->
+          <g v-for="(text, t) in group" :key="t + 'text'" >
+            <g v-if="t == 0 || t == 8">
+            </g>
+          </g>
         <!-- builds pie chart-->
           <circle :class="'omcost_per'"
           :r="dot.value/2" :cx="dot.year" cy="5" fill="transparent"
@@ -43,7 +42,12 @@
           <!-- white circle on top to create donut chart-->
           <circle :class="'WhiteCirc'" :cx="dot.year" cy="5" v-bind:r="(dot.value/1.5)"/>
         </g>        <!-- :transform="`rotate(-10 ${dot.year + margin.left } ${ margin.left + 5 })`"-->
-        <text :x="scale.x(2019)" y="40">{{ labels[g] }}</text>
+        <text :x="scale.x(2019)" y="50">{{ labels[g] }}</text>
+        <g v-for="(text, t) in group" :key="t + 'text'" >
+          <g v-if="t == 0 || t == 8">
+          <text class="year-label" :x="text.year" y="20">{{ years[t] }}</text>
+          </g>
+        </g>
       </g>
       <g v-for="(group, g) in world" v-bind:key="g + 'wgroup'" :class="`${labels[g]}-wgroup`" :transform="`translate(0, ${groupPosition[g]})`">
           <!--draws hotizontal axis line through dots and small circles at the beginning and end of axis -->
@@ -55,12 +59,12 @@
       </g>
       <!--legend for pie chart -->
       <g>
-        <text :x="scale.x(2020)" :y="innerHeight*0.7" >Fuel Cost</text>
-        <circle :cx="scale.x(2018)" :cy="innerHeight*0.695" r="8" :class="'fuelcost'"/>
-        <text :x="scale.x(2034)" :y="innerHeight*0.7" >Capital Cost</text>
-        <circle :cx="scale.x(2032)" :cy="innerHeight*0.695" r="8" :class="'capcost'"/>
-        <text :x="scale.x(2051)" :y="innerHeight*0.7" >Operational Cost</text>
-        <circle :cx="scale.x(2049)" :cy="innerHeight*0.695" r="8" :class="'omcost'" />
+        <text :x="scale.x(2020)" :y="innerHeight*0.6" >Fuel Cost</text>
+        <circle :cx="scale.x(2018)" :cy="innerHeight*0.595" r="8" :class="'fuelcost'"/>
+        <text :x="scale.x(2034)" :y="innerHeight*0.6" >Capital Cost</text>
+        <circle :cx="scale.x(2032)" :cy="innerHeight*0.595" r="8" :class="'capcost'"/>
+        <text :x="scale.x(2051)" :y="innerHeight*0.6" >Operational Cost</text>
+        <circle :cx="scale.x(2049)" :cy="innerHeight*0.595" r="8" :class="'omcost'" />
       </g>
     </svg>
   </div>
@@ -115,7 +119,7 @@ export default {
       regions: [...new Set(SecondaryEnergyAndAllCosts.map(r => r.Region))],
       allValues: [...new Set(SecondaryEnergyAndAllCosts.map(r => r.Value))],
       tooltip: 'Here a description of what Secondary Energy is!',
-      currentScenario: 'NPi_v3',
+      currentScenario: 'NPi2020_400_v3',
       currentRegion: 'World',
       active: false,
       over: '',
@@ -144,7 +148,7 @@ export default {
       // domain-> observartio EJ/yr, range-> visual variable px
       return {
         x: d3.scaleLinear()
-          .range([50, this.innerWidth - (this.margin.right * 10)])
+          .range([50, this.innerWidth - (this.margin.right * 12)])
           .domain([2020, 2100]),
         y: d3.scaleLinear()
           .range([2, 1500])
@@ -229,14 +233,14 @@ export default {
 $margin-space: $spacing / 2;
 
 .secondary-energy {
-  height: 45vh;
+  height: 85vh;
 
   .key {
     z-index: 9;
     width: 100%;
     height: 100px;
-    margin-bottom: 5%;
-    padding: 20px 0px;
+    margin-bottom: 1%;
+    padding: 40px 0px;
 
     top: 50px;
 
@@ -246,16 +250,14 @@ $margin-space: $spacing / 2;
       margin-right: $margin-space;
       margin-top: 5px;
     }
-
+    .selectors {
+      display: inline-block;
+    }
     .model-label    {
-      margin-right: $margin-space;
       margin-top: 5px;
       color: #424ab9;
       font-weight: normal;
       display: inline
-    }
-    .selectors {
-      display: inline-block;
     }
     .scenario_selector {
       margin-top: $margin-space;

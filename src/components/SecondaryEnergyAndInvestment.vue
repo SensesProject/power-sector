@@ -36,7 +36,7 @@
         <g v-for="(text, t) in group" v-bind:key="t + 'text'" :class="active === true & over === t + labels[g] ? 'visible' : 'invisible'">
           <circle class="year-dot" :cx="text.year" cy="5" r="2.5"/>
           <text class="year-label" :x="text.year" y="20">{{ years[t] }}</text>
-          <text class="year-label" :x="text.year" y="-15">{{ Math.round(text.value) }} Ej/year</text>
+          <text class="year-label" :x="text.year" y="-15">{{ Math.round(text.valueEJ) }} Ej/year</text>
           <line class="line-label" :x1="text.year" :x2="text.year" y1="-25" y2="5"/>
         </g>
       </g>
@@ -127,7 +127,7 @@ export default {
       MWhSel: ['Capital Cost', 'Capital Cost per MWh'],
       tooltip: 'Here a description of what Secondary Energy is!',
       currentMWhSel: 'Capital Cost',
-      currentScenario: 'NPi_v3',
+      currentScenario: 'NPi2020_400_v3',
       currentRegion: 'World',
       active: false,
       over: '',
@@ -153,13 +153,8 @@ export default {
     // filters over scenrioFilter Array, returns same array only with objects with region = World
     worldFilter () { return _.map(this.scenarioFilter, (re, r) => _.filter(re, d => d.Region === 'World')) },
     worldFilterAllCapcost () {
-<<<<<<< HEAD
       let vals = []
       _.forEach(this.SecondaryEnergyAndAllCosts, (data, d) => {
-=======
-      const vals = []
-      _.forEach(this.SecondaryEnergyAndTotalCostWorld, (data, d) => {
->>>>>>> 0635db308993372096e6f32e6cc6be12a14e569a
         if (data.Region === 'World') {
           vals.push(data.CAPCOST)
         }
@@ -169,13 +164,8 @@ export default {
     // filters only the values of world from all costs per MWh
     // since there are "inf" or no values for certain regions in datsets
     worldFilterAllCapcost_MWh () {
-<<<<<<< HEAD
       let vals = []
       _.forEach(this.SecondaryEnergyAndAllCosts, (data, d) => {
-=======
-      const vals = []
-      _.forEach(this.SecondaryEnergyAndTotalCostWorld, (data, d) => {
->>>>>>> 0635db308993372096e6f32e6cc6be12a14e569a
         if (data.Region === 'World') {
           vals.push(data.CAPCOST_MWh)
         }
@@ -252,7 +242,8 @@ export default {
         return _.map(energy, (single, s) => {
           return {
             year: this.scale.x(single.Year),
-            value: this.scale.y(Math.sqrt(single.Value))
+            value: this.scale.y(Math.sqrt(single.Value)),
+            valueEJ: single.Value
           }
         })
       })

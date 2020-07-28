@@ -37,6 +37,40 @@
         <SecondaryEnergy :width="width" :height="height" :mobile="mobile"/>
       </div>
       <div class="text-wrapper">
+        <h2 class="chapter-title" id="structure">
+          Changing Cost Structure risk
+        </h2>
+        <p>As seen above low-carbon energy technologies, such as solar and wind,
+        but also nuclear, require higher capital investments than fossil power
+        plants. However, they do not (or barely) need any fuel to operate making
+        these technologies less vulnerable to changes in fuel prices.</p>
+        <p>Therefore when determining the risk profile in the overall power sector,
+        investors need to be aware that the risk structure of the power sector
+        will change from capital and fuel-based towards almost purely capital
+        based.</p>
+      </div>
+      <LayoutScrollytelling>
+        <template v-slot:vis="{ width, height, step }">
+          <div class="vis-inner" :style="{width: `${width}px`, height: `${height}px`}">
+            <SecondaryEnergySum :width="width" :height="height" :step="step"/>
+          </div>
+        </template>
+        <div slot="text" class="observer">
+        <IntersectionObserver :step="0"  align="right">
+          <p>I do nothing.</p>
+        </IntersectionObserver>
+        <IntersectionObserver :step="1"  align="right">
+          <p>I am triggering cost structute.</p>
+        </IntersectionObserver>
+        <IntersectionObserver :step="2"  align="right">
+          <p>I am triggering the aggregate cost structute.</p>
+        </IntersectionObserver>
+        <IntersectionObserver :step="3"  align="right" class="changeheight">
+          <p>I do nothing.</p>
+        </IntersectionObserver>
+      </div>
+      </LayoutScrollytelling>
+      <div class="text-wrapper">
         <h2 class="chapter-title" id="costs">
           Fuel Cost Risk
         </h2>
@@ -96,25 +130,6 @@
       <div class="vis-wrapper">
         <InvestmentNeed :width="width" :height="height"/>
       </div>
-      <div class="text-wrapper">
-        <h2 class="chapter-title" id="structure">
-          Changing Cost Structure risk
-        </h2>
-        <p>As seen above low-carbon energy technologies, such as solar and wind,
-        but also nuclear, require higher capital investments than fossil power
-        plants. However, they do not (or barely) need any fuel to operate making
-        these technologies less vulnerable to changes in fuel prices.</p>
-        <p>Therefore when determining the risk profile in the overall power sector,
-        investors need to be aware that the risk structure of the power sector
-        will change from capital and fuel-based towards almost purely capital
-        based.</p>
-      </div>
-      <div class="vis-wrapper CostStructure">
-        <CostStructure :width="width" :height="height" :mobile="mobile"/>
-      </div>
-      <div class="vis-wrapper CostStructureAgg">
-        <CostStructureAgg :width="width" :height="height" :mobile="mobile"/>
-      </div>
       <div class="text-wrapper" id="last-text">
         <h2 class="chapter-title" id="conclusion">
           Assessing risks with the help of climate scenarios
@@ -145,10 +160,9 @@ import RiskPathway from './components/RiskPathway.vue'
 import SecondaryEnergyAndTotalCost from './components/SecondaryEnergyAndTotalCost.vue'
 import SecondaryEnergy from './components/SecondaryEnergy.vue'
 import InvestmentNeed from './components/InvestmentNeed.vue'
-import CostStructure from './components/CostStructure.vue'
-import CostStructureAgg from './components/CostStructureAgg.vue'
 import FossilCosts from './components/FossilCosts.vue'
 import SecondaryEnergyAndInvestment from './components/SecondaryEnergyAndInvestment.vue'
+import SecondaryEnergySum from './components/SecondaryEnergySum.vue'
 
 export default {
   name: 'App',
@@ -160,11 +174,10 @@ export default {
     RiskPathway,
     SecondaryEnergy,
     InvestmentNeed,
-    CostStructure,
-    CostStructureAgg,
     FossilCosts,
     SecondaryEnergyAndTotalCost,
-    SecondaryEnergyAndInvestment
+    SecondaryEnergyAndInvestment,
+    SecondaryEnergySum
   },
   data () {
     return {

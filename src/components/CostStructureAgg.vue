@@ -1,13 +1,13 @@
 <template>
   <div class="secondary-energy" ref="inWrapper">
     <div class="key" :class=" mobile ? 'mobile' : 'desktop'">
-      <h4>Total Cost Structure for Power Sector</h4>
+      <h4>Total costs structure for the power sector (in %)</h4>
       <p class="selectors">
         Select a scenario and a region:
         <SensesSelect class="scenario_selector" :options="scenarios" v-model="currentScenario"/>
         <SensesSelect class="region_selector" :options="regions" v-model="currentRegion"/>
       </p>
-      <p class="model-label"> MESSAGEix-GLOBIOM_1.0</p>
+      <p class="model-label">MESSAGEix-GLOBIOM_1.0</p>
     </div>
     <div></div>
     <svg :width="innerWidth" :height="innerHeight" :transform="`translate(${margin.left}, 0)`">
@@ -18,7 +18,7 @@
       groupposition is an array with 8 positions, one for each energy carrier-->
       <g v-for="(group, g) in dots" v-bind:key="g + 'group'" :class="`${labels[g]}-group`" :transform="`translate(0, ${groupPosition[g]})`">
         <!-- draws dots for energy carrier with index g   -->
-        <g v-for="(dot, d) in group" v-bind:key="d + 'dot'">
+        <g v-for="(dot, d) in group" v-bind:key="d + 'dot'" @mouseover="[active = true, over = d + labels[g]]" @mouseleave="active = false">
           <!-- if loop to display only preselected years form data set, every second year-->
           <g v-if="selectYears(dot.year) == 1">
           <circle :class="labels[g]" :cx="dot.year" cy="5" r="50"/>
@@ -53,21 +53,29 @@
         </g>
       </g>
       <g v-for="(group, g) in world" v-bind:key="g + 'wgroup'" :class="`${labels[g]}-wgroup`" :transform="`translate(0, ${groupPosition[g]})`">
-          <!--draws hotizontal axis line through dots and small circles at the beginning and end of axis -->
+        <!--draws hotizontal axis line through dots and small circles at the beginning and end of axis -->
         <g class="axis_group">
           <line class="axis" y1="5" y2="5" :x1="scale.x(2020)" :x2="scale.x(2100)"/>
           <circle class="axis-dot" :cx="scale.x(2020)" cy="5" r="2.5"/>
           <circle class="axis-dot" :cx="scale.x(2100)" cy="5" r="2.5"/>
         </g>
+        <!--hover over values for data -->
+        <g v-for="(text, t) in group" v-bind:key="t + 'text'" :class="active === true & over === t + labels[g] ? 'visible' : 'invisible'">
+          <circle class="year-dot" :cx="text.year" cy="5" r="2.5"/>
+          <text class="year-label" :x="text.year" y="-60">Fuel cost: {{ Math.round(text.perFuel) }} % </text>
+          <text class="year-label" :x="text.year" y="-90">Oper. cost: {{ Math.round(text.perOM) }} % </text>
+          <text class="year-label" :x="text.year" y="-75">Capital cost: {{ Math.round(text.perCap) }} % </text>
+          <line class="line-label" :x1="text.year" :x2="text.year" y1="-55" y2="5"/>
+        </g>
       </g>
       <!--legend for pie chart -->
-      <svg>
-        <text :x="scale.x(2020)" y="200" >Fuel Cost</text>
-        <circle :cx="scale.x(2018)" cy="196" r="8" :class="'fuelcost'"/>
-        <text :x="scale.x(2034)" y="200" >Capital Cost</text>
-        <circle :cx="scale.x(2032)" cy="196" r="8" :class="'capcost'"/>
-        <text :x="scale.x(2051)" y="200" >Operational Cost</text>
-        <circle :cx="scale.x(2049)" cy="196" r="8" :class="'omcost'" />
+      <svg >
+        <text :x="scale.x(2020)" :y="innerHeight*0.6" >Fuel Cost</text>
+        <circle :cx="scale.x(2018)" :cy="innerHeight*0.595" r="8" :class="'fuelcost'"/>
+        <text :x="scale.x(2034)" :y="innerHeight*0.6" >Capital Cost</text>
+        <circle :cx="scale.x(2032)" :cy="innerHeight*0.595" r="8" :class="'capcost'"/>
+        <text :x="scale.x(2051)" :y="innerHeight*0.6" >Operational Cost</text>
+        <circle :cx="scale.x(2049)" :cy="innerHeight*0.595" r="8" :class="'omcost'" />
       </svg>
     </svg>
   </div>
@@ -115,7 +123,7 @@ export default {
       regions: [...new Set(CostStructureAgg.map(r => r.Region))],
       allValues: [...new Set(CostStructureAgg.map(r => r.Value))],
       tooltip: 'Here a description of what Secondary Energy is!',
-      currentScenario: 'NPi_v3',
+      currentScenario: 'NPi2020_400_v3',
       currentRegion: 'World',
       active: false,
       over: '',
@@ -144,10 +152,10 @@ export default {
       // domain-> observartio EJ/yr, range-> visual variable px
       return {
         x: d3.scaleLinear()
-          .range([50, this.innerWidth - (this.margin.right * 10)])
+          .range([50, this.innerWidth - (this.margin.right * 12)])
           .domain([2020, 2100]),
         y: d3.scaleLinear()
-          .range([2, 500])
+          .range([2, 1500])
           .domain([d3.min(this.allValues, s => +s), d3.max(this.allValues, s => +s)])
       }
     },
@@ -175,7 +183,10 @@ export default {
         return _.map(energy, (single, s) => {
           return {
             year: this.scale.x(single.Year),
-            value: this.scale.y(Math.sqrt(single.Value))
+            value: this.scale.y(Math.sqrt(single.Value)),
+            perCap: single.CAPCOST_p,
+            perFuel: single.FUELCOST_p,
+            perOM: single.OMCOST_p
           }
         })
       })
@@ -186,7 +197,7 @@ export default {
       const dotsArray = this.dots
       // console.log('dotsArrayAGG')
       // console.log(dotsArray)
-      let pos = 70
+      let pos = 160
       return _.map(this.regionFilter, (energy, e, l) => {
         if (e !== 0) { pos = pos + this.innerHeight / dotsArray.length - 100 }
         return pos
@@ -249,8 +260,8 @@ $margin-space: $spacing / 2;
     z-index: 9;
     width: 100%;
     height: 100px;
-    margin-bottom: 5%;
-    padding: 20px 0px;
+    margin-bottom: 1%;
+    padding: 40px 0px;
 
     top: 50px;
 
@@ -259,10 +270,8 @@ $margin-space: $spacing / 2;
     .highlight {
       margin-right: $margin-space;
       margin-top: 5px;
-      margin-left: 10px;
     }
     .model-label    {
-      margin-right: $margin-space;
       margin-top: 5px;
       color: #424ab9;
       font-weight: normal;
