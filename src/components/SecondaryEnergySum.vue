@@ -183,7 +183,7 @@ export default {
       })
     },
     groupPosition () {
-      console.log('dots', this.dots)
+      // console.log('dots', this.dots)
       // length of dotsArray is  = nr of energy carrier
       // returns array with the position for each energy carrier
       const dotsArray = this.dots

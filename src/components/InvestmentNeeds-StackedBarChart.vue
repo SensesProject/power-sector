@@ -109,7 +109,7 @@ export default {
     }
   },
   mounted () {
-    console.log('elements', this.elements)
+    // console.log('elements', this.elements)
     this.calcSizes()
     window.addEventListener('resize', this.calcSizes, false)
   },

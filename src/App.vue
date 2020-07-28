@@ -262,7 +262,7 @@ export default {
       height: 100vh;
 
       &.secondaryenergy  {
-        height: 200vh;
+        height: 100vh;
       }
       &.CostStructure  {
         height: 75vh;

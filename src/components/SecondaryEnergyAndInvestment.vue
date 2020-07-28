@@ -153,7 +153,7 @@ export default {
     // filters over scenrioFilter Array, returns same array only with objects with region = World
     worldFilter () { return _.map(this.scenarioFilter, (re, r) => _.filter(re, d => d.Region === 'World')) },
     worldFilterAllCapcost () {
-      let vals = []
+      const vals = []
       _.forEach(this.SecondaryEnergyAndAllCosts, (data, d) => {
         if (data.Region === 'World') {
           vals.push(data.CAPCOST)
@@ -164,7 +164,7 @@ export default {
     // filters only the values of world from all costs per MWh
     // since there are "inf" or no values for certain regions in datsets
     worldFilterAllCapcost_MWh () {
-      let vals = []
+      const vals = []
       _.forEach(this.SecondaryEnergyAndAllCosts, (data, d) => {
         if (data.Region === 'World') {
           vals.push(data.CAPCOST_MWh)

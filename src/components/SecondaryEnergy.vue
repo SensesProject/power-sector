@@ -10,33 +10,23 @@
       </p>
     </div>
     <div></div>
-    <svg :width="innerWidth" :height="innerHeight - margin.bottom" :transform="`translate(${margin.left}, 0)`">
-      <!-- dots is array with 8 key value pairs, one for each energy carrier, g is index 0-7
-      v-bind key provides a unique key attribute for each item
-      a class is defined for each energy carrier-group
-      transform:translate moves the dots 0 px (x-value) and y-value:groupposition(g)
-      groupposition is an array with 8 positions, one for each energy carrier-->
-      <g v-for="(group, g) in dots" v-bind:key="g + 'group'" :class="`${labels[g]}-group`" :transform="`translate(0, ${groupPosition[g]})`">
-        <!-- draws dots for energy carrier with index g   -->
+    <svg :width="innerWidth" :height="innerHeight" :transform="`translate(0, 0)`">
+      <g v-for="(group, g) in dots" v-bind:key="g + 'group'" :class="`${labels[g]}-group`" :transform="`translate(${verticalPosition[g]}, ${groupPosition[g]})`">
         <circle v-for="(dot, d) in group" v-bind:key="d + 'dot'" @mouseover="[active = true, over = d + labels[g]]" @mouseleave="active = false" :class="labels[g]" :cx="dot.year" cy="5" :r="dot.value"/>
-        <!-- labels for energy carrier g-->
         <text :x="scale.x(2019)" y="40">{{ labels[g] }}</text>
       </g>
-      <g v-for="(group, g) in world" v-bind:key="g + 'wgroup'" :class="`${labels[g]}-wgroup`" :transform="`translate(0, ${groupPosition[g]})`">
-          <!--draws hotizontal axis line through dots and small circles at the beginning and end of axis -->
+      <g v-for="(group, g) in world" v-bind:key="g + 'wgroup'" :class="`${labels[g]}-wgroup`" :transform="`translate(${verticalPosition[g]}, ${groupPosition[g]})`">
         <g class="axis_group">
           <line class="axis" y1="5" y2="5" :x1="scale.x(2020)" :x2="scale.x(2100)"/>
           <circle class="axis-dot" :cx="scale.x(2020)" cy="5" r="2.5"/>
           <circle class="axis-dot" :cx="scale.x(2100)" cy="5" r="2.5"/>
         </g>
         <g v-for="(text, t) in group" v-bind:key="t + 'text'" :class="active === true & over === t + labels[g] ? 'visible' : 'invisible'">
-          <!-- draws little line with dot to indicate value and year of each dot -->
           <circle class="year-dot" :cx="text.year" cy="5" r="2.5"/>
           <text class="year-label" :x="text.year" y="20">{{ years[t] }}</text>
           <text class="year-label" :x="text.year" y="-35">{{ Math.round(text.value) }} Ej/year</text>
           <line class="line-label" :x1="text.year" :x2="text.year" y1="-25" y2="5"/>
         </g>
-        <!-- draws dashed dots for world region -->
         <circle v-for="(dot, d) in group" v-bind:key="d + 'wdot'" @mouseover="[active = true, over = d + labels[g]]" @mouseleave="active = false" class="world" :class="labels[g]" :cx="dot.year" cy="5" :r="dot.value"/>
       </g>
     </svg>
@@ -71,19 +61,8 @@ export default {
   },
   data () {
     return {
-      // Dataset SecondaryEnergy is array with objects
-      // [{},...,{}]
       SecondaryEnergy,
-      // groupBy creates object composed of keys (coal, wind, ...)
-      // generated from the results of running each
-      // element of SecondaryEnergy thru iteratee d = {}
-      // {"coal": [{},{}...],
-      //   "wind": [{},{}...],
-      //    ...
-      //  }
       energy: _.groupBy(SecondaryEnergy, d => d.Variable),
-      // map erstellt einen Array mit allen values des keys model
-      // set erstellt einen Array mit allen einzigartigen Einträgen für Model
       model: [...new Set(SecondaryEnergy.map(r => r.Model))],
       years: [...new Set(SecondaryEnergy.map(r => r.Year))],
       labels: [...new Set(SecondaryEnergy.map(r => r.Variable))],
@@ -106,29 +85,19 @@ export default {
   },
   computed: {
     innerWidth () { return this.width - (this.margin.left + this.margin.right) },
-    // scenario Filter takes Energy Array and returns Array where Objects with Scenario = currentScenario are filtered
-    // ["coal": [{scenario: 1.5,...},{scenario: 1.5,...}...],
-    //   "wind": [{scenario: 1.5,...},{scenario: 1.5,...}...],
-    //    ...
-    //  ]
     scenarioFilter () { return _.map(this.energy, (sc, s) => _.filter(sc, d => d.Scenario === this.currentScenario)) },
-    // filters over scenrioFilter Array, returns same array only with objects with CurrentRegion
     regionFilter () { return _.map(this.scenarioFilter, (re, r) => _.filter(re, d => d.Region === this.currentRegion)) },
-    // filters over scenrioFilter Array, returns same array only with objects with region = World
     worldFilter () { return _.map(this.scenarioFilter, (re, r) => _.filter(re, d => d.Region === 'World')) },
     scale () {
-      // domain-> observartio EJ/yr, range-> visual variable px
       return {
         x: d3.scaleLinear()
-          .range([50, this.innerWidth - (this.margin.right * 10)])
+          .range([35, (this.innerWidth - (this.margin.right * 10)) / 2])
           .domain([2020, 2100]),
         y: d3.scaleLinear()
-          .range([2, 1500])
+          .range([2, 800])
           .domain([d3.min(this.allValues, s => +s), d3.max(this.allValues, s => +s)])
       }
     },
-    // dots returns an array with the size of regionFilter
-    // with just that values for year and value in pixel
     dots () {
       return _.map(this.regionFilter, (energy, e) => {
         return _.map(energy, (single, s) => {
@@ -150,13 +119,25 @@ export default {
       })
     },
     groupPosition () {
-      // console.log('secEndots', this.dots)
-      // length of dotsArray is 8 = nr of energy carrier
-      // returns array with the position for each energy carrier
-      const dotsArray = this.dots
-      let pos = 50
+      // const dotsArray = this.dots
+      let pos = -100
+      let posDx = -100
+      const positions = []
+      _.map(this.regionFilter, (energy, e, l) => {
+        if (e > 3) {
+          pos = pos + this.innerHeight / 5
+          positions.push(pos)
+        } else {
+          posDx = posDx + this.innerHeight / 5
+          positions.push(posDx)
+        }
+      })
+      return positions
+    },
+    verticalPosition () {
+      let pos = 0
       return _.map(this.regionFilter, (energy, e, l) => {
-        if (e !== 0) { pos = pos + this.innerHeight / dotsArray.length - 50 }
+        if (e <= 3) { pos = this.innerWidth / 2 + 5 } else { pos = 0 }
         return pos
       })
     }
@@ -187,7 +168,7 @@ export default {
 $margin-space: $spacing / 2;
 
 .secondary-energy {
-  height: 110%;
+  height: 80%;
 
   .key {
     z-index: 9;
