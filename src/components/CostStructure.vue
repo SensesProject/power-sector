@@ -257,7 +257,8 @@ $margin-space: $spacing / 2;
       margin-top: 5px;
       color: #424ab9;
       font-weight: normal;
-      display: inline
+      display: inline;
+      margin-left: $margin-space;
     }
     .scenario_selector {
       margin-top: $margin-space;

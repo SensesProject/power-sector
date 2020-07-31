@@ -27,9 +27,24 @@
           should consider climate policy in their decisions.
         </p>
       </div>
-      <div class="vis-wrapper">
-        <SecondaryEnergyAndTotalCost :width="width" :height="height" :mobile="mobile"/>
+      <LayoutScrollytelling>
+        <template v-slot:vis="{ width, height, step }">
+          <div class="vis-inner" :style="{width: `${width}px`, height: `${height}px`}">
+            <SecondaryEnergyAndTotalCost :width="width" :height="height" :step="step"/>
+          </div>
+        </template>
+        <div slot="text" class="observer">
+        <IntersectionObserver :step="0"  align="right">
+          <p>I do nothing.</p>
+        </IntersectionObserver>
+        <IntersectionObserver :step="1"  align="right">
+          <p>I am triggering the cost graph.</p>
+        </IntersectionObserver>
+        <IntersectionObserver :step="2"  align="right" class="changeheight">
+          <p>I am triggering the relative values.</p>
+        </IntersectionObserver>
       </div>
+      </LayoutScrollytelling>
       <div class="text-wrapper">
         <p>Let’s have a look at the volume in energy production of different energy carrier:</p>
       </div>
@@ -229,6 +244,7 @@ export default {
 
     .text-wrapper {
       margin-top: $spacing*2;
+      margin-bottom: $spacing;
 
       .module-title {
         font-size: 60px;

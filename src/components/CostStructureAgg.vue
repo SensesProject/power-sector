@@ -275,7 +275,8 @@ $margin-space: $spacing / 2;
       margin-top: 5px;
       color: #424ab9;
       font-weight: normal;
-      display: inline
+      display: inline;
+      margin-left: $margin-space;
     }
     .selectors {
       display: inline-block;

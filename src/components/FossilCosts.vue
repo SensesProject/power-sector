@@ -143,7 +143,7 @@
                       fill="#D8D8E4"
                       fill-rule="nonzero"/>
                       <text id="Coal" fill="#000000">
-                          <tspan x="29" y="60.374759">Diff.</tspan>
+                          <tspan x="29" y="60.374759">Baseline</tspan>
                       </text>
                     </g>
                 </g>
@@ -169,7 +169,7 @@
                       fill="#ED96AB"
                       fill-rule="nonzero"/>
                       <text id="Gas" fill="#000000">
-                          <tspan x="29" y="60.374759">Diff.</tspan>
+                          <tspan x="29" y="60.374759">Baseline</tspan>
                       </text>
                     </g>
                 </g>
@@ -195,7 +195,7 @@
                       fill="#9B94A6"
                       fill-rule="nonzero"/>
                       <text id="Gas" fill="#000000">
-                          <tspan x="29" y="60.374759">Diff.</tspan>
+                          <tspan x="29" y="60.374759">Baseline</tspan>
                       </text>
                     </g>
                 </g>
@@ -304,7 +304,8 @@ export default {
           .endAngle(0),
         relative: arc()
           .innerRadius(0)
-          .outerRadius(f => scales.radius(Math.sqrt(-f.Value_diff)))
+          .outerRadius(f => scales.radius(Math.sqrt(f.Value)))
+          // .outerRadius(f => scales.radius(Math.sqrt(-f.Value_diff)))
           .startAngle(180 * (pi / 180))
           .endAngle(0)
       }

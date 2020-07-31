@@ -48,7 +48,7 @@ export default {
         bottom: 10
       },
       region: 'World',
-      showModels: true,
+      showModels: false,
       barDifference: false
     }
   },
