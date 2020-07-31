@@ -87,7 +87,7 @@ export default {
       return this.width - (this.margin.left + this.margin.right)
     },
     dataByScenario () {
-      console.log('data', this.data)
+      // console.log('data', this.data)
       return groupBy(this.data, 'scenario')
     },
     extents () {

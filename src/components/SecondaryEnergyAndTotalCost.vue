@@ -235,7 +235,7 @@ export default {
     // filters only the values of world from all costs
     // since there are "inf" or no values for certain regions in datsets
     worldFilterAllCostTotal () {
-      let vals = []
+      const vals = []
       _.forEach(this.SecondaryEnergyAndAllCosts, (data, d) => {
         if (data.Region === 'World') {
           vals.push(data.CostTotal)
@@ -245,7 +245,7 @@ export default {
     },
     // filters only the values of world from all costs per MWh
     worldFilterAllCostTotal_MWh () {
-      let vals = []
+      const vals = []
       _.forEach(this.SecondaryEnergyAndAllCosts, (data, d) => {
         if (data.Region === 'World') {
           vals.push(data.CostTotal_MWh)
@@ -305,7 +305,7 @@ export default {
     },
     // ScaleCo for Barchart for Costs
     scaleCo () {
-      console.log('MaxMin', d3.min(this.worldFilterAllCostTotal, s => +s), d3.max(this.worldFilterAllCostTotal, s => +s))
+      // console.log('MaxMin', d3.min(this.worldFilterAllCostTotal, s => +s), d3.max(this.worldFilterAllCostTotal, s => +s))
       return {
         x: d3.scaleLinear()
           .range([4 * this.margin.left, this.innerWidth - (this.margin.right * 4)])
@@ -329,7 +329,7 @@ export default {
     },
     // ScaleCo_MWh for Barchart for Costs per MWh
     scaleCo_MWh () {
-      console.log('MWhMaxMin', d3.min(this.worldFilterAllCostTotal_MWh, s => +s), d3.max(this.worldFilterAllCostTotal_MWh, s => +s))
+      // console.log('MWhMaxMin', d3.min(this.worldFilterAllCostTotal_MWh, s => +s), d3.max(this.worldFilterAllCostTotal_MWh, s => +s))
       return {
         x: d3.scaleLinear()
           .range([4 * this.margin.left, this.innerWidth - (this.margin.right * 4)])
