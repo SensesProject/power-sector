@@ -1,24 +1,28 @@
 <template>
   <div class="secondary-energy" ref="inWrapper">
     <div class="key" :class=" mobile ? 'mobile' : 'desktop'">
-      <h4>Energy production (Ej/year) and production costs ($/yr | $/MWh) </h4>
-      <p class="selectors">
+      <h4 v-if="step < 1" >Electricity production (Ej/year)</h4>
+      <h4 v-if="step >= 1" >Electricity production (Ej/year) and production costs ($/yr | $/MWh) </h4>
+      <p v-if="step < 1" class="selectors">
+        Select a scenario:
+        <SensesSelect class="scenario_selector" :options="scenarios" v-model="currentScenario"/>
+      </p>
+      <p v-if="step >= 1" class="selectors">
         Select a scenario and cost type:
         <SensesSelect class="scenario_selector" :options="scenarios" v-model="currentScenario"/>
         <!-- selctor for bar chart between costs and costs per MWh -->
-        <SensesSelect v-if="step >= 1" class="MWh_selector" :options="MWhSel" v-model="currentMWhSel"/>
-      </p>
-      <p class="comparison_selector">
-        <span
-        class="comparison"
-        :class="comparison === 'absolute' ? '' : 'active-comparison'"
-        v-on:click="comparison = 'absolute'"
-        >Absolute</span>
-        | <span
-        class="comparison"
-        :class="comparison === 'relative' ? '' : 'active-comparison'"
-        v-on:click="comparison = 'relative'"
-        >Relative to baseline</span>
+        <SensesSelect class="MWh_selector" :options="MWhSel" v-model="currentMWhSel"/>
+          <span class="comparison_selector" v-if="step > 1"> <span
+          class="comparison"
+          :class="comparison === 'absolute' ? '' : 'active-comparison'"
+          v-on:click="comparison = 'absolute'"
+          >Absolute</span>
+          | <span
+          class="comparison"
+          :class="comparison === 'relative' ? '' : 'active-comparison'"
+          v-on:click="comparison = 'relative'"
+          >Relative to baseline</span>
+          </span>
       </p>
     </div>
     <div></div>
@@ -80,6 +84,7 @@
         </g>
     </g>
     </g>
+    <!--Only showing bar with total costs for relative values-->
     <g v-else>
       <g v-for="(group, g) in dots" v-bind:key="g + 'rgroup'" :class="`${labels[g]}-group`" >
           <g>
@@ -329,7 +334,6 @@ export default {
     },
     // ScaleCo_MWh for Barchart for Costs per MWh
     scaleCo_MWh () {
-      // console.log('MWhMaxMin', d3.min(this.worldFilterAllCostTotal_MWh, s => +s), d3.max(this.worldFilterAllCostTotal_MWh, s => +s))
       return {
         x: d3.scaleLinear()
           .range([4 * this.margin.left, this.innerWidth - (this.margin.right * 4)])
@@ -341,7 +345,7 @@ export default {
     },
     // ScaleCo_MWh for Barchart for Costs per MWh diference to baseline
     scaleCo_MWhDiff () {
-      console.log('MWhMaxMin', d3.min(this.worldFilterAllCostTotal_MWh, s => +s), d3.max(this.worldFilterAllCostTotal_MWh, s => +s))
+      console.log('CostTotalDiffMaxMin', d3.min(this.worldFilterAllCostDiffTotal, s => +s), d3.max(this.worldFilterAllCostDiffTotal, s => +s))
       return {
         x: d3.scaleLinear()
           .range([4 * this.margin.left, this.innerWidth - (this.margin.right * 4)])
@@ -362,23 +366,23 @@ export default {
               year: this.scale.x(single.Year),
               barWidth: (0.8 * this.sectWidth) / 4,
               Unit: this.currentMWhSel === 'Total Cost' ? 'K$/yr' : '$/MWh',
-              // Wert fuer Kreise
+              // Values for circles
               value: this.scale.y(Math.sqrt(single.Value)),
               basevalue: this.scale.y(Math.sqrt(basedata[e][s].Value)),
               valueDiff: single.Value_diff,
-              // Werte fuer Bars
+              // Values for Bars Height
               AllCosts: this.scaleCo.y(single.CostTotal),
               OmCosts: this.scaleCo.y(single.OMCOST),
               CapCosts: this.scaleCo.y(single.CAPCOST),
               FuelCosts: this.scaleCo.y(single.FUELCOST),
               CarbCosts: this.scaleCo.y(single.CARBONCOST),
               AllCostsDiff: this.scaleCo.y(single.CostTotal_diff),
-              // Andere Werte fuer Bars
+              // Y Values for Barchart
               AllY: (0.4 * this.innerHeight) - this.scaleCo.y(single.CostTotal),
               OmY: (0.4 * this.innerHeight) - this.scaleCo.y(single.OMCOST),
               CapY: (0.4 * this.innerHeight) - this.scaleCo.y(single.OMCOST) - this.scaleCo.y(single.CAPCOST),
               CarbY: (0.4 * this.innerHeight) - this.scaleCo.y(single.CARBONCOST),
-              // Noch andere Werte fuer Bars
+              // Hover Over real values
               OmCostValue: single.OMCOST,
               FuelCostValue: single.FUELCOST,
               CapCostValue: single.CAPCOST,
@@ -522,6 +526,13 @@ export default {
       return ylab
     }
   },
+  watch: {
+    step (currentStep, previousStep) {
+      if (currentStep === 2) {
+        this.comparison = 'relative'
+      }
+    }
+  },
   methods: {
     calcSizes () {
       const { inWrapper: el } = this.$refs
@@ -562,35 +573,36 @@ $margin-space: $spacing / 2;
     background: hsla(0,0%,100%,.90);
 
     .highlight {
-      margin-right: $margin-space;
+      margin-right: $margin-space*2;
       margin-top: 5px;
       margin-left: 10px;
     }
     .selectors {
       display: inline-block;
-      width: 50%;
+      width: 100%;
     }
     .scenario_selector {
       margin-top: $margin-space;
       margin-left: $margin-space;
       margin-right: $margin-space;
     }
-    .comparison_selector {
-      margin-left: 5%;
+    .comparison_selector{
       display: inline-flex;
       display: inline;
-      .comparison {
-        margin: 0 5px;
-        cursor: pointer;
-      }
+      margin: 5px;
 
-      .active-comparison {
+    .comparison {
+
+        cursor: pointer;
+    }
+
+    .active-comparison {
         color: $color-neon;
         text-decoration: underline;
       }
-    }
+  }
     h4 {
-      padding-left: 0px;
+      padding-bottom: 5px;
     }
 
     .v-popover {

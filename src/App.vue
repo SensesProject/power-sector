@@ -46,7 +46,7 @@
       </div>
       </LayoutScrollytelling>
       <div class="text-wrapper">
-        <p>Let’s have a look at the volume in energy production of different energy carrier:</p>
+        <p>Let’s have a look at the volume in electricity production of different energy carrier:</p>
       </div>
       <div class="vis-wrapper secondaryenergy">
         <SecondaryEnergy :width="width" :height="height" :mobile="mobile"/>
