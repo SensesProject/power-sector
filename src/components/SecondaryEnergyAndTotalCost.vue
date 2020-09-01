@@ -189,7 +189,8 @@ export default {
       model: [...new Set(SecondaryEnergyAndAllCosts.map(r => r.Model))],
       years: [...new Set(SecondaryEnergyAndAllCosts.map(r => r.Year))],
       labels: [...new Set(SecondaryEnergyAndAllCosts.map(r => r.Variable))],
-      scenarios: [...new Set(SecondaryEnergyAndAllCosts.map(r => r.Scenario))],
+      scenarios: ['1.5ºC', '2.0ºC', 'Current Policies'],
+      scenDict: { '1.5ºC': 'NPi2020_400_v3', '2.0ºC': 'NPi2020_1000_v3', 'Current Policies': 'NPi_v3' },
       regions: [...new Set(SecondaryEnergyAndAllCosts.map(r => r.Region))],
       allValues: [...new Set(SecondaryEnergyAndAllCosts.map(r => r.Value))],
       allDiffValues: [...new Set(SecondaryEnergyAndAllCosts.map(r => r.Value_diff))],
@@ -199,7 +200,7 @@ export default {
       MWhSel: ['Total Cost', 'Total Cost per MWh'],
       tooltip: 'Here a description of what Secondary Energy is!',
       currentMWhSel: 'Total Cost per MWh',
-      currentScenario: 'NPi2020_400_v3',
+      currentScenario: '1.5ºC',
       currentRegion: 'World',
       comparison: 'absolute',
       active: false,
@@ -226,7 +227,7 @@ export default {
     //   "wind": [{scenario: 1.5,...},{scenario: 1.5,...}...],
     //    ...
     //  ]
-    scenarioFilter () { return _.map(this.energy, (sc, s) => _.filter(sc, d => d.Scenario === this.currentScenario)) },
+    scenarioFilter () { return _.map(this.energy, (sc, s) => _.filter(sc, d => d.Scenario === this.scenDict[this.currentScenario])) },
     // filters over scenrioFilter Array, returns same array only with objects with CurrentRegion
     regionFilter () { return _.map(this.scenarioFilter, (re, r) => _.filter(re, d => d.Region === this.currentRegion)) },
     // filters over scenrioFilter Array, returns same array only with objects with region = World
@@ -481,7 +482,8 @@ export default {
       }
     },
     world () {
-      console.log('nudots', this.dots)
+      console.log('NPi_v3', Object.keys(this.scenDict)[2])
+      console.log('scenfilter', this.scenarioFilter)
       console.log('worldbase', this.worldBaseFilter[1][5].Value)
       return _.map(this.worldFilter, (energy, e) => {
         return _.map(energy, (single, s) => {
