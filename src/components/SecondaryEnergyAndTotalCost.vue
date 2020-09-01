@@ -117,7 +117,10 @@
           <text class="value-label" :x="(scale.x(2014.45)+text.year)" :y="(0.98*innerHeight)">Renewables: {{ Math.round(dots[1][t].AllCostValue) }} {{text.Unit}}</text>
           <line class="line-label" :x1="text.year+barXshift[1]" :x2="text.year+barXshift[1]" :y1="(0.94*innerHeight)" :y2="(0.91*innerHeight)"/>
           <circle class="year-dot" :cx="text.year+barXshift[1]" :cy="(0.91*innerHeight)" r="2"/>
-
+        </g>
+        <!--horizontal dashed line at y=0 for case of rel value -->
+        <g v-if="comparison == 'relative' && currentMWhSel == 'Total Cost'" >
+          <line class="line-label-dashed" :x1="scale.x(2020)" :x2="scale.x(2104.5)" :y1="(0.9*innerHeight) - scaleCoDiff.y(0)" :y2="(0.9*innerHeight)- scaleCoDiff.y(0)"/>
         </g>
       </g>
       <!--x Axis-->
@@ -134,13 +137,6 @@
         <text class="year-label" x="27" :y="(0.765 * innerHeight) - yLabel[1]" > {{ yLabel[0] }} </text>
       </g>
       </g>
-      <!--legend
-      <g>
-        <text :x="scale.x(2020)" :y="innerHeight*0.98" >Fossils</text>
-        <circle :cx="scale.x(2018)" :cy="innerHeight*0.974" r="8" :class="'Fossils'"/>
-        <text :x="scale.x(2034)" :y="innerHeight*0.98" >Renewables</text>
-        <circle :cx="scale.x(2032)" :cy="innerHeight*0.974" r="8" :class="'Renewables'"/>
-      </g>  -->
     </svg>
   </div>
 </template>
@@ -345,7 +341,7 @@ export default {
     },
     // ScaleCo_MWh for Barchart for Costs per MWh diference to baseline
     scaleCo_MWhDiff () {
-      console.log('CostTotalDiffMaxMin', d3.min(this.worldFilterAllCostDiffTotal, s => +s), d3.max(this.worldFilterAllCostDiffTotal, s => +s))
+      console.log('CostMWHDiffMaxMin', d3.min(this.worldFilterAllCostDiffTotal_MWh, s => +s), d3.max(this.worldFilterAllCostDiffTotal_MWh, s => +s))
       return {
         x: d3.scaleLinear()
           .range([4 * this.margin.left, this.innerWidth - (this.margin.right * 4)])
@@ -399,13 +395,16 @@ export default {
               basevalue: this.scale.y(Math.sqrt(basedata[e][s].Value)),
               valueDiff: single.Value_diff,
               // Values for Bars Height
-              AllCosts: this.scaleCoDiff.y(single.CostTotal_diff),
+              // due to neg values the absolute number of CostTotal_diff is needed
+              // need to substract "this.scaleCoDiff.y(0)" because of neg values, y(0) is not 0 but a section from 0.4 *innerHeight
+              AllCosts: this.scaleCoDiff.y(Math.abs(single.CostTotal_diff)) - this.scaleCoDiff.y(0),
               OmCosts: this.scaleCoDiff.y(single.OMCOST_diff),
               CapCosts: this.scaleCoDiff.y(single.CAPCOST_diff),
               FuelCosts: this.scaleCoDiff.y(single.FUELCOST_diff),
               CarbCosts: this.scaleCoDiff.y(single.CARBONCOST_diff),
               // Y Values for Barchart
-              AllY: (0.4 * this.innerHeight) - this.scaleCoDiff.y(single.CostTotal_diff),
+              // case distinction for negative values bc y-value for neg values is O
+              AllY: single.CostTotal_diff >= 0 ? (0.4 * this.innerHeight) - this.scaleCoDiff.y(single.CostTotal_diff) : (0.4 * this.innerHeight) - this.scaleCoDiff.y(0),
               OmY: (0.4 * this.innerHeight) - this.scaleCoDiff.y(single.OMCOST_diff),
               CapY: (0.4 * this.innerHeight) - this.scaleCoDiff.y(single.OMCOST_diff) - this.scaleCoDiff.y(single.CAPCOST_diff),
               CarbY: (0.4 * this.innerHeight) - this.scaleCoDiff.y(single.CARBONCOST_diff),
@@ -510,13 +509,15 @@ export default {
       const shiftarray = [0, (0.8 * this.sectWidth) / 3.3]
       return shiftarray
     },
-    // Calculation of values for y-Axis Scale
+    // Calculation of values for 3 y-Axis Scales, (Only 3 bc scale for Cost per MWh stays the same for rel and abs values)
     yTicks () {
       const costMwhTicksArray = [['0', '400', '800', '1200', '1600', '2000'],
         [this.scaleCo_MWh.y(0), this.scaleCo_MWh.y(400), this.scaleCo_MWh.y(800), this.scaleCo_MWh.y(1200), this.scaleCo_MWh.y(1600), this.scaleCo_MWh.y(2000)]]
       const costTicksArray = [['0', '4', '8', '12', '16', '20'],
         [this.scaleCo.y(0), this.scaleCo.y(4000000), this.scaleCo.y(8000000), this.scaleCo.y(12000000), this.scaleCo.y(16000000), this.scaleCo.y(20000000)]]
-      const tickVal = this.currentMWhSel === 'Total Cost' ? costTicksArray : costMwhTicksArray
+      const costDiffTicksArray = [['-4', '0', '4', '8', '12'],
+        [this.scaleCoDiff.y(-4000000), this.scaleCoDiff.y(0), this.scaleCoDiff.y(4000000), this.scaleCoDiff.y(8000000), this.scaleCoDiff.y(12000000)]]
+      const tickVal = this.currentMWhSel === 'Total Cost' && this.comparison === 'absolute' ? costTicksArray : 'Total Cost' && this.comparison === 'relative' ? costDiffTicksArray : costMwhTicksArray
       return tickVal
     },
     yLabel () {
@@ -559,7 +560,7 @@ export default {
 $margin-space: $spacing / 2;
 
 .secondary-energy {
-  height: 80vh;
+  height: 75vh;
 
   .key {
     z-index: 9;
@@ -656,6 +657,11 @@ $margin-space: $spacing / 2;
       .line-label {
         stroke: $color-gray;
         stroke-width: 0.5;
+      }
+      .line-label-dashed {
+        stroke: $color-gray;
+        stroke-width: 0.5;
+        stroke-dasharray: 4 2;
       }
       .visible {
         opacity: 1;

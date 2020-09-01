@@ -275,7 +275,7 @@ export default {
     .vis-wrapper {
       margin-top: $spacing;
       // border: 0.5px solid lightblue;
-      height: 100vh;
+      height: 110vh;
 
       &.secondaryenergy  {
         height: 100vh;
