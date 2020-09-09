@@ -2,12 +2,12 @@
   <div class="secondary-energy" ref="inWrapper">
     <div class="key" :class=" mobile ? 'mobile' : 'desktop'">
       <h4>Electricity production (Ej/year)</h4>
-      <p class="highlight">{{ model[0] }}</p>
       <p class="selectors">
         Select a scenario and a region:
         <SensesSelect class="scenario_selector" :options="scenarios" v-model="currentScenario"/>
         <SensesSelect class="region_selector" :options="regions" v-model="currentRegion"/>
       </p>
+      <p class="model-label">{{ model[0] }}</p>
     </div>
     <div></div>
     <svg :width="innerWidth" :height="innerHeight" :transform="`translate(0, 0)`">
@@ -66,11 +66,12 @@ export default {
       model: [...new Set(SecondaryEnergy.map(r => r.Model))],
       years: [...new Set(SecondaryEnergy.map(r => r.Year))],
       labels: [...new Set(SecondaryEnergy.map(r => r.Variable))],
-      scenarios: [...new Set(SecondaryEnergy.map(r => r.Scenario))],
+      scenarios: ['1.5ºC', '2.0ºC', 'Current Policies'],
+      scenDict: { '1.5ºC': 'NPi2020_400_v3', '2.0ºC': 'NPi2020_1000_v3', 'Current Policies': 'NPi_v3' },
       regions: [...new Set(SecondaryEnergy.map(r => r.Region))],
       allValues: [...new Set(SecondaryEnergy.map(r => r.Value))],
       tooltip: 'Here a description of what Secondary Energy is!',
-      currentScenario: 'NPi_v3',
+      currentScenario: '1.5ºC',
       currentRegion: 'World',
       active: false,
       over: '',
@@ -85,7 +86,7 @@ export default {
   },
   computed: {
     innerWidth () { return this.width - (this.margin.left + this.margin.right) },
-    scenarioFilter () { return _.map(this.energy, (sc, s) => _.filter(sc, d => d.Scenario === this.currentScenario)) },
+    scenarioFilter () { return _.map(this.energy, (sc, s) => _.filter(sc, d => d.Scenario === this.scenDict[this.currentScenario])) },
     regionFilter () { return _.map(this.scenarioFilter, (re, r) => _.filter(re, d => d.Region === this.currentRegion)) },
     worldFilter () { return _.map(this.scenarioFilter, (re, r) => _.filter(re, d => d.Region === 'World')) },
     scale () {
@@ -120,7 +121,7 @@ export default {
     },
     groupPosition () {
       // const dotsArray = this.dots
-      let pos = -100
+      let pos = -90
       let posDx = -100
       const positions = []
       _.map(this.regionFilter, (energy, e, l) => {
@@ -188,9 +189,18 @@ $margin-space: $spacing / 2;
       margin-top: 5px;
       margin-left: 10px;
     }
+    .model-label    {
+      margin-top: 5px;
+      color: #424ab9;
+      font-weight: normal;
+      display: inline;
+      margin-left: 10px;
+      margin-right: $margin-space;
+    }
     .selectors {
       display: inline-block;
-      width: 70%;
+      width: 50%;
+      margin-left: 10px;
     }
     .scenario_selector {
       margin-top: $margin-space;

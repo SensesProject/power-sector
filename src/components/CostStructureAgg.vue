@@ -1,7 +1,7 @@
 <template>
   <div class="secondary-energy" ref="inWrapper">
     <div class="key" :class=" mobile ? 'mobile' : 'desktop'">
-      <h4>Total costs structure for the power sector (in %)</h4>
+      <h4>Total costs structure of the power sector</h4>
       <p class="selectors">
         Select a scenario and a region:
         <SensesSelect class="scenario_selector" :options="scenarios" v-model="currentScenario"/>
@@ -70,12 +70,12 @@
       </g>
       <!--legend for pie chart -->
       <svg >
-        <text :x="scale.x(2020)" :y="innerHeight*0.6" >Fuel Cost</text>
-        <circle :cx="scale.x(2018)" :cy="innerHeight*0.595" r="8" :class="'fuelcost'"/>
-        <text :x="scale.x(2034)" :y="innerHeight*0.6" >Capital Cost</text>
-        <circle :cx="scale.x(2032)" :cy="innerHeight*0.595" r="8" :class="'capcost'"/>
-        <text :x="scale.x(2051)" :y="innerHeight*0.6" >Operational Cost</text>
-        <circle :cx="scale.x(2049)" :cy="innerHeight*0.595" r="8" :class="'omcost'" />
+        <text :x="scale.x(2020)" :y="innerHeight*0.65" >Fuel Cost including carbon emission costs"</text>
+        <circle :cx="scale.x(2018)" :cy="innerHeight*0.644" r="8" :class="'fuelcost'"/>
+        <text :x="scale.x(2020)" :y="innerHeight*0.7" >Capital Cost</text>
+        <circle :cx="scale.x(2018)" :cy="innerHeight*0.695" r="8" :class="'capcost'"/>
+        <text :x="scale.x(2020)" :y="innerHeight*0.75" >Operational Cost</text>
+        <circle :cx="scale.x(2018)" :cy="innerHeight*0.744" r="8" :class="'omcost'" />
       </svg>
     </svg>
   </div>
@@ -119,11 +119,12 @@ export default {
       years: [...new Set(CostStructureAgg.map(r => r.Year))],
       labels: [...new Set(CostStructureAgg.map(r => r.Variable))],
       perLabels: ['perCap', 'perFuel', 'perOM'],
-      scenarios: [...new Set(CostStructureAgg.map(r => r.Scenario))],
+      scenarios: ['1.5ºC', '2.0ºC', 'Current Policies'],
+      scenDict: { '1.5ºC': 'NPi2020_400_v3', '2.0ºC': 'NPi2020_1000_v3', 'Current Policies': 'NPi_v3' },
       regions: [...new Set(CostStructureAgg.map(r => r.Region))],
       allValues: [...new Set(CostStructureAgg.map(r => r.Value))],
       tooltip: 'Here a description of what Secondary Energy is!',
-      currentScenario: 'NPi2020_400_v3',
+      currentScenario: '1.5ºC',
       currentRegion: 'World',
       active: false,
       over: '',
@@ -143,7 +144,7 @@ export default {
     //   "wind": [{scenario: 1.5,...},{scenario: 1.5,...}...],
     //    ...
     //  ]
-    scenarioFilter () { return _.map(this.energy, (sc, s) => _.filter(sc, d => d.Scenario === this.currentScenario)) },
+    scenarioFilter () { return _.map(this.energy, (sc, s) => _.filter(sc, d => d.Scenario === this.scenDict[this.currentScenario])) },
     // filters over scenrioFilter Array, returns same array only with objects with CurrentRegion
     regionFilter () { return _.map(this.scenarioFilter, (re, r) => _.filter(re, d => d.Region === this.currentRegion)) },
     // filters over scenrioFilter Array, returns same array only with objects with region = World
@@ -197,7 +198,7 @@ export default {
       const dotsArray = this.dots
       // console.log('dotsArrayAGG')
       // console.log(dotsArray)
-      let pos = 160
+      let pos = 180
       return _.map(this.regionFilter, (energy, e, l) => {
         if (e !== 0) { pos = pos + this.innerHeight / dotsArray.length - 100 }
         return pos
@@ -362,27 +363,34 @@ $margin-space: $spacing / 2;
       stroke: getColor(gray, 40);
     }
     .omcost_per{
-      stroke: getColor(yellow, 60);
+      // stroke: getColor(yellow, 60);
+      stroke: getColor(gray, 50);
       fill-opacity: 0.6;
     }
     .capcost_per{
-      stroke: #b8aeff;
+      stroke: getColor(yellow, 80);
       fill-opacity: 0.6;
+      stroke-opacity: 0.7;
     }
     .fuelcost_per{
-      stroke: getColor(green, 60);
+      stroke: lighten(#336666, 40) ;
       fill-opacity: 0.6;
+      stroke-opacity: 0.9;
+
     }
     .omcost{
-      fill: getColor(yellow, 60);
+      fill: getColor(gray, 50);
       stroke: #5d5d63;
+
     }
     .capcost{
-      fill: #8d88ff;
+      fill: getColor(yellow, 80);
+      fill-opacity: 0.7;
       stroke: #5d5d63;
     }
     .fuelcost{
-      fill: getColor(green, 60);
+      fill:lighten(#336666, 40);
+      fill-opacity: 0.9;
       stroke: #5d5d63;
     }
   }

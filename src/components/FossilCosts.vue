@@ -16,7 +16,7 @@
         class="comparison"
         :class="comparison === 'relative' ? '' : 'active-comparison'"
         v-on:click="comparison = 'relative'"
-        >Relative to baseline</span>
+        >Relative to current policy scenario</span>
       </p>
     </div>
     <svg :width="innerWidth" :height="innerHeight - margin.bottom" :transform="`translate(${margin.left}, 0)`">
@@ -425,7 +425,7 @@ $margin-space: $spacing / 2;
 
     path.invisible {
       fill-opacity: 0;
-      stroke-opacity: 0.2;
+      stroke-opacity: 0.5;
     }
 
     path.selected {

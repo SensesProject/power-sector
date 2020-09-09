@@ -2,7 +2,7 @@
   <div class="secondary-energy" ref="inWrapper">
     <div class="key" :class=" mobile ? 'mobile' : 'desktop'">
       <h4 v-if="step < 1" >Changes in electricity production in the power sector</h4>
-      <h4 v-if="step >= 1" >Changes in electricity production and production costs/revenue in the power sector</h4>
+      <h4 v-if="step >= 1" >Changes in electricity production and production costs in the power sector</h4>
       <p v-if="step < 1" class="selectors">
         Select a scenario:
         <SensesSelect class="scenario_selector" :options="scenarios" v-model="currentScenario"/>
@@ -10,10 +10,9 @@
       <p v-if="step >= 1" class="selectors">
         Select a scenario and cost type:
         <SensesSelect class="scenario_selector" :options="scenarios" v-model="currentScenario"/>
-        <!-- selector for bar chart between revenue and costs per MWh -->
+        <!-- selctor for bar chart between costs and costs per MWh -->
         <SensesSelect class="MWh_selector" :options="MWhSel" v-model="currentMWhSel"/>
-        <!-- selector for abs and rel values-->
-        <span class="comparison_selector" v-if="step > 2"> <span
+          <span class="comparison_selector" v-if="step > 1"> <span
           class="comparison"
           :class="comparison === 'absolute' ? '' : 'active-comparison'"
           v-on:click="comparison = 'absolute'"
@@ -22,8 +21,8 @@
           class="comparison"
           :class="comparison === 'relative' ? '' : 'active-comparison'"
           v-on:click="comparison = 'relative'"
-          >Relative to current policy scenario</span>
-        </span>
+          >Relative to baseline</span>
+          </span>
       </p>
     </div>
     <div></div>
@@ -58,7 +57,7 @@
         <g v-for="(text, t) in group" v-bind:key="t + 'text'" :class="active === true & over === t + labels[g] & comparison === 'absolute' ? 'visible' : 'invisible'">
           <circle class="year-dot" :cx="text.year" cy="5" r="2.5"/>
           <text class="year-label" :x="text.year" y="20">{{ years[t] }}</text>
-          <text class="year-label" :x="text.year" y="-32">{{ Math.round(text.valueEJ) }} Ej/year</text>
+          <text class="year-label" :x="text.year" y="-15">{{ Math.round(text.valueEJ) }} Ej/year</text>
           <line class="line-label" :x1="text.year" :x2="text.year" y1="-25" y2="5"/>
         </g>
         <g v-for="(text, t) in dots[g]" v-bind:key="t + 'textDiff'" :class="active === true & over === t + labels[g] & comparison === 'relative' ? 'visible' : 'invisible'">
@@ -70,25 +69,19 @@
       </g>
     <!--separation line-->
     <g v-if="step >= 1">
-    <!-- <line class="axis" :x1="0" :y1="(0.5*innerHeight)" :x2="0.95*innerWidth" :y2="(0.5*innerHeight)" /> -->
+    <line class="axis" :x1="0" :y1="(0.5*innerHeight)" :x2="0.95*innerWidth" :y2="(0.5*innerHeight)" />
     <!--barchart-->
+    <!--transparent bar for hover over-->
+    <rect v-for="(layer, l) in dots[0]" v-bind:key="l + 'layer'"  @mouseover="[activeLayer = true, over = l + labels[0]]" @mouseleave="activeLayer = false" class="HoverLayer" :width="layer.barWidth*4" :x="(layer.year)" :y="(0.5*innerHeight)" :height="(0.4*innerHeight)"/>
+    <!--stacked bars for different cost Types-->
     <g v-if="comparison == 'absolute'">
-    <!--bars for fossils and low-carb-->
-    <g v-if="currentMWhSel == 'Total Cost per MWh'">
     <g v-for="(group, g) in dots" v-bind:key="g + 'rgroup'" :class="`${labels[g]}-group`" >
         <g>
-        <rect v-for="(rec, r) in group" v-bind:key="r + 'rect6'" :class="labels[g] + '-bar'" :width="rec.barWidth" :x="(rec.year+barXshift[g])" :y="(rec.AllY+0.5*innerHeight)" :height="rec.AllCosts"/>
+        <rect v-for="(rec, r) in group" v-bind:key="r + 'rect1'" @mouseover="[activeOM = true, over = r + labels[g]]" @mouseleave="activeOM = false" :class="activeOM === true & over === r + labels[g] ? labels[g] + '-barActive' : labels[g] + '-bar'" :width="rec.barWidth" :x="(rec.year+barXshift[g])" :y="(rec.OmY+0.5*innerHeight)" :height="rec.OmCosts"/>
+        <rect v-for="(rec, r) in group" v-bind:key="r + 'rect2'" @mouseover="[activeCap = true, over = r + labels[g]]" @mouseleave="activeCap = false" :class="activeCap === true & over === r + labels[g] ? labels[g] + '-barActive' : labels[g] + '-bar'" :width="rec.barWidth" :x="(rec.year+barXshift[g])" :y="(rec.CapY+0.5*innerHeight)" :height="rec.CapCosts"/>
+        <rect v-for="(rec, r) in group" v-bind:key="r + 'rect3'" @mouseover="[activeFuel = true, over = r + labels[g]]" @mouseleave="activeFuel = false" :class="activeFuel === true & over === r + labels[g] ? labels[g] + '-barActive' : labels[g] + '-bar'" :width="rec.barWidth" :x="(rec.year+barXshift[g])" :y="(rec.AllY+0.5*innerHeight)" :height="rec.FuelCosts"/>
+        <rect v-for="(rec, r) in group" v-bind:key="r + 'rect4'" @mouseover="[activeCarb = true, over = r + labels[g]]" @mouseleave="activeCarb = false" :class="activeCarb === true & over === r + labels[g] ? labels[g] + '-barActive' : labels[g] + '-bar'" :width="rec.barWidth" :x="(rec.year+barXshift[g])" :y="(rec.AllY+0.5*innerHeight)" :height="rec.CarbCosts"/>
         </g>
-    </g>
-    </g>
-    <!--stacked bar revenue-->
-    <g v-if="currentMWhSel == 'Revenue'">
-      <g  :class="`${labels[0]}-group`" >
-          <g>
-          <rect v-for="(rec, r) in dots[0]" v-bind:key="r + 'rect6'" :class="labels[0] + '-bar'" :width="rec.barWidth" :x="(rec.year+barXshift[0])" :y="(rec.AllY+0.5*innerHeight)" :height="rec.AllCosts"/>
-          <rect v-for="(rec, r) in dots[0]" v-bind:key="r + 'rect7'" :class="labels[1] + '-bar'" :width="rec.barWidth" :x="(rec.year+barXshift[0])" :y="(rec.RevVarY+0.5*innerHeight)" :height="rec.RevVar"/>
-      </g>
-      </g>
     </g>
     </g>
     <!--Only showing bar with total costs for relative values-->
@@ -99,20 +92,34 @@
           </g>
     </g>
   </g>
-  <!--transparent bar for hover over-->
-  <rect v-for="(layer, l) in dots[0]" v-bind:key="l + 'layer'"  @mouseover="[activeLayer = true, over = l + labels[0]]" @mouseleave="activeLayer = false" class="HoverLayer" :width="layer.barWidth*4" :x="(layer.year)" :y="(0.5*innerHeight)" :height="(0.4*innerHeight)"/>
     <g v-for="(group, g) in dots" v-bind:key="g + 'textgroup'" :class="`${labels[g]}-group`" >
       <!--Text: Values on mouse over for barchart-->
+        <g v-for="(text, t) in group" v-bind:key="t + 'textom'" :class="activeOM === true & over === t + labels[g] ? 'visible' : 'invisible'">
+          <text class="cost-label" :x="(scale.x(2014.6)+text.year+barXshift[g])" :y="(text.AllY+0.47*innerHeight)">Operational costs</text>
+          <text class="value-label" :x="(scale.x(2014.6)+text.year+barXshift[g])" :y="(text.AllY+0.49*innerHeight)">{{ Math.round(text.OmCostValue) }} {{text.Unit}}</text>
+        </g>
+        <g v-for="(text, t) in group" v-bind:key="t + 'textcap'" :class="activeCap === true & over === t + labels[g] ? 'visible' : 'invisible'">
+          <text class="cost-label" :x="(scale.x(2014.6)+text.year+barXshift[g])" :y="(text.AllY+0.47*innerHeight)">Capital costs</text>
+          <text class="value-label" :x="(scale.x(2014.6)+text.year+barXshift[g])" :y="(text.AllY+0.49*innerHeight)">{{ Math.round(text.CapCostValue) }} {{text.Unit}}</text>
+        </g>
+        <g v-for="(text, t) in group" v-bind:key="t + 'textfuel'" :class="activeFuel === true & over === t + labels[g] ? 'visible' : 'invisible'">
+          <text class="cost-label" :x="(scale.x(2014.6)+text.year+barXshift[g])" :y="(text.AllY+0.47*innerHeight)">Fuel costs</text>
+          <text class="value-label" :x="(scale.x(2014.6)+text.year+barXshift[g])" :y="(text.AllY+0.49*innerHeight)">{{ Math.round(text.FuelCostValue) }} {{text.Unit}}</text>
+        </g>
+        <g v-for="(text, t) in group" v-bind:key="t + 'textcarb'" :class="activeCarb === true & over === t + labels[g] ? 'visible' : 'invisible'">
+          <text class="cost-label" :x="(scale.x(2014.6)+text.year+barXshift[g])" :y="(text.AllY+0.47*innerHeight)">Carbon costs</text>
+          <text class="value-label" :x="(scale.x(2014.6)+text.year+barXshift[g])" :y="(text.AllY+0.49*innerHeight)">{{ Math.round(text.CarbCostValue) }} {{text.Unit}}</text>
+        </g>
         <g v-for="(text, t) in group" v-bind:key="t + 'textAll'" :class="activeLayer === true & over === t + labels[g] ? 'visible' : 'invisible'">
         <!--  <text class="cost-label" :x="(scale.x(2013)+text.year+barXshift[0])" :y="(dots[0][t].AllY+0.47*innerHeight)">Fossils</text>-->
-          <text class="value-label" :x="(scale.x(2014.45)+text.year)" :y="(0.96*innerHeight)">Fossils: {{ format(Math.round(dots[0][t].AllCostValue)) }} {{text.Unit}}</text>
+          <text class="value-label" :x="(scale.x(2014.45)+text.year)" :y="(0.96*innerHeight)">Fossils: {{ Math.round(dots[0][t].AllCostValue) }} {{text.Unit}}</text>
         <!--  <text class="cost-label" :x="(scale.x(2019)+text.year+barXshift[1])" :y="(dots[1][t].AllY+0.47*innerHeight)">Renewables</text> -->
-          <text class="value-label" :x="(scale.x(2014.45)+text.year)" :y="(0.98*innerHeight)">Renewables: {{ format(Math.round(dots[1][t].AllCostValue)) }} {{text.Unit}}</text>
+          <text class="value-label" :x="(scale.x(2014.45)+text.year)" :y="(0.98*innerHeight)">Renewables: {{ Math.round(dots[1][t].AllCostValue) }} {{text.Unit}}</text>
           <line class="line-label" :x1="text.year+barXshift[1]" :x2="text.year+barXshift[1]" :y1="(0.94*innerHeight)" :y2="(0.91*innerHeight)"/>
           <circle class="year-dot" :cx="text.year+barXshift[1]" :cy="(0.91*innerHeight)" r="2"/>
         </g>
         <!--horizontal dashed line at y=0 for case of rel value -->
-        <g v-if="comparison == 'relative' && currentMWhSel == 'Revenue'" >
+        <g v-if="comparison == 'relative' && currentMWhSel == 'Total Cost'" >
           <line class="line-label-dashed" :x1="scale.x(2020)" :x2="scale.x(2104.5)" :y1="(0.9*innerHeight) - scaleCoDiff.y(0)" :y2="(0.9*innerHeight)- scaleCoDiff.y(0)"/>
         </g>
       </g>
@@ -188,19 +195,19 @@ export default {
       allValues: [...new Set(SecondaryEnergyAndAllCosts.map(r => r.Value))],
       allDiffValues: [...new Set(SecondaryEnergyAndAllCosts.map(r => r.Value_diff))],
       // new Array for all "Total Cost in mwh" values to create yAxis
-      allRevenue: [...new Set(SecondaryEnergyAndAllCosts.map(r => r.Revenue))],
+      allCostTotal: [...new Set(SecondaryEnergyAndAllCosts.map(r => r.CostTotal))],
       allCostTotal_MWh: [...new Set(SecondaryEnergyAndAllCosts.map(r => r.CostTotal_MWh))],
-      MWhSel: ['Revenue', 'Total Cost per MWh'],
+      MWhSel: ['Total Cost', 'Total Cost per MWh'],
       tooltip: 'Here a description of what Secondary Energy is!',
       currentMWhSel: 'Total Cost per MWh',
       currentScenario: '1.5ºC',
       currentRegion: 'World',
       comparison: 'absolute',
       active: false,
-      // activeOM: false,
-      // activeCap: false,
-      // activeFuel: false,
-      // activeCarb: false,
+      activeOM: false,
+      activeCap: false,
+      activeFuel: false,
+      activeCarb: false,
       activeLayer: false,
       activeBase: false,
       over: '',
@@ -229,11 +236,11 @@ export default {
     worldBaseFilter () { return _.map(this.energy, (sc, s) => _.filter(sc, d => (d.Scenario === 'NPi_v3' && d.Region === this.currentRegion))) },
     // filters only the values of world from all costs
     // since there are "inf" or no values for certain regions in datsets
-    worldFilterAllRevenue () {
+    worldFilterAllCostTotal () {
       const vals = []
       _.forEach(this.SecondaryEnergyAndAllCosts, (data, d) => {
         if (data.Region === 'World') {
-          vals.push(data.Revenue)
+          vals.push(data.CostTotal)
         }
       })
       return vals
@@ -249,11 +256,11 @@ export default {
       return vals
     },
     // filters only the values of world from all costs Diff
-    worldFilterAllRevenueDiffTotal () {
+    worldFilterAllCostDiffTotal () {
       let vals = []
       _.forEach(this.SecondaryEnergyAndAllCosts, (data, d) => {
         if (data.Region === 'World') {
-          vals.push(data.Revenue_diff)
+          vals.push(data.CostTotal_diff)
         }
       })
       return vals
@@ -298,7 +305,7 @@ export default {
           .domain([d3.min(this.allDiffValues, s => +s), d3.max(this.allDiffValues, s => +s)])
       }
     },
-    // ScaleCo for Barchart for Revenue
+    // ScaleCo for Barchart for Costs
     scaleCo () {
       // console.log('MaxMin', d3.min(this.worldFilterAllCostTotal, s => +s), d3.max(this.worldFilterAllCostTotal, s => +s))
       return {
@@ -307,23 +314,23 @@ export default {
           .domain([2020, 2110]),
         y: d3.scaleLinear()
           .range([0, 0.35 * this.innerHeight])
-          .domain([0, d3.max(this.worldFilterAllRevenue, s => +s)])
+          .domain([0, d3.max(this.worldFilterAllCostTotal, s => +s)])
       }
     },
-    // ScaleCo for Barchart for Revenue difference to baseline
+    // ScaleCo for Barchart for Cost difference to baseline
     scaleCoDiff () {
+      console.log('MaxMin', d3.min(this.worldFilterAllCostTotal, s => +s), d3.max(this.worldFilterAllCostTotal, s => +s))
       return {
         x: d3.scaleLinear()
           .range([4 * this.margin.left, this.innerWidth - (this.margin.right * 4)])
           .domain([2020, 2110]),
         y: d3.scaleLinear()
           .range([0, 0.35 * this.innerHeight])
-          .domain([d3.min(this.worldFilterAllRevenueDiffTotal, s => +s), d3.max(this.worldFilterAllRevenueDiffTotal, s => +s)])
+          .domain([d3.min(this.worldFilterAllCostDiffTotal, s => +s), d3.max(this.worldFilterAllCostDiffTotal, s => +s)])
       }
     },
     // ScaleCo_MWh for Barchart for Costs per MWh
     scaleCo_MWh () {
-      console.log('MaxMinRevenueDiff', d3.min(this.worldFilterAllRevenueDiffTotal, s => +s), d3.max(this.worldFilterAllRevenueDiffTotal, s => +s))
       return {
         x: d3.scaleLinear()
           .range([4 * this.margin.left, this.innerWidth - (this.margin.right * 4)])
@@ -351,31 +358,39 @@ export default {
         // console.log('e', e)
         return _.map(energy, (single, s) => {
           // console.log('s', s)
-          if (this.currentMWhSel === 'Revenue' && this.comparison === 'absolute') {
+          if (this.currentMWhSel === 'Total Cost' && this.comparison === 'absolute') {
             return {
               year: this.scale.x(single.Year),
               barWidth: (0.8 * this.sectWidth) / 4,
-              Unit: this.currentMWhSel === 'Revenue' ? 'BN$/yr' : '$/MWh',
+              Unit: this.currentMWhSel === 'Total Cost' ? 'K$/yr' : '$/MWh',
               // Values for circles
               value: this.scale.y(Math.sqrt(single.Value)),
               basevalue: this.scale.y(Math.sqrt(basedata[e][s].Value)),
               valueDiff: single.Value_diff,
               // Values for Bars Height
-              AllCosts: this.scaleCo.y(single.Revenue),
-              RevVar: this.scaleCo.y(single.Revenue_var),
-              AllCostsDiff: this.scaleCo.y(single.Revenue_diff),
+              AllCosts: this.scaleCo.y(single.CostTotal),
+              OmCosts: this.scaleCo.y(single.OMCOST),
+              CapCosts: this.scaleCo.y(single.CAPCOST),
+              FuelCosts: this.scaleCo.y(single.FUELCOST),
+              CarbCosts: this.scaleCo.y(single.CARBONCOST),
+              AllCostsDiff: this.scaleCo.y(single.CostTotal_diff),
               // Y Values for Barchart
-              AllY: (0.4 * this.innerHeight) - this.scaleCo.y(single.Revenue) - this.scaleCo.y(single.Revenue_var),
-              RevVarY: (0.4 * this.innerHeight) - this.scaleCo.y(single.Revenue_var),
+              AllY: (0.4 * this.innerHeight) - this.scaleCo.y(single.CostTotal),
+              OmY: (0.4 * this.innerHeight) - this.scaleCo.y(single.OMCOST),
+              CapY: (0.4 * this.innerHeight) - this.scaleCo.y(single.OMCOST) - this.scaleCo.y(single.CAPCOST),
+              CarbY: (0.4 * this.innerHeight) - this.scaleCo.y(single.CARBONCOST),
               // Hover Over real values
-              RevVarValue: single.Revenue_var,
-              AllCostValue: single.Revenue
+              OmCostValue: single.OMCOST,
+              FuelCostValue: single.FUELCOST,
+              CapCostValue: single.CAPCOST,
+              CarbCostValue: single.CARBONCOST,
+              AllCostValue: single.CostTotal
             }
-          } else if (this.currentMWhSel === 'Revenue' && this.comparison === 'relative') {
+          } else if (this.currentMWhSel === 'Total Cost' && this.comparison === 'relative') {
             return {
               year: this.scale.x(single.Year),
               barWidth: (0.8 * this.sectWidth) / 4,
-              Unit: this.currentMWhSel === 'Revenue' ? 'BN$/yr' : '$/MWh',
+              Unit: this.currentMWhSel === 'Total Cost' ? 'K$/yr' : '$/MWh',
               // Values for circles
               value: this.scale.y(Math.sqrt(single.Value)),
               basevalue: this.scale.y(Math.sqrt(basedata[e][s].Value)),
@@ -383,14 +398,14 @@ export default {
               // Values for Bars Height
               // due to neg values the absolute number of CostTotal_diff is needed
               // need to substract "this.scaleCoDiff.y(0)" because of neg values, y(0) is not 0 but a section from 0.4 *innerHeight
-              AllCosts: this.scaleCoDiff.y(Math.abs(single.Revenue_diff)) - this.scaleCoDiff.y(0),
+              AllCosts: this.scaleCoDiff.y(Math.abs(single.CostTotal_diff)) - this.scaleCoDiff.y(0),
               OmCosts: this.scaleCoDiff.y(single.OMCOST_diff),
               CapCosts: this.scaleCoDiff.y(single.CAPCOST_diff),
               FuelCosts: this.scaleCoDiff.y(single.FUELCOST_diff),
               CarbCosts: this.scaleCoDiff.y(single.CARBONCOST_diff),
               // Y Values for Barchart
               // case distinction for negative values bc y-value for neg values is O
-              AllY: single.Revenue_diff >= 0 ? (0.4 * this.innerHeight) - this.scaleCoDiff.y(single.Revenue_diff) : (0.4 * this.innerHeight) - this.scaleCoDiff.y(0),
+              AllY: single.CostTotal_diff >= 0 ? (0.4 * this.innerHeight) - this.scaleCoDiff.y(single.CostTotal_diff) : (0.4 * this.innerHeight) - this.scaleCoDiff.y(0),
               OmY: (0.4 * this.innerHeight) - this.scaleCoDiff.y(single.OMCOST_diff),
               CapY: (0.4 * this.innerHeight) - this.scaleCoDiff.y(single.OMCOST_diff) - this.scaleCoDiff.y(single.CAPCOST_diff),
               CarbY: (0.4 * this.innerHeight) - this.scaleCoDiff.y(single.CARBONCOST_diff),
@@ -399,14 +414,14 @@ export default {
               FuelCostValue: single.FUELCOST_diff,
               CapCostValue: single.CAPCOST_diff,
               CarbCostValue: single.CARBONCOST_diff,
-              AllCostValue: single.Revenue_diff
+              AllCostValue: single.CostTotal_diff
             }
-          } else if (this.currentMWhSel !== 'Revenue' && this.comparison === 'absolute') {
+          } else if (this.currentMWhSel !== 'Total Cost' && this.comparison === 'absolute') {
           // //  block of code to be executed if the condition1 is false and condition2 is false
             return {
               year: this.scale.x(single.Year),
               barWidth: (0.8 * this.sectWidth) / 4,
-              Unit: this.currentMWhSel === 'Revenue' ? 'BN$/yr' : '$/MWh',
+              Unit: this.currentMWhSel === 'Total Cost' ? 'K$/yr' : '$/MWh',
               // Values for circles
               value: this.scale.y(Math.sqrt(single.Value)),
               basevalue: this.scale.y(Math.sqrt(basedata[e][s].Value)),
@@ -433,7 +448,7 @@ export default {
             return {
               year: this.scale.x(single.Year),
               barWidth: (0.8 * this.sectWidth) / 4,
-              Unit: this.currentMWhSel === 'Revenue' ? 'BN$/yr' : '$/MWh',
+              Unit: this.currentMWhSel === 'Total Cost' ? 'K$/yr' : '$/MWh',
               // Values for circles
               value: this.scale.y(Math.sqrt(single.Value)),
               basevalue: this.scale.y(Math.sqrt(basedata[e][s].Value)),
@@ -462,8 +477,8 @@ export default {
     },
     CostTotalExtremes () {
       return {
-        min: d3.min(this.allRevenue, s => +s),
-        max: d3.max(this.allRevenue, s => +s)
+        min: d3.min(this.allCostTotal, s => +s),
+        max: d3.max(this.allCostTotal, s => +s)
       }
     },
     world () {
@@ -481,7 +496,6 @@ export default {
     },
     groupPosition () {
       console.log('worldpart', this.world.slice(0, 2))
-      console.log('dots', this.dots)
       // length of dotsArray is  = nr of energy carrier
       // returns array with the position for each energy carrier
       const dotsArray = this.dots.slice(0, 2)
@@ -497,36 +511,28 @@ export default {
       const shiftarray = [0, (0.8 * this.sectWidth) / 3.3]
       return shiftarray
     },
-    // Calculation of values for 4 y-Axis Scales
+    // Calculation of values for 3 y-Axis Scales, (Only 3 bc scale for Cost per MWh stays the same for rel and abs values)
     yTicks () {
       const costMwhTicksArray = [['0', '400', '800', '1200', '1600', '2000'],
         [this.scaleCo_MWh.y(0), this.scaleCo_MWh.y(400), this.scaleCo_MWh.y(800), this.scaleCo_MWh.y(1200), this.scaleCo_MWh.y(1600), this.scaleCo_MWh.y(2000)]]
-      const costMwhDiffTicksArray = [['0', '400', '800', '1200', '1600', '2000'],
-        [this.scaleCo_MWh.y(0), this.scaleCo_MWh.y(400), this.scaleCo_MWh.y(800), this.scaleCo_MWh.y(1200), this.scaleCo_MWh.y(1600), this.scaleCo_MWh.y(2000)]]
-      const revTicksArray = [['0', '4 000', '8 000', '12 000'],
-        [this.scaleCo.y(0), this.scaleCo.y(4000), this.scaleCo.y(8000), this.scaleCo.y(12000)]]
-      const revDiffTicksArray = [['-4 000', '0', '4 000', '8 000'],
-        [this.scaleCoDiff.y(-4000), this.scaleCoDiff.y(0), this.scaleCoDiff.y(4000), this.scaleCoDiff.y(8000), this.scaleCoDiff.y(12000)]]
-      const tickVal = this.currentMWhSel === 'Revenue' && this.comparison === 'absolute' ? revTicksArray : this.currentMWhSel === 'Revenue' && this.comparison === 'relative' ? revDiffTicksArray : this.currentMWhSel === 'Total Cost per MWh' && this.comparison === 'relative' ? costMwhDiffTicksArray : costMwhTicksArray
+      const costTicksArray = [['0', '4', '8', '12', '16', '20'],
+        [this.scaleCo.y(0), this.scaleCo.y(4000000), this.scaleCo.y(8000000), this.scaleCo.y(12000000), this.scaleCo.y(16000000), this.scaleCo.y(20000000)]]
+      const costDiffTicksArray = [['-4', '0', '4', '8', '12'],
+        [this.scaleCoDiff.y(-4000000), this.scaleCoDiff.y(0), this.scaleCoDiff.y(4000000), this.scaleCoDiff.y(8000000), this.scaleCoDiff.y(12000000)]]
+      const tickVal = this.currentMWhSel === 'Total Cost' && this.comparison === 'absolute' ? costTicksArray : 'Total Cost' && this.comparison === 'relative' ? costDiffTicksArray : costMwhTicksArray
       return tickVal
     },
     yLabel () {
-      const labelCost = ['BN$/yr', this.scaleCo_MWh.y(1450)]
-      const labelCostMwh = ['$/MWh', this.scaleCo_MWh.y(1450)]
-      const ylab = this.currentMWhSel === 'Revenue' ? labelCost : labelCostMwh
+      const labelCost = ['BN$/yr', this.scaleCo.y(14000000)]
+      const labelCostMwh = ['$/MWh', this.scaleCo.y(14000000)]
+      const ylab = this.currentMWhSel === 'Total Cost' ? labelCost : labelCostMwh
       return ylab
     }
   },
   watch: {
     step (currentStep, previousStep) {
-      if (currentStep === 1) {
-        this.currentMWhSel = 'Total Cost per MWh'
-      } if (currentStep === 2) {
-        this.currentMWhSel = 'Revenue'
-      } if (currentStep === 3) {
+      if (currentStep === 2) {
         this.comparison = 'relative'
-      } else {
-        this.comparison = 'absolute'
       }
     }
   },
@@ -535,9 +541,6 @@ export default {
       const { inWrapper: el } = this.$refs
       const innerHeight = el.clientHeight || el.parentNode.clientHeight
       this.innerHeight = Math.max(innerHeight, 500)
-    },
-    format (value) {
-      return d3.format(',')(value).replace(/,/g, ' ')
     }
   },
   mounted () {

@@ -2,7 +2,7 @@
   <div  class="secondary-energy" ref="inWrapper">
     <div v-if="step < 1">
       <div class="key" :class=" mobile ? 'mobile' : 'desktop'">
-      <h4>Electricity production (Ej/year) </h4>
+      <h4>Electricity production</h4>
       <p class="selectors">
         Select a scenario and a region:
         <SensesSelect class="scenario_selector" :options="scenarios" v-model="currentScenario"/>
@@ -12,7 +12,7 @@
     </div>
     <div></div>
     <svg  :width="(innerWidth)" :height="innerHeight" :transform="`translate(${margin.left}, 0)`">
-      <g v-for="(group, g) in dots" v-bind:key="g + 'group'" :class="`${labels[g]}-group`" :transform="`translate(0, ${groupPosition[g]})`">
+      <g v-for="(group, g) in dots.slice(0, 2)" v-bind:key="g + 'group'" :class="`${labels[g]}-group`" :transform="`translate(0, ${groupPosition[g]})`">
         <!-- draws dots for energy carrier with index g   -->
         <g>
         <circle v-for="(dot, d) in group" v-bind:key="d + 'dot'" @mouseover="[active = true, over = d + labels[g]]" @mouseleave="active = false" :class="labels[g]" :cx="dot.year" cy="5" :r="dot.value"/>
@@ -26,7 +26,7 @@
           </g>
         </g>
       </g>
-    <g v-for="(group, g) in world" v-bind:key="g + 'wgroup'" :class="`${labels[g]}-wgroup`" :transform="`translate(0, ${groupPosition[g]})`">
+    <g v-for="(group, g) in world.slice(0, 2)" v-bind:key="g + 'wgroup'" :class="`${labels[g]}-wgroup`" :transform="`translate(0, ${groupPosition[g]})`">
       <!--   draws hotizontal axis line through dots and small circles at the beginning and end of axis  -->
         <g class="axis_group">
             <line class="axis" y1="5" y2="5" :x1="scale.x(2020)" :x2="scale.x(2100)"/>
@@ -104,7 +104,8 @@ export default {
       model: [...new Set(SecondaryEnergyAndAllCosts.map(r => r.Model))],
       years: [...new Set(SecondaryEnergyAndAllCosts.map(r => r.Year))],
       labels: [...new Set(SecondaryEnergyAndAllCosts.map(r => r.Variable))],
-      scenarios: [...new Set(SecondaryEnergyAndAllCosts.map(r => r.Scenario))],
+      scenarios: ['1.5ºC', '2.0ºC', 'Current Policies'],
+      scenDict: { '1.5ºC': 'NPi2020_400_v3', '2.0ºC': 'NPi2020_1000_v3', 'Current Policies': 'NPi_v3' },
       regions: [...new Set(SecondaryEnergyAndAllCosts.map(r => r.Region))],
       allValues: [...new Set(SecondaryEnergyAndAllCosts.map(r => r.Value))],
       // new Array for all "Total Cost in mwh" values to create yAxis
@@ -113,7 +114,7 @@ export default {
       MWhSel: ['Total Cost', 'Total Cost per MWh'],
       tooltip: 'Here a description of what Secondary Energy is!',
       currentMWhSel: 'Total Cost',
-      currentScenario: 'NPi2020_400_v3',
+      currentScenario: '1.5ºC',
       currentRegion: 'World',
       active: false,
       over: '',
@@ -133,7 +134,7 @@ export default {
     //   "wind": [{scenario: 1.5,...},{scenario: 1.5,...}...],
     //    ...
     //  ]
-    scenarioFilter () { return _.map(this.energy, (sc, s) => _.filter(sc, d => d.Scenario === this.currentScenario)) },
+    scenarioFilter () { return _.map(this.energy, (sc, s) => _.filter(sc, d => d.Scenario === this.scenDict[this.currentScenario])) },
     // filters over scenrioFilter Array, returns same array only with objects with CurrentRegion
     regionFilter () { return _.map(this.scenarioFilter, (re, r) => _.filter(re, d => d.Region === this.currentRegion)) },
     // filters over scenrioFilter Array, returns same array only with objects with region = World
@@ -186,7 +187,7 @@ export default {
       // console.log('dots', this.dots)
       // length of dotsArray is  = nr of energy carrier
       // returns array with the position for each energy carrier
-      const dotsArray = this.dots
+      const dotsArray = this.dots.slice(0, 2)
       let pos = 70
       return _.map(this.regionFilter, (energy, e, l) => {
         if (e !== 0) { pos = pos + this.innerHeight / dotsArray.length - 100 }
