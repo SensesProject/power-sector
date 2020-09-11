@@ -11,7 +11,7 @@
           :data="scenario"
           :scenario="key"
           :extents="extents"
-          :variables="variables"
+          :variables="visibleVariables"
         />
     </div>
   </section>
@@ -73,13 +73,10 @@ export default {
   computed: {
     data () {
       return map(datum, (d) => {
-        const obj = {}
-        forEach(this.variables, (key) => {
-          obj[key] = parseFloat(get(datum, key, 0))
-        })
         return {
           ...d,
-          ...obj
+          value: parseFloat(get(d, 'value', 0)),
+          ref: parseFloat(get(d, 'ref', 0))
         }
       })
     },
@@ -87,7 +84,6 @@ export default {
       return this.width - (this.margin.left + this.margin.right)
     },
     dataByScenario () {
-      // console.log('data', this.data)
       return groupBy(this.data, 'scenario')
     },
     extents () {
@@ -99,6 +95,10 @@ export default {
         maxes[variable] = Math.max(...map(runs, 'value'))
       })
       return maxes
+    },
+    visibleVariables () {
+      // Here we filter the list of variables by checking if the hightest value for this variable exceeds 15
+      return filter(this.variables, (variable) => get(this.extents, variable, 0) > 15)
     }
   },
   methods: {
@@ -133,11 +133,7 @@ export default {
     height: 100px;
     margin: 0 auto;
     padding: 0 0px;
-    border-bottom:0.5px solid grey;
-  }
-
-  svg {
-    background-color: lightblue;
+    border-bottom: 0.5px solid grey;
   }
 }
 
