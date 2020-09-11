@@ -250,7 +250,7 @@ export default {
     },
     // filters only the values of world from all costs Diff
     worldFilterAllRevenueDiffTotal () {
-      let vals = []
+      const vals = []
       _.forEach(this.SecondaryEnergyAndAllCosts, (data, d) => {
         if (data.Region === 'World') {
           vals.push(data.Revenue_diff)
@@ -260,7 +260,7 @@ export default {
     },
     // filters only the values of world from all costs Diff per MWh
     worldFilterAllCostDiffTotal_MWh () {
-      let vals = []
+      const vals = []
       _.forEach(this.SecondaryEnergyAndAllCosts, (data, d) => {
         if (data.Region === 'World') {
           vals.push(data.CostTotal_MWh_diff)
@@ -346,7 +346,7 @@ export default {
       }
     },
     dots () {
-      let basedata = this.worldBaseFilter
+      const basedata = this.worldBaseFilter
       return _.map(this.worldFilter, (energy, e) => {
         // console.log('e', e)
         return _.map(energy, (single, s) => {
