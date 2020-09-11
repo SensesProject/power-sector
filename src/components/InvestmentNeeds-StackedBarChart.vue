@@ -32,13 +32,35 @@
 <script>
 import { scaleLinear } from 'd3-scale'
 import { map, sum, values, filter, get, forEach } from 'lodash'
+import { format } from 'd3-format'
+
+const colors = {
+  'Coal|w/ CCS': '#8c8c94',
+  'Coal|w/o CCS': '#d7d7e3',
+  'Gas|w/ CCS': '#f8cbd4',
+  'Gas|w/o CCS': '#ed96ab',
+  'Oil|w/ CCS': '#fcb69f',
+  'Biomass|w/ CCS': '#e31a1c',
+  'Biomass|w/o CCS': '#dca0e5',
+  Nuclear: '#a3d1ea',
+  Hydro: '#ac9bd9',
+  Solar: '#ffd89a',
+  Wind: '#99cccc',
+  Geothermal: '#cc9999',
+  Ocean: '#8d88ff',
+  'Transmission and Distribution': '#47474c',
+  'Electricity Storage': '#a2e7c0'
+}
+
+function getColorFromVariable (variable) {
+  return get(colors, variable, '#000')
+}
 
 export default {
   name: 'InvestmentNeedsStackedBarChart',
   props: ['data', 'scenario', 'extents', 'variables', 'gap', 'isStacked'],
   data: () => {
     return {
-      colors: ['#8c8c94', '#d7d7e3', '#f8cbd4', '#ed96ab', '#fcb69f', '#e31a1c', '#dca0e5', '#a3d1ea', '#ac9bd9', '#ffd89a', '#99cccc', '#cc9999', '#8d88ff', '#47474c', '#a2e7c0'],
       width: 0,
       height: 100,
       margin: {
@@ -76,15 +98,17 @@ export default {
       return map(this.elements, (d) => get(d, 'x1', 0) - this.gap)
     },
     sumThis () {
-      return sum(map(this.elements, 'value'))
+      return this.formatNumber(sum(map(this.elements, 'value')))
     },
     elements () {
       let x0 = 0
-      return map(this.variables, (variable, i) => {
-        const color = get(this.colors, i, '#222')
+      return map(this.variables, (variable) => {
+        const color = getColorFromVariable(variable)
         const data = get(filter(this.data, { variable }), 0)
+        // console.log({ data })
 
-        const value = parseFloat(get(data, 'value', 0))
+        const value = get(data, 'value', 0)
+        const ref = get(data, 'ref', 0)
         const y = 0
 
         const x1 = this.isStacked ? this.scaleX(get(this.extents, variable, value)) + this.gap : this.scaleX(value)
@@ -94,7 +118,7 @@ export default {
           key: variable,
           x: x0,
           y,
-          label: Math.round((value + Number.EPSILON) * 100) / 100,
+          label: this.formatNumber(value),
           x0,
           x1,
           width,
@@ -129,6 +153,9 @@ export default {
       if (el !== 'undefined') {
         this.width = el.clientWidth || el.parentNode.clientWidth
       }
+    },
+    formatNumber (n) {
+      return format(',.2r')(n)
     }
   }
 }
