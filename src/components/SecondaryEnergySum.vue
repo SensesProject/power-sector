@@ -279,6 +279,7 @@ $margin-space: $spacing / 2;
   svg {
     .axis {
       stroke: $color-gray;
+      stroke-width: 0.3;
     }
     circle {
       fill: $color-gray;

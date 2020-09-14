@@ -70,11 +70,11 @@
       </g>
       <!--legend for pie chart -->
       <svg >
-        <text :x="scale.x(2020)" :y="innerHeight*0.65" >Fuel Cost including carbon emission costs"</text>
+        <text :x="scale.x(2020)" :y="innerHeight*0.65" >Fuel cost, including carbon emission costs</text>
         <circle :cx="scale.x(2018)" :cy="innerHeight*0.644" r="8" :class="'fuelcost'"/>
-        <text :x="scale.x(2020)" :y="innerHeight*0.7" >Capital Cost</text>
+        <text :x="scale.x(2020)" :y="innerHeight*0.7" >Capital cost</text>
         <circle :cx="scale.x(2018)" :cy="innerHeight*0.695" r="8" :class="'capcost'"/>
-        <text :x="scale.x(2020)" :y="innerHeight*0.75" >Operational Cost</text>
+        <text :x="scale.x(2020)" :y="innerHeight*0.75" >Operational cost</text>
         <circle :cx="scale.x(2018)" :cy="innerHeight*0.744" r="8" :class="'omcost'" />
       </svg>
     </svg>
@@ -313,6 +313,7 @@ $margin-space: $spacing / 2;
 
     .axis {
       stroke: $color-gray;
+      stroke-width: 0.3;
     }
     circle {
       fill: $color-gray;
@@ -364,32 +365,32 @@ $margin-space: $spacing / 2;
     }
     .omcost_per{
       // stroke: getColor(yellow, 60);
-      stroke: getColor(gray, 50);
+      stroke: #F0E160;
       fill-opacity: 0.6;
     }
     .capcost_per{
-      stroke: getColor(yellow, 80);
+      stroke: #75D9F0;
       fill-opacity: 0.6;
       stroke-opacity: 0.7;
     }
     .fuelcost_per{
-      stroke: lighten(#336666, 40) ;
+      stroke: #A3215B ;
       fill-opacity: 0.6;
       stroke-opacity: 0.9;
 
     }
     .omcost{
-      fill: getColor(gray, 50);
+      fill: #F0E160;
       stroke: #5d5d63;
 
     }
     .capcost{
-      fill: getColor(yellow, 80);
+      fill: #75D9F0;
       fill-opacity: 0.7;
       stroke: #5d5d63;
     }
     .fuelcost{
-      fill:lighten(#336666, 40);
+      fill:#A3215B;
       fill-opacity: 0.9;
       stroke: #5d5d63;
     }

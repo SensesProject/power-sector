@@ -33,7 +33,7 @@
         <g>
         <circle v-for="(dot, d) in group" v-bind:key="d + 'dot'" @mouseover="[active = true, over = d + labels[g]]" @mouseleave="active = false" :class="labels[g]" :cx="dot.year" cy="5" :r="dot.value"/>
         <!-- labels for energy carrier g-->
-        <text class="value-label" :x="scale.x(2019)" y="50">{{ labels[g] }}</text>
+        <text class="value-label" :x="scale.x(2009.5)" y="10">{{ labels[g] }}</text>
         </g>
         <g v-if="comparison == 'relative'">
         <circle v-for="(dot, d) in group" v-bind:key="d + 'Basedot'" @mouseover="[active = true, over = d + labels[g]]" @mouseleave="active = false" :class="`${labels[g]}-base`" :cx="dot.year" cy="5" :r="dot.basevalue"/>
@@ -42,7 +42,7 @@
         <g v-if="step < 1" >
         <g v-for="(text, t) in group" :key="t + 'text'" >
           <g v-if="t == 0 || t == 8">
-          <text class="year-label" :x="text.year" y="20">{{ years[t] }}</text>
+          <text class="year-label" :x="text.year" y="22">{{ years[t] }}</text>
           </g>
         </g>
       </g>
@@ -57,7 +57,7 @@
         <!-- Hover over, shows values for each dot -->
         <g v-for="(text, t) in group" v-bind:key="t + 'text'" :class="active === true & over === t + labels[g] & comparison === 'absolute' ? 'visible' : 'invisible'">
           <circle class="year-dot" :cx="text.year" cy="5" r="2.5"/>
-          <text class="year-label" :x="text.year" y="20">{{ years[t] }}</text>
+          <text class="year-label" :x="text.year" y="22">{{ years[t] }}</text>
           <text class="year-label" :x="text.year" y="-32">{{ Math.round(text.valueEJ) }} Ej/year</text>
           <line class="line-label" :x1="text.year" :x2="text.year" y1="-25" y2="5"/>
         </g>
@@ -68,16 +68,15 @@
           <text class="year-label" :x="text.year" y="-15">{{ Math.round(text.valueDiff) }} Ej/year</text>
         </g>
       </g>
-    <!--separation line-->
     <g v-if="step >= 1">
     <!-- <line class="axis" :x1="0" :y1="(0.5*innerHeight)" :x2="0.95*innerWidth" :y2="(0.5*innerHeight)" /> -->
     <!--barchart-->
     <g v-if="comparison == 'absolute'">
-    <!--bars for fossils and low-carb-->
+    <!--bars for fossils and renewables-->
     <g v-if="currentMWhSel == 'Total Cost per MWh'">
     <g v-for="(group, g) in dots" v-bind:key="g + 'rgroup'" :class="`${labels[g]}-group`" >
         <g>
-        <rect v-for="(rec, r) in group" v-bind:key="r + 'rect6'" :class="labels[g] + '-bar'" :width="rec.barWidth" :x="(rec.year+barXshift[g])" :y="(rec.AllY+0.5*innerHeight)" :height="rec.AllCosts"/>
+        <rect v-for="(rec, r) in group" v-bind:key="r + 'rect6'" :class="labels[g] + '-bar'" :width="rec.barWidth" :x="(rec.year+barXshift[g]-1.1*rec.barWidth)" :y="(rec.AllY+0.45*innerHeight)" :height="rec.AllCosts"/>
         </g>
     </g>
     </g>
@@ -85,49 +84,50 @@
     <g v-if="currentMWhSel == 'Revenue'">
       <g  :class="`${labels[0]}-group`" >
           <g>
-          <rect v-for="(rec, r) in dots[0]" v-bind:key="r + 'rect6'" :class="labels[0] + '-bar'" :width="rec.barWidth" :x="(rec.year+barXshift[0])" :y="(rec.AllY+0.5*innerHeight)" :height="rec.AllCosts"/>
-          <rect v-for="(rec, r) in dots[0]" v-bind:key="r + 'rect7'" :class="labels[1] + '-bar'" :width="rec.barWidth" :x="(rec.year+barXshift[0])" :y="(rec.RevVarY+0.5*innerHeight)" :height="rec.RevVar"/>
+          <rect v-for="(rec, r) in dots[0]" v-bind:key="r + 'rect6'" :class="labels[0] + '-bar'" :width="rec.barWidth" :x="(rec.year+barXshift[0]-0.5*rec.barWidth)" :y="(rec.AllY+0.45*innerHeight)" :height="rec.AllCosts"/>
+          <rect v-for="(rec, r) in dots[0]" v-bind:key="r + 'rect7'" :class="labels[1] + '-bar'" :width="rec.barWidth" :x="(rec.year+barXshift[0]-0.5*rec.barWidth)" :y="(rec.RevVarY+0.45*innerHeight)" :height="rec.RevVar"/>
       </g>
       </g>
     </g>
     </g>
-    <!--Only showing bar with total costs for relative values-->
+    <!-- bar with total costs for relative values-->
     <g v-else>
       <g v-for="(group, g) in dots" v-bind:key="g + 'rgroup'" :class="`${labels[g]}-group`" >
           <g>
-          <rect v-for="(rec, r) in group" v-bind:key="r + 'rect5'" :class="labels[g] + '-bar'" :width="rec.barWidth" :x="(rec.year+barXshift[g])" :y="(rec.AllY+0.5*innerHeight)" :height="rec.AllCosts"/>
+          <rect v-for="(rec, r) in group" v-bind:key="r + 'rect5'" :class="labels[g] + '-bar'" :width="rec.barWidth" :x="(rec.year+barXshift[g]-1.1*rec.barWidth)" :y="(rec.AllY+0.45*innerHeight)" :height="rec.AllCosts"/>
           </g>
     </g>
   </g>
   <!--transparent bar for hover over-->
-  <rect v-for="(layer, l) in dots[0]" v-bind:key="l + 'layer'"  @mouseover="[activeLayer = true, over = l + labels[0]]" @mouseleave="activeLayer = false" class="HoverLayer" :width="layer.barWidth*4" :x="(layer.year)" :y="(0.5*innerHeight)" :height="(0.4*innerHeight)"/>
+  <rect v-for="(layer, l) in dots[0]" v-bind:key="l + 'layer'"  @mouseover="[activeLayer = true, over = l + labels[0]]" @mouseleave="activeLayer = false" class="HoverLayer" :width="layer.barWidth*4" :x="(layer.year)" :y="(0.45*innerHeight)" :height="(0.4*innerHeight)"/>
     <g v-for="(group, g) in dots" v-bind:key="g + 'textgroup'" :class="`${labels[g]}-group`" >
       <!--Text: Values on mouse over for barchart-->
         <g v-for="(text, t) in group" v-bind:key="t + 'textAll'" :class="activeLayer === true & over === t + labels[g] ? 'visible' : 'invisible'">
-        <!--  <text class="cost-label" :x="(scale.x(2013)+text.year+barXshift[0])" :y="(dots[0][t].AllY+0.47*innerHeight)">Fossils</text>-->
-          <text class="value-label" :x="(scale.x(2014.45)+text.year)" :y="(0.96*innerHeight)">Fossils: {{ format(Math.round(dots[0][t].AllCostValue)) }} {{text.Unit}}</text>
-        <!--  <text class="cost-label" :x="(scale.x(2019)+text.year+barXshift[1])" :y="(dots[1][t].AllY+0.47*innerHeight)">Renewables</text> -->
-          <text class="value-label" :x="(scale.x(2014.45)+text.year)" :y="(0.98*innerHeight)">Renewables: {{ format(Math.round(dots[1][t].AllCostValue)) }} {{text.Unit}}</text>
-          <line class="line-label" :x1="text.year+barXshift[1]" :x2="text.year+barXshift[1]" :y1="(0.94*innerHeight)" :y2="(0.91*innerHeight)"/>
-          <circle class="year-dot" :cx="text.year+barXshift[1]" :cy="(0.91*innerHeight)" r="2"/>
+          <text class="year-label" :x="(text.year)" :y="(0.93*innerHeight)">Fossils: {{ format(Math.round(dots[0][t].AllCostValue)) }} {{text.Unit}}</text>
+          <text class="year-label" :x="(text.year)" :y="(0.95*innerHeight)">Renewables: {{ format(Math.round(dots[1][t].AllCostValue)) }} {{text.Unit}}</text>
+          <text v-if="comparison == 'absolute' && currentMWhSel == 'Revenue'" class="year-label" :x="(text.year)" :y="(0.97*innerHeight)">Total: {{ format(Math.round(dots[0][t].AllCostValue + dots[1][t].AllCostValue)) }} {{text.Unit}}</text>
+          <!--Line and circle for hover over indicator-->
+          <line class="line-label" :x1="text.year" :x2="text.year" :y1="(0.91*innerHeight)" :y2="(0.88*innerHeight)"/>
+          <circle class="year-dot" :cx="text.year" :cy="(0.91*innerHeight)" r="2"/>
         </g>
         <!--horizontal dashed line at y=0 for case of rel value -->
         <g v-if="comparison == 'relative' && currentMWhSel == 'Revenue'" >
-          <line class="line-label-dashed" :x1="scale.x(2020)" :x2="scale.x(2104.5)" :y1="(0.9*innerHeight) - scaleCoDiff.y(0)" :y2="(0.9*innerHeight)- scaleCoDiff.y(0)"/>
+          <line class="line-label-dashed" :x1="scale.x(2020)" :x2="scale.x(2104.5)" :y1="(0.85*innerHeight) - scaleCoDiff.y(0)" :y2="(0.85*innerHeight)- scaleCoDiff.y(0)"/>
         </g>
       </g>
       <!--x Axis-->
       <g v-for="(year, j) in years" v-bind:key="j+'year'">
-        <line class="axis" :x1="scale.x(year)" y1="0" :x2="scale.x(year)" :y2="(0.9*innerHeight)"/>
-        <text class="year-label" :x="scale.x(year)" :y="(0.92*innerHeight)">{{ years[j] }}</text>
+        <!--vertical lines through all dots-->
+        <line class="axis-vertical" :x1="scale.x(year)" y1="0" :x2="scale.x(year)" :y2="(0.85*innerHeight)"/>
+        <text class="year-label" :x="scale.x(year)" :y="(0.87*innerHeight)">{{ years[j] }}</text>
       </g>
       <!--y Axis-->
       <g v-for="(val, v) in yTicks[0]" v-bind:key="v+'val'">
-        <line class="axis" x1="35" :y1="(0.9 * innerHeight) - yTicks[1][v]" x2="50" :y2="(0.9 * innerHeight) - yTicks[1][v]"/>
-        <text class="year-label" x="27" :y="(0.9 * innerHeight) - yTicks[1][v] -3" > {{ val }} </text>
+        <line class="axis" x1="65" :y1="(0.85 * innerHeight) - yTicks[1][v]" x2="90" :y2="(0.85 * innerHeight) - yTicks[1][v]"/>
+        <text class="year-label" x="35" :y="(0.85 * innerHeight) - yTicks[1][v] -3" > {{ val }} {{ yLabel[0] }} </text>
       </g>
       <g>
-        <text class="year-label" x="27" :y="(0.765 * innerHeight) - yLabel[1]" > {{ yLabel[0] }} </text>
+        <!-- <text class="year-label" x="27" :y="(0.765 * innerHeight) - yLabel[1]" > {{ yLabel[0] }} </text> -->
       </g>
       </g>
     </svg>
@@ -280,7 +280,7 @@ export default {
     scale () {
       return {
         x: d3.scaleLinear()
-          .range([50, this.innerWidth - (this.margin.right * 12)])
+          .range([90, this.innerWidth - (this.margin.right * 12)])
           .domain([2020, 2100]),
         y: d3.scaleLinear()
           .range([2, 1500])
@@ -368,8 +368,9 @@ export default {
               AllY: (0.4 * this.innerHeight) - this.scaleCo.y(single.Revenue) - this.scaleCo.y(single.Revenue_var),
               RevVarY: (0.4 * this.innerHeight) - this.scaleCo.y(single.Revenue_var),
               // Hover Over real values
-              RevVarValue: single.Revenue_var,
-              AllCostValue: single.Revenue
+              RevVarValue: parseFloat(single.Revenue_var),
+              AllCostValue: parseFloat(single.Revenue),
+              RevTotalValue: this.RevVarValue + this.AllCostValue
             }
           } else if (this.currentMWhSel === 'Revenue' && this.comparison === 'relative') {
             return {
@@ -624,6 +625,12 @@ $margin-space: $spacing / 2;
   svg {
     .axis {
       stroke: $color-gray;
+      stroke-width: 0.3;
+
+    }
+    .axis-vertical {
+      stroke: $color-gray;
+      stroke-width: 0.3;
     }
     circle {
       fill: $color-gray;
@@ -638,6 +645,8 @@ $margin-space: $spacing / 2;
         text-anchor: middle;
         fill: black;
         font-size: 10px;
+        -webkit-text-stroke-width: 10px;
+        -webkit-text-stroke-color: white;
       }
       .cost-label {
         fill: black;

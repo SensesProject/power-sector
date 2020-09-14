@@ -108,7 +108,7 @@ export default {
         // console.log({ data })
 
         const value = get(data, 'value', 0)
-        const ref = get(data, 'ref', 0)
+        // const ref = get(data, 'ref', 0)
         const y = 0
 
         const x1 = this.isStacked ? this.scaleX(get(this.extents, variable, value)) + this.gap : this.scaleX(value)
