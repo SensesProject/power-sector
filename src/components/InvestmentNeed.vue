@@ -3,16 +3,18 @@
     <header class="key">
       <h4>Energy investment needs</h4>
       <label><input type="checkbox" v-model="isStacked">is stacked?</label>
+      <label><input type="checkbox" v-model="showDifference">show Difference?</label>
     </header>
-    <div v-for="(scenario, key) in dataByScenario" :key="key" class="scenario">
-      <InvestmentNeedsStackedBarChart
-          :isStacked="isStacked"
-          :gap="20"
-          :data="scenario"
-          :scenario="key"
-          :extents="extents"
-          :variables="visibleVariables"
-        />
+    <div v-for="key in scenarios" :key="key" class="scenario">
+      <Chart
+        :isStacked="isStacked"
+        :showDifference="showDifference"
+        :gap="30"
+        :data="dataByScenario[key]"
+        :scenario="key"
+        :extents="extents"
+        :variables="visibleVariables"
+      />
     </div>
   </section>
 </template>
@@ -20,12 +22,12 @@
 <script>
 import { groupBy, filter, map, forEach, get } from 'lodash'
 import datum from 'dsv-loader!@/assets/data/Investments.csv' // eslint-disable-line import/no-webpack-loader-syntax
-import InvestmentNeedsStackedBarChart from './InvestmentNeeds-StackedBarChart'
+import Chart from './InvestmentNeeds/Chart'
 
 export default {
   name: 'EmiCostsRisk',
   components: {
-    InvestmentNeedsStackedBarChart
+    Chart
   },
   props: {
     width: {
@@ -51,6 +53,7 @@ export default {
       },
       innerHeight: 0,
       isStacked: true,
+      showDifference: false,
       variables: [
         'Coal|w/ CCS',
         'Coal|w/o CCS',
@@ -67,7 +70,8 @@ export default {
         'Ocean',
         'Transmission and Distribution',
         'Electricity Storage'
-      ]
+      ],
+      scenarios: ['CPol', 'NDC', '2C', '1.5C']
     }
   },
   computed: {
@@ -98,7 +102,7 @@ export default {
     },
     visibleVariables () {
       // Here we filter the list of variables by checking if the hightest value for this variable exceeds 15
-      return filter(this.variables, (variable) => get(this.extents, variable, 0) > 15)
+      return filter(this.variables, (variable) => get(this.extents, variable, 0) > 5)
     }
   },
   methods: {
