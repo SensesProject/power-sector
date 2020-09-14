@@ -6,33 +6,38 @@
     </div>
     <svg ref="vis" class="vis">
       <g v-if="width">
-        <g v-for="{ key, x, width, height, y, color, label } in elements" :key="key">
-          <rect
-            :x="x"
-            :width="width"
-            :height="height"
-            :y="y"
-            :style="{ fill: color }"
-          />
-          <text
-            v-if="isStacked"
-            ref="labels"
-            :x="0"
-            :style="`transform: translateX(${x}px)`"
-            :y="y + height + 10"
-            dominant-baseline="hanging"
-            class="label"
-          >{{ label  }}{{ key  }}</text>
+        <g v-for="(el, i) in elements" :key="el.id">
+          <Bar
+            v-bind="el" />
+          <g v-if="el.widthRef !== el.width && isStacked" :class="['difference', { showDifference }]">
+            <DiffLess
+              v-if="el.widthRef < el.width"
+              v-bind="el" />
+            <DiffMore
+              v-else
+              v-bind="el" />
+          </g>
+          <Label
+            v-bind="el"
+            :widths="widths[i]"
+            v-if="!(showDifference && scenario === 'CPol') && isStacked"
+            :showDifference="showDifference" />
         </g>
       </g>
+      <PatternDefs />
     </svg>
   </div>
 </template>
 
 <script>
 import { scaleLinear } from 'd3-scale'
-import { map, sum, values, filter, get, forEach } from 'lodash'
+import { map, sum, filter, get } from 'lodash'
 import { format } from 'd3-format'
+import Bar from './Bar'
+import PatternDefs from './PatternDefs'
+import DiffLess from './DiffLess'
+import DiffMore from './DiffMore'
+import Label from './Label'
 
 const colors = {
   'Coal|w/ CCS': '#8c8c94',
@@ -58,7 +63,14 @@ function getColorFromVariable (variable) {
 
 export default {
   name: 'InvestmentNeedsStackedBarChart',
-  props: ['data', 'scenario', 'extents', 'variables', 'gap', 'isStacked'],
+  props: ['data', 'scenario', 'extents', 'variables', 'gap', 'isStacked', 'showDifference'],
+  components: {
+    Bar,
+    PatternDefs,
+    DiffLess,
+    DiffMore,
+    Label
+  },
   data: () => {
     return {
       width: 0,
@@ -69,25 +81,24 @@ export default {
         top: 70,
         bottom: 10
       },
-      region: 'World',
-      showModels: false,
-      barDifference: false
+      region: 'World'
     }
   },
   computed: {
     label () {
-      const pronom = this.region === 'World' ? 'we' : this.region
       const labels = {
-        CPol: `What ${pronom} ${this.region === 'World' ? 'are' : 'is'} <strong>currently</strong> investing <small>(Current policies)</small>`,
-        NDC: `What ${pronom} <strong>pledged</strong> to invest <small>(Nationally Determined Contributions)</small>`,
-        '2C': `What ${pronom} <strong>should</strong> invest for <strong>2°C</strong>`,
-        '1.5C': `What ${pronom} <strong>should</strong> invest for <strong>1.5°C</strong>`
+        CPol: 'What we are <strong>currently</strong> investing <small>(Current policies)</small>',
+        NDC: 'What we <strong>pledged</strong> to invest <small>(Nationally Determined Contributions)</small>',
+        '2C': 'What we <strong>should</strong> invest for <strong>2°C</strong>',
+        '1.5C': 'What we <strong>should</strong> invest for <strong>1.5°C</strong>'
       }
-      return get(labels, this.scenario, this.scenario)
+      return get(labels, this.scenario)
     },
     total () {
       // The total sum of values. This marks the max value for the x-scale
-      return sum(values(this.extents))
+      return sum(map(this.variables, (variable) => {
+        return get(this.extents, variable, 0)
+      }))
     },
     scaleX () {
       return scaleLinear()
@@ -100,49 +111,48 @@ export default {
     sumThis () {
       return this.formatNumber(sum(map(this.elements, 'value')))
     },
+    barHeight () {
+      return this.height / 2
+    },
     elements () {
       let x0 = 0
       return map(this.variables, (variable) => {
         const color = getColorFromVariable(variable)
         const data = get(filter(this.data, { variable }), 0)
-        // console.log({ data })
 
         const value = get(data, 'value', 0)
         const ref = get(data, 'ref', 0)
-        const y = 0
+        const extent = get(this.extents, variable, 0)
 
-        const x1 = this.isStacked ? this.scaleX(get(this.extents, variable, value)) + this.gap : this.scaleX(value)
+        const diff = value - ref
+
         const width = this.scaleX(value)
-        const height = this.height / 2
+        const widthRef = this.scaleX(ref)
+        const widthExtent = this.scaleX(extent) + this.gap
+
+        const x1 = this.isStacked ? widthExtent : width // End
+
         const obj = {
-          key: variable,
-          x: x0,
-          y,
+          id: variable,
+          x: x0, // Start
           label: this.formatNumber(value),
-          x0,
+          height: this.barHeight,
           x1,
           width,
+          widthRef,
           value,
-          height,
-          color
+          color,
+          diff: (diff > 0 ? '+' : '') + this.formatNumber(diff).replace('-', '–')
         }
 
-        x0 += this.isStacked ? this.scaleX(get(this.extents, variable, value)) + this.gap : this.scaleX(value)
+        x0 += x1
         return obj
       })
     }
   },
   mounted () {
-    // console.log('elements', this.elements)
     this.calcSizes()
     window.addEventListener('resize', this.calcSizes, false)
-  },
-  updated () {
-    forEach(this.$refs.labels, (label, i) => {
-      const { width } = label.getBBox()
-      label.style.opacity = width < this.widths[i] ? 1 : 0
-    })
-    this.calcSizes()
   },
   beforeDestroy () {
     window.removeEventListener('resize', this.calcSizes, false)
@@ -200,6 +210,18 @@ export default {
           stroke: #fff;
           stroke-width: 2px;
           stroke-dasharray: 1px, 1px;
+        }
+      }
+
+      .difference {
+        rect, line {
+          opacity: 0;
+        }
+
+        &.showDifference {
+          rect, line {
+            opacity: 1;
+          }
         }
       }
 
