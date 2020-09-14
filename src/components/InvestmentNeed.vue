@@ -102,7 +102,7 @@ export default {
     },
     visibleVariables () {
       // Here we filter the list of variables by checking if the hightest value for this variable exceeds 15
-      return filter(this.variables, (variable) => get(this.extents, variable, 0) > 15)
+      return filter(this.variables, (variable) => get(this.extents, variable, 0) > 5)
     }
   },
   methods: {
