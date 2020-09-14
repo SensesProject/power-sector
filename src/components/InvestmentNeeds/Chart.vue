@@ -6,7 +6,7 @@
     </div>
     <svg ref="vis" class="vis">
       <g v-if="width">
-        <g v-for="(el, i) in elements" :key="el.id">
+        <g v-for="(el, i) in elements" v-tooltip="el.tooltip" :key="el.id">
           <Bar
             v-bind="el" />
           <g v-if="el.widthRef !== el.width && isStacked" :class="['difference', { showDifference }]">
@@ -126,6 +126,8 @@ export default {
 
         const diff = value - ref
 
+        const tooltip = this.createTooltip(variable, value, ref, diff)
+
         const width = this.scaleX(value)
         const widthRef = this.scaleX(ref)
         const widthExtent = this.scaleX(extent) + this.gap
@@ -142,6 +144,7 @@ export default {
           widthRef,
           value,
           color,
+          tooltip,
           diff: (diff > 0 ? '+' : '') + this.formatNumber(diff).replace('-', '–')
         }
 
@@ -158,6 +161,48 @@ export default {
     window.removeEventListener('resize', this.calcSizes, false)
   },
   methods: {
+    createTooltip (variable, value, reference, diff) {
+      const { formatNumber: fN } = this
+      switch (this.scenario) {
+        case 'CPol':
+          return `
+            <header>${variable}</header>
+            <p>
+              We are currently investing <strong>${fN(reference)}</strong> Billion US-Dollar per year in ${variable}.
+            </p>
+          `
+        case 'NDC':
+          return `
+            <header>${variable}</header>
+            <p>
+              We are currently investing <strong>${fN(reference)}</strong> Billion US-Dollar per year in ${variable},<br />
+              but we pledged to invest <strong>${fN(value)}</strong>.
+              That means, we pledged<br />
+              to invest <strong>${fN(Math.abs(diff))} ${diff > 0 ? 'more' : 'less'}</strong> in ${variable}.
+            </p>
+          `
+        case '1.5C':
+          return `
+            <header>${variable}</header>
+            <p>
+              We are currently investing <strong>${fN(reference)}</strong> Billion US-Dollar per year in ${variable},<br />
+              but for for the 1.5C target we should invest <strong>${fN(value)}</strong>.
+              That means,<br />
+              we should invest <strong>${fN(Math.abs(diff))} ${diff > 0 ? 'more' : 'less'}</strong> in ${variable}.
+            </p>
+          `
+        case '2C':
+          return `
+            <header>${variable}</header>
+            <p>
+              We are currently investing <strong>${fN(reference)}</strong> Billion US-Dollar per year in ${variable},<br />
+              but for for the 2C target we should invest <strong>${fN(value)}</strong>.
+              That means,<br />
+              we should invest <strong>${fN(Math.abs(diff))} ${diff > 0 ? 'more' : 'less'}</strong> in ${variable}.
+            </p>
+          `
+      }
+    },
     calcSizes () {
       const { vis: el } = this.$refs
       if (el !== 'undefined') {
@@ -165,7 +210,7 @@ export default {
       }
     },
     formatNumber (n) {
-      return format(',.2r')(n)
+      return format('.1f')(n)
     }
   }
 }
@@ -235,6 +280,132 @@ export default {
       display: grid;
       font-size: 8px;
       color: getColor(gray, 60);
+    }
+  }
+
+  .tooltip {
+    font-size: 0.8rem;
+    font-weight: $font-weight-regular;
+    letter-spacing: 0.02em;
+
+    header {
+      font-weight: $font-weight-bold;
+      font-size: 1.0rem;
+      margin: 0 0 $spacing / 6;
+    }
+  }
+
+  .tooltip {
+    $background-color: getColor(gray, 10);
+    $text-color: #fff;
+
+    display: block !important;
+    z-index: 10000;
+    box-shadow: $box-shadow--strong;
+
+    .tooltip-inner {
+      background: $background-color;
+      color: $text-color;
+      border-radius: $border-radius;
+      padding: $spacing / 3 $spacing / 2 $spacing / 2;
+    }
+
+    .tooltip-arrow {
+      width: 0;
+      height: 0;
+      border-style: solid;
+      position: absolute;
+      margin: 5px;
+      border-color: $background-color;
+      z-index: 1;
+    }
+
+    &[x-placement^="top"] {
+      margin-bottom: 5px;
+
+      .tooltip-arrow {
+        border-width: 5px 5px 0 5px;
+        border-left-color: transparent !important;
+        border-right-color: transparent !important;
+        border-bottom-color: transparent !important;
+        bottom: -5px;
+        left: calc(50% - 5px);
+        margin-top: 0;
+        margin-bottom: 0;
+      }
+    }
+
+    &[x-placement^="bottom"] {
+      margin-top: 5px;
+
+      .tooltip-arrow {
+        border-width: 0 5px 5px 5px;
+        border-left-color: transparent !important;
+        border-right-color: transparent !important;
+        border-top-color: transparent !important;
+        top: -5px;
+        left: calc(50% - 5px);
+        margin-top: 0;
+        margin-bottom: 0;
+      }
+    }
+
+    &[x-placement^="right"] {
+      margin-left: 5px;
+
+      .tooltip-arrow {
+        border-width: 5px 5px 5px 0;
+        border-left-color: transparent !important;
+        border-top-color: transparent !important;
+        border-bottom-color: transparent !important;
+        left: -5px;
+        top: calc(50% - 5px);
+        margin-left: 0;
+        margin-right: 0;
+      }
+    }
+
+    &[x-placement^="left"] {
+      margin-right: 5px;
+
+      .tooltip-arrow {
+        border-width: 5px 0 5px 5px;
+        border-top-color: transparent !important;
+        border-right-color: transparent !important;
+        border-bottom-color: transparent !important;
+        right: -5px;
+        top: calc(50% - 5px);
+        margin-left: 0;
+        margin-right: 0;
+      }
+    }
+
+    &.popover {
+      $color: #f9f9f9;
+
+      .popover-inner {
+        background: $color;
+        color: black;
+        padding: 24px;
+        border-radius: 5px;
+        box-shadow: 0 5px 30px rgba(black, .1);
+      }
+
+      .popover-arrow {
+        border-color: $color;
+      }
+    }
+
+    &[aria-hidden='true'] {
+      visibility: hidden;
+      opacity: 0;
+      transition: opacity .15s, visibility .15s;
+    }
+
+    &[aria-hidden='false'] {
+      visibility: visible;
+      opacity: 1;
+      transition: opacity .15s;
     }
   }
 

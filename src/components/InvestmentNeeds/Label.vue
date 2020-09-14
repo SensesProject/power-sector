@@ -6,16 +6,25 @@
     :y="height + 10"
     dominant-baseline="hanging"
     class="label"
+    style="opacity: 0;"
   >{{ showDifference ? diff : label }}</text>
 </template>
 
 <script>
 export default {
-  props: ['x', 'y', 'height', 'diff', 'label', 'showDifference', 'widths'],
+  props: ['x', 'y', 'height', 'diff', 'label', 'showDifference', 'widths', 'id'],
+  mounted () {
+    this.show()
+  },
   updated () {
-    const { label } = this.$refs
-    const { width } = label.getBBox()
-    label.style.opacity = width < this.widths ? 1 : 0
+    this.show()
+  },
+  methods: {
+    show () {
+      const { label } = this.$refs
+      const { width } = label.getBBox()
+      label.style.opacity = width < this.widths ? 1 : 0
+    }
   }
 }
 </script>
