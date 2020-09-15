@@ -3,7 +3,7 @@
     <SensesMenu :id="'power-sector'"/>
     <div class="content" :class="mobile ? 'isMobile' : 'isDesktop'" ref="container">
       <div class="text-wrapper">
-        <h1 class="module-title">Power Sector</h1>
+        <h1 class="module-title">Transition Risks – Power Sector Transformation</h1>
         <p>This is the second chapter of the Finance Risks Pathway.
           You can select another chapter below.</p>
       </div>
@@ -12,19 +12,15 @@
         <h2 class="chapter-title" id="introduction">
           What risks will be discussed?
         </h2>
-        <p>The Paris agreement aims to limit global warming to 2°C and pursue
-          efforts to limit to 1.5°C. An essential step for this is to decarbonize
-          electricity production. As can be easily seen below, when comparing energy
-          production from fossil fuels with renewables, energy is currently
-          still mainly being produced from fossil fuels. However if a carbon tax is
-          introduced, fuel costs will rise and at some point it will become
-          unprofitable to generate electricity from fossil fuels resulting in a
-          shift towards renewable energies.
+        <p class="cost-risk-paragraph">The Paris agreement aims to limit global warming to well-below 2°C.
+          An essential step in reaching that goal is to decarbonize global electricity production.
+          In this module we explore the risks and opportunities that result from the decarbonization of
+          the power sector and we explain why investors should take climate policy into account in their
+          decision-making.
           <br>
           <br>
-          In this module we show the risks and opportunities that
-          result from the decarbonization of the power sector and explain why investors
-          should consider climate policy in their decisions.
+          We will explore the changes in electricity production and revenue, the <b>changing risk structure </b>
+          of the power sector, the <b>risk of fuel costs </b> and emission costs, and the need for clean investments.
         </p>
       </div>
       <LayoutScrollytelling>
@@ -35,34 +31,60 @@
         </template>
         <div slot="text" class="observer">
         <IntersectionObserver :step="0"  align="right">
-          <p>I do nothing.</p>
+          <p>In climate stabilization scenarios, the power sector is expected to go through a
+            major transition from fossil fuel electricity production to low carbon electricity. </p>
         </IntersectionObserver>
         <IntersectionObserver :step="1"  align="right">
-          <p>I am triggering the cost graph.</p>
+          <p>In the scenarios, this transition is driven by a carbon tax that increases the relative costs
+            of fossil fuels compared to renewables and other low-carbon technologies
+          </p>
         </IntersectionObserver>
-        <IntersectionObserver :step="2"  align="right" class="changeheight">
-          <p>I am triggering the relative values.</p>
+        <IntersectionObserver :step="2"  align="right">
+          <p>As a result, revenue within the power sector shifts from fossil utilities to low-carbon
+            based utilities.
+          </p>
+        </IntersectionObserver>
+        <IntersectionObserver :step="3"  align="right" class="changeheight">
+          <p>relative values
+          </p>
         </IntersectionObserver>
       </div>
       </LayoutScrollytelling>
       <div class="text-wrapper">
         <p>Let’s have a look at the volume in electricity production of different energy carrier:</p>
       </div>
-      <div class="vis-wrapper secondaryenergy">
-        <SecondaryEnergy :width="width" :height="height" :mobile="mobile"/>
+      <LayoutScrollytelling>
+        <template v-slot:vis="{ width, height, step }">
+          <div class="vis-inner" :style="{width: `${width}px`, height: `${height}px`}">
+            <SecondaryEnergy :width="width" :height="height" :step="step"/>
+          </div>
+        </template>
+        <div slot="text" class="observer">
+        <IntersectionObserver :step="0"  align="right" class="changeheight">
+          <p>Under mitigation scenarios coal is quickly phased out. However, natural gas can play a
+            substantial role in power production until mid-century. Rapid growth is expected in low-carbon
+            technologies like solar, wind and nuclear under the 2C and 1.5C scenarios.
+          </p>
+        </IntersectionObserver>
       </div>
+      </LayoutScrollytelling>
       <div class="text-wrapper">
         <h2 class="chapter-title" id="structure">
-          Changing Cost Structure risk
+          Changing risk Structure
         </h2>
-        <p>As seen above low-carbon energy technologies, such as solar and wind,
-        but also nuclear, require higher capital investments than fossil power
-        plants. However, they do not (or barely) need any fuel to operate making
-        these technologies less vulnerable to changes in fuel prices.</p>
-        <p>Therefore when determining the risk profile in the overall power sector,
-        investors need to be aware that the risk structure of the power sector
-        will change from capital and fuel-based towards almost purely capital
-        based.</p>
+        <p>Low-carbon energy technologies, such as solar and wind, but also nuclear, require higher
+          upfront capital investments than fossil power plants. However, most low-carbon technologies do
+          barely need any fuel to operate. This means that the operational costs of low-carbon technologies
+          are lower and over the lifetime of the power plant low carbon electricity can be produced for
+          less costs per MWh than fossil-based electricity. As a result of this difference in cost structure
+          between fossil and low-carbon technologies, the cost structure of the power sector will change
+          during the transition. The sector will require more capital investment (CAPEX) and becomes less
+          exposed to changes in fuel prices as operational expenditures (OPEX).
+        </p>
+        <p>
+          The risk structure of the overall power sector changes in line with this development, from capital
+          and fuel-based towards almost purely capital based.
+        </p>
       </div>
       <LayoutScrollytelling>
         <template v-slot:vis="{ width, height, step }">
@@ -72,16 +94,21 @@
         </template>
         <div slot="text" class="observer">
         <IntersectionObserver :step="0"  align="right">
-          <p>I do nothing.</p>
+          <p>The transition changes electricity production from fossil to low-carbon technologies,
+            which have different cost structures.
+        </p>
         </IntersectionObserver>
         <IntersectionObserver :step="1"  align="right">
-          <p>I am triggering cost structute.</p>
+          <p>Capital expenditure (CAPEX) currently accounts for about 1/3rd of total fossil electricity costs,
+            but this shrinks over time as the increase of fuel costs and emission costs raises operational
+            expenditures (OPEX)
+            Low-carbon options have a much higher share of capital expenditure, accounting for more than 90%
+            of the cost structure.
+          </p>
         </IntersectionObserver>
-        <IntersectionObserver :step="2"  align="right">
-          <p>I am triggering the aggregate cost structute.</p>
-        </IntersectionObserver>
-        <IntersectionObserver :step="3"  align="right" class="changeheight">
-          <p>I do nothing.</p>
+        <IntersectionObserver :step="2"  align="right" class="changeheight">
+          <p>As a result of the transition, the cost structure of the total power sector evolves from the current
+            balance between  capital/operational expenditures towards a capital-dominated structure. </p>
         </IntersectionObserver>
       </div>
       </LayoutScrollytelling>
@@ -90,17 +117,14 @@
           Fuel Cost Risk
         </h2>
         <p class="cost-risk-paragraph">
-          One risk we observe in the power sector is the Fuel cost risk. With the
-          introduction of the tax, fuel costs will consequently rise and a conversion
-          of the power sector from fossil fuel based generation to renewables will take
-          place. This shift is also reflected in the fuel costs changes: despite
-          increasing costs in the energy production from fossils, the total fuel
-          costs decrease at some point because the energy production from fossil
-          fuels goes down.
+          One of the risks that we observe in the power sector is the fuel cost risk. With the introduction of
+          a carbon tax, fuel costs will consequently rise and drive a transition in the power sector from
+          fossil fuel based generation to low-carbon. Therefore investors face the risk that fossil-based assets,
+          such as coal or gas-fired power plants lose their value under climate policy.
           <br>
           <br>
-          Therefor investors face the risk that fossil-based assets, such as coal
-          or gas-fired power plants reduce their value under climate policy. </p>
+          This shift is reflected in the fuel costs changes depicted in the figure below.
+          </p>
       </div>
       <LayoutScrollytelling>
         <template v-slot:vis="{ width, height, step }">
@@ -109,20 +133,24 @@
           </div>
         </template>
         <div slot="text" class="observer">
-        <IntersectionObserver :step="0"  align="left">
-          <p>I do nothing.</p>
+        <IntersectionObserver :step="0"  align="right">
+          <p>Without climate policy, total fuel costs for electricity production increase as gas becomes
+            more dominant in the power sector.
+          </p>
         </IntersectionObserver>
-        <IntersectionObserver :step="1"  align="left">
-          <p>I am triggering a different scenario.</p>
+        <IntersectionObserver :step="1"  align="right">
+          <p>Despite increasing costs per unit of electricity production from fossil sources, the total
+            fuel costs decrease because energy production from fossil fuels is declining.
+            Later in the century, fossil fuels are almost phased out and the increase in fuel prices and
+            carbon taxes is leading to an increase in total fuel costs.
+          </p>
         </IntersectionObserver>
-        <IntersectionObserver :step="2"  align="center">
-          <p>I am triggering relative change.</p>
-        </IntersectionObserver>
-        <IntersectionObserver :step="3"  align="center">
-          <p>I do nothing.</p>
+        <IntersectionObserver :step="2"  align="right">
+          <p>Relative to the current policy scenario, fuel costs are reduced strongly under mitigation,
+            saving the total global sector up to 800 million USD per year by mid-century. </p>
         </IntersectionObserver>
         <IntersectionObserver :step="4"  align="right" class="changeheight">
-          <p>I am restoring initial settings (and I have a special class to keep the vis in the viewport).</p>
+          <p></p>
         </IntersectionObserver>
       </div>
       </LayoutScrollytelling>
@@ -130,17 +158,14 @@
         <h2 class="chapter-title" id="structure">
           Investment need
         </h2>
-        <p>As seen above, if a Tax is introduced, generating low-carbon energy will become more
-          profitable which will lead to a shift in the Power Sector towards
-          renewables.
-          However this low-carbon transition is expensive for the power sector,
-          as both renewables and nuclear are more capital intensive than traditional
-          fossil fuel power production.</p>
-        <p>Therefore, the transition will cause a large investment need in low-carbon
-          electricity production. For investors this opens investment opportunities.</p>
-      </div>
-      <div class="vis-wrapper">
-        <SecondaryEnergyAndInvestment :width="width" :height="height"/>
+        <p>As seen above, if a carbon price is introduced, generating low-carbon energy will become
+          more attractive which will lead to a shift in the power sector towards renewables.
+          However this low-carbon transition requires a growth in investments in the power sector,
+          because both renewables and nuclear are more capital intensive than traditional fossil fuel
+          power production.
+        </p>
+        <p>Therefore, the transition comes with a large investment need in low-carbon
+        electricity production.</p>
       </div>
       <div class="vis-wrapper">
         <InvestmentNeed :width="width" :height="height"/>
@@ -149,13 +174,11 @@
         <h2 class="chapter-title" id="conclusion">
           Assessing risks with the help of climate scenarios
         </h2>
-        <p>We have seen that some final sententences here Lorem ipsum dolor sit amet
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-          minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-          ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
-          voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur
-          sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-          mollit anim id est laborum.
+        <p>In this module we have seen that the transition in the electricity production sector leads to a
+          changing cost structure that is strongly dominated by capital expenditures. However, while fossil fuels
+          are around, their prices and taxation still pose a fuel cost risk and emission cost risk. Finally,
+          to facilitate the transition towards low-carbon technologies, investment needs provide an opportunity
+          for the financial sector.
           </p>
       </div>
       <SensesMeta :id="'power-sector'"/>
@@ -176,7 +199,6 @@ import SecondaryEnergyAndTotalCost from './components/SecondaryEnergyAndTotalCos
 import SecondaryEnergy from './components/SecondaryEnergy.vue'
 import InvestmentNeed from './components/InvestmentNeed.vue'
 import FossilCosts from './components/FossilCosts.vue'
-import SecondaryEnergyAndInvestment from './components/SecondaryEnergyAndInvestment.vue'
 import SecondaryEnergySum from './components/SecondaryEnergySum.vue'
 
 export default {
@@ -191,7 +213,6 @@ export default {
     InvestmentNeed,
     FossilCosts,
     SecondaryEnergyAndTotalCost,
-    SecondaryEnergyAndInvestment,
     SecondaryEnergySum
   },
   data () {
@@ -275,7 +296,7 @@ export default {
     .vis-wrapper {
       margin-top: $spacing;
       // border: 0.5px solid lightblue;
-      height: 110vh;
+      height: 100vh;
 
       &.secondaryenergy  {
         height: 100vh;

@@ -1,7 +1,7 @@
 <template>
   <div class="secondary-energy" ref="inWrapper">
     <div class="key" :class=" mobile ? 'mobile' : 'desktop'">
-      <h4>Electricity production (Ej/year) and costs structure (in %)</h4>
+      <h4>Electricity production and changing costs structure</h4>
       <p class="selectors">
         Select a scenario and a region:
         <SensesSelect class="scenario_selector" :options="scenarios" v-model="currentScenario"/>
@@ -11,7 +11,7 @@
     </div>
     <div></div>
     <svg :width="innerWidth" :height="innerHeight" :transform="`translate(${margin.left}, 0)`">
-      <g v-for="(group, g) in dots" v-bind:key="g + 'group'" :class="`${labels[g]}-group`" :transform="`translate(0, ${groupPosition[g]})`">
+      <g v-for="(group, g) in dots.slice(0, 2)" v-bind:key="g + 'group'" :class="`${labels[g]}-group`" :transform="`translate(0, ${groupPosition[g]})`">
         <!-- draws dots for energy carrier with index g   -->
         <g v-for="(dot, d) in group" v-bind:key="d + 'dot'">
           <circle :class="labels[g]" :cx="dot.year" cy="5" :r="dot.value"/>
@@ -49,7 +49,7 @@
           </g>
         </g>
       </g>
-      <g v-for="(group, g) in world" v-bind:key="g + 'wgroup'" :class="`${labels[g]}-wgroup`" :transform="`translate(0, ${groupPosition[g]})`">
+      <g v-for="(group, g) in world.slice(0, 2)" v-bind:key="g + 'wgroup'" :class="`${labels[g]}-wgroup`" :transform="`translate(0, ${groupPosition[g]})`">
           <!--draws hotizontal axis line through dots and small circles at the beginning and end of axis -->
         <g class="axis_group">
           <line class="axis" y1="5" y2="5" :x1="scale.x(2020)" :x2="scale.x(2100)"/>
@@ -59,12 +59,12 @@
       </g>
       <!--legend for pie chart -->
       <g>
-        <text :x="scale.x(2020)" :y="innerHeight*0.6" >Fuel Cost</text>
-        <circle :cx="scale.x(2018)" :cy="innerHeight*0.595" r="8" :class="'fuelcost'"/>
-        <text :x="scale.x(2034)" :y="innerHeight*0.6" >Capital Cost</text>
-        <circle :cx="scale.x(2032)" :cy="innerHeight*0.595" r="8" :class="'capcost'"/>
-        <text :x="scale.x(2051)" :y="innerHeight*0.6" >Operational Cost</text>
-        <circle :cx="scale.x(2049)" :cy="innerHeight*0.595" r="8" :class="'omcost'" />
+        <text :x="scale.x(2020)" :y="innerHeight*0.65" >Fuel cost, including carbon emission costs</text>
+        <circle :cx="scale.x(2018)" :cy="innerHeight*0.644" r="8" :class="'fuelcost'"/>
+        <text :x="scale.x(2020)" :y="innerHeight*0.7" >Capital cost</text>
+        <circle :cx="scale.x(2018)" :cy="innerHeight*0.695" r="8" :class="'capcost'"/>
+        <text :x="scale.x(2020)" :y="innerHeight*0.75" >Operational cost</text>
+        <circle :cx="scale.x(2018)" :cy="innerHeight*0.744" r="8" :class="'omcost'" />
       </g>
     </svg>
   </div>
@@ -115,11 +115,12 @@ export default {
       years: [...new Set(SecondaryEnergyAndAllCosts.map(r => r.Year))],
       labels: [...new Set(SecondaryEnergyAndAllCosts.map(r => r.Variable))],
       perLabels: ['perCap', 'perFuel', 'perOM'],
-      scenarios: [...new Set(SecondaryEnergyAndAllCosts.map(r => r.Scenario))],
+      scenarios: ['1.5ºC', '2.0ºC', 'Current Policies'],
+      scenDict: { '1.5ºC': 'NPi2020_400_v3', '2.0ºC': 'NPi2020_1000_v3', 'Current Policies': 'NPi_v3' },
       regions: [...new Set(SecondaryEnergyAndAllCosts.map(r => r.Region))],
       allValues: [...new Set(SecondaryEnergyAndAllCosts.map(r => r.Value))],
       tooltip: 'Here a description of what Secondary Energy is!',
-      currentScenario: 'NPi2020_400_v3',
+      currentScenario: '1.5ºC',
       currentRegion: 'World',
       active: false,
       over: '',
@@ -139,7 +140,7 @@ export default {
     //   "wind": [{scenario: 1.5,...},{scenario: 1.5,...}...],
     //    ...
     //  ]
-    scenarioFilter () { return _.map(this.energy, (sc, s) => _.filter(sc, d => d.Scenario === this.currentScenario)) },
+    scenarioFilter () { return _.map(this.energy, (sc, s) => _.filter(sc, d => d.Scenario === this.scenDict[this.currentScenario])) },
     // filters over scenrioFilter Array, returns same array only with objects with CurrentRegion
     regionFilter () { return _.map(this.scenarioFilter, (re, r) => _.filter(re, d => d.Region === this.currentRegion)) },
     // filters over scenrioFilter Array, returns same array only with objects with region = World
@@ -183,7 +184,7 @@ export default {
     groupPosition () {
       // length of dotsArray is  = nr of energy carrier
       // returns array with the position for each energy carrier
-      const dotsArray = this.dots
+      const dotsArray = this.dots.slice(0, 2)
       let pos = 70
       return _.map(this.regionFilter, (energy, e, l) => {
         if (e !== 0) { pos = pos + this.innerHeight / dotsArray.length - 100 }
@@ -291,6 +292,7 @@ $margin-space: $spacing / 2;
 
     .axis {
       stroke: $color-gray;
+      stroke-width: 0.3;
     }
     circle {
       fill: $color-gray;
@@ -341,27 +343,34 @@ $margin-space: $spacing / 2;
       stroke: getColor(gray, 40);
     }
     .omcost_per{
-      stroke: getColor(yellow, 60);
+      // stroke: getColor(yellow, 60);
+      stroke: #F0E160;
       fill-opacity: 0.6;
     }
     .capcost_per{
-      stroke: #8d88ff;
+      stroke: #75D9F0;
       fill-opacity: 0.6;
+      stroke-opacity: 0.7;
     }
     .fuelcost_per{
-      stroke: getColor(green, 60);
+      stroke: #A3215B ;
       fill-opacity: 0.6;
+      stroke-opacity: 0.9;
+
     }
     .omcost{
-      fill: getColor(yellow, 60);
+      fill: #F0E160;
       stroke: #5d5d63;
+
     }
     .capcost{
-      fill: #8d88ff;
+      fill: #75D9F0;
+      fill-opacity: 0.7;
       stroke: #5d5d63;
     }
     .fuelcost{
-      fill: getColor(green, 60);
+      fill:#A3215B;
+      fill-opacity: 0.9;
       stroke: #5d5d63;
     }
   }
