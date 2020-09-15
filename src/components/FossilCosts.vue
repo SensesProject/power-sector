@@ -22,9 +22,6 @@
     <svg :width="innerWidth" :height="innerHeight - margin.bottom" :transform="`translate(${margin.left}, 0)`">
       <g :transform="`translate(${margin.left + 10}, 0)`">
       <text class="yaxis-label" x="0" y="40" :transform='`translate(${-margin.left * 3} 90) rotate(-90)`'>Costs (Mn/$)</text>
-      <g class="yaxis" v-for="tick in yTicks" :key="tick" :transform="`translate(${margin.left}, ${scales.y(tick)})`">
-        <text :x="5" y="5" text-anchor="end">{{tick / 1000}}</text>
-      </g>
       <g v-for="(arc, a) in arcs" :key="`${a}-arc`">
         <line
         class="yaxis"
@@ -35,8 +32,7 @@
         :y2="arc.yPos"
          stroke="black"
          />
-         <path
-         :transform="`translate(${arc.year}, ${arc.yPos})`"
+         <circle
          @mouseover="currentSelection = a"
          @mouseleave="currentSelection = null"
          v-if="comparison === 'relative'"
@@ -45,10 +41,11 @@
            selected: currentSelection === a,
            no_baseline: comparison === 'relative' & arc.klass[1] === currentFuel
            }]"
-         :d="arc.baseline"
+         :r="arc.baseline"
+         :cx="arc.year"
+         :cy="arc.yPos"
          />
-         <path
-         :transform="`translate(${arc.year}, ${arc.yPos})`"
+         <circle
          @mouseover="currentSelection = a"
          @mouseleave="currentSelection = null"
          :class="[arc.klass, {
@@ -56,7 +53,9 @@
            selected: currentSelection === a,
            baseline: comparison === 'relative'
            }]"
-         :d="arc.shape"
+         :r="arc.shape"
+         :cx="arc.year"
+         :cy="arc.yPos"
          />
          <text
          class="shadow"
@@ -93,6 +92,9 @@
         {{arc.price / 1000}} Mn/$
       </text>
       </g>
+      <g class="yaxis" v-for="tick in yTicks" :key="tick" :transform="`translate(${margin.left}, ${scales.y(tick)})`">
+        <text :x="5" y="5" text-anchor="end">{{tick / 1000}}</text>
+      </g>
       <g class="xaxis" v-for="year in years" :key="year" :transform="`translate(${scales.x(year)}, 0)`">
         <line x1="0" x2="0" y1="10" :y2="innerGraph.height" stroke="black"/>
         <text x="5" :y="innerGraph.height + 20" text-anchor="middle">{{year}}</text>
@@ -100,32 +102,37 @@
     </g>
     <g class="legend" :transform="`translate(${margin.left}, ${innerGraph.height + 60})`">
       <text>Energy Volume (EJ/yr)</text>
-      <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-          <g id="Group-8" transform="translate(150, -10)">
-              <polygon id="Path-11" fill="#C4CFDE" points="22 49 159 80 159 0 22 31"></polygon>
-              <path d="M76.7407407,61.1488428 C88.1762191,61.1488428 97.4465059,51.7468225 97.4465059,40.1488428 C97.4465059,28.550863 88.1762191,19.1488428 76.7407407,19.1488428 L76.7407407,40.1488428 L76.7407407,61.1488428 Z" id="Path-Copy-14" fill="#6A7687" fill-rule="nonzero"></path>
-              <path d="M44.5185185,54.1488428 C52.23005,54.1488428 58.4814815,48.1046869 58.4814815,40.6488428 C58.4814815,33.1929987 52.23005,27.1488428 44.5185185,27.1488428 L44.5185185,40.6488428 L44.5185185,54.1488428 Z" id="Path-Copy-15" fill="#6A7687" fill-rule="nonzero"></path>
-              <path d="M22,48.66741 C26.8787206,48.66741 30.833705,44.7124256 30.833705,39.833705 C30.833705,34.9549845 26.8787206,31 22,31 L22,39.833705 L22,48.66741 Z" id="Path-Copy-12" fill="#6A7687" fill-rule="nonzero"></path>
-              <path d="M159,80 C181.09139,80 199,62.09139 199,40 C199,17.90861 181.09139,1.42108547e-14 159,1.42108547e-14 L159,40 L159,80 Z" id="Path-Copy-11" fill="#6A7687" fill-rule="nonzero"></path>
-              <path d="M115.481481,70.1488428 C132.050024,70.1488428 145.481481,56.7173853 145.481481,40.1488428 C145.481481,23.5803003 132.050024,10.1488428 115.481481,10.1488428 L115.481481,40.1488428 L115.481481,70.1488428 Z" id="Path-Copy-13" fill="#6A7687" fill-rule="nonzero"></path>
-              <text id="&lt;1-Mn/$" fill="#000000">
-                  <tspan x="20" y="100">&lt; 5 EJ/yr</tspan>
-              </text>
-              <text id="88.2-Mn/$" fill="#000000">
-                  <tspan x="160" y="100">&gt; 80 EJ/yr</tspan>
-              </text>
-              <line x1="22.5" y1="31.5" x2="22" y2="89" id="Path-12" stroke="#000000" stroke-width="0.5"></line>
-              <line x1="159.5" y1="0.5" x2="159.5" y2="89.5" id="Path-12-Copy" stroke="#000000" stroke-width="0.5"></line>
+          <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+              <g id="Group-11" transform="translate(100, -20)">
+                  <text id="&lt;-5-EJ/yr" fill="#000000" fill-rule="nonzero">
+                      <tspan x="-7.10542736e-15" y="47">&lt; 5 EJ/yr</tspan>
+                  </text>
+                  <text id="&gt;-80-EJ/yr" fill="#000000" fill-rule="nonzero">
+                      <tspan x="169" y="48">&gt; 80 EJ/yr</tspan>
+                  </text>
+                  <line x1="158" y1="51" x2="204" y2="51" id="Path-12-Copy" stroke="#000000" stroke-width="0.5"></line>
+                  <line x1="18" y1="51" x2="64" y2="51" id="Path-12-Copy-Copy" stroke="#000000" stroke-width="0.5"></line>
+                  <g id="Group-8" transform="translate(64, 0)" fill-rule="nonzero" stroke="#4E40B2">
+                      <circle id="Oval" cx="3.98" cy="48.98" r="3.98" stroke="#4E40B2"></circle>
+                      <circle id="Oval" cx="46.9827628" cy="46.9827628" r="46.9827628" stroke="#4E40B2"></circle>
+                      <circle id="Oval-Copy" cx="41.3380862" cy="47.3380862" r="41.3380862" stroke="#4E40B2"></circle>
+                      <circle id="Oval-Copy" cx="34.5" cy="47.3380862" r="34.5" stroke="#4E40B2"></circle>
+                      <circle id="Oval-Copy" cx="26.5" cy="47.3380862" r="26.5" stroke="#4E40B2"></circle>
+                      <circle id="Oval-Copy" cx="17.5" cy="47.3380862" r="17.5" stroke="#4E40B2"></circle>
+                  </g>
+              </g>
           </g>
-      </g>
       <text transform="translate(450, -1)">Energy Carriers</text>
         <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
             <g id="Group-14" transform="translate(450, 20)">
                 <g id="Coal">
-                    <path
+                    <circle
                     :class="{invisible: currentFuel !== 'Coal'}"
                     @mouseover="currentFuel = 'Coal'"
-                    d="M0,32 C8.836556,32 16,24.836556 16,16 C16,7.163444 8.836556,5.32907052e-15 0,5.32907052e-15 L0,16 L0,32 Z" id="Path-Copy-16"
+                    r="10"
+                    cx="10"
+                    cy="15"
+                    id="Path-Copy-16"
                     stroke="#75757A"
                     fill="#D8D8E4"
                     fill-rule="nonzero"/>
@@ -133,12 +140,15 @@
                         <tspan x="29" y="20.374759">Coal</tspan>
                     </text>
                     <g v-if="comparison === 'relative'">
-                      <path
+                      <circle
                       class="no_baseline"
                       transform="translate(0, 40)"
                       :class="{invisible: currentFuel !== 'Coal'}"
                       @mouseover="currentFuel = 'Coal'"
-                      d="M0,32 C8.836556,32 16,24.836556 16,16 C16,7.163444 8.836556,5.32907052e-15 0,5.32907052e-15 L0,16 L0,32 Z" id="Path-Copy-16"
+                      r="10"
+                      cx="10"
+                      cy="15"
+                      id="Path-Copy-16"
                       stroke="#75757A"
                       fill="#D8D8E4"
                       fill-rule="nonzero"/>
@@ -148,10 +158,13 @@
                     </g>
                 </g>
                 <g id="Gas" transform="translate(97, 0)">
-                    <path
+                    <circle
                     :class="{invisible: currentFuel !== 'Gas'}"
                     @mouseover="currentFuel = 'Gas'"
-                    d="M0,32 C8.836556,32 16,24.836556 16,16 C16,7.163444 8.836556,5.32907052e-15 0,5.32907052e-15 L0,16 L0,32 Z"
+                    r="10"
+                    cx="10"
+                    cy="15"
+                    id="Path-Copy-16"
                     stroke="#931547"
                     fill="#ED96AB"
                     fill-rule="nonzero"/>
@@ -159,12 +172,15 @@
                         <tspan x="33" y="20.374759">Gas</tspan>
                     </text>
                     <g v-if="comparison === 'relative'">
-                      <path
+                      <circle
                       class="no_baseline"
                       transform="translate(0, 40)"
                       :class="{invisible: currentFuel !== 'Gas'}"
                       @mouseover="currentFuel = 'Gas'"
-                      d="M0,32 C8.836556,32 16,24.836556 16,16 C16,7.163444 8.836556,5.32907052e-15 0,5.32907052e-15 L0,16 L0,32 Z"
+                      r="10"
+                      cx="10"
+                      cy="15"
+                      id="Path-Copy-16"
                       stroke="#931547"
                       fill="#ED96AB"
                       fill-rule="nonzero"/>
@@ -174,25 +190,31 @@
                     </g>
                 </g>
                 <g id="Fossils" transform="translate(195, 0)">
-                    <path
+                    <circle
                     :class="{invisible: currentFuel !== 'Fossils'}"
                     @mouseover="currentFuel = 'Fossils'"
-                    d="M0,32 C8.836556,32 16,24.836556 16,16 C16,7.163444 8.836556,5.32907052e-15 0,5.32907052e-15 L0,16 L0,32 Z"
+                    r="10"
+                    cx="10"
+                    cy="15"
+                    id="Path-Copy-16"
                     stroke="#36323C"
-                    fill="#9B94A6"
+                    fill="#4E40B2"
                     fill-rule="nonzero"/>
                     <text id="Fossils-(all)" fill="#000000">
                         <tspan x="33" y="20.374759">Fossils (all)</tspan>
                     </text>
                     <g v-if="comparison === 'relative'">
-                      <path
+                      <circle
                       class="no_baseline"
                       transform="translate(0, 40)"
                       :class="{invisible: currentFuel !== 'Fossils'}"
                       @mouseover="currentFuel = 'Fossils'"
-                      d="M0,32 C8.836556,32 16,24.836556 16,16 C16,7.163444 8.836556,5.32907052e-15 0,5.32907052e-15 L0,16 L0,32 Z"
+                      r="10"
+                      cx="10"
+                      cy="15"
+                      id="Path-Copy-16"
                       stroke="#36323C"
-                      fill="#9B94A6"
+                      fill="#4E40B2"
                       fill-rule="nonzero"/>
                       <text id="Gas" fill="#000000">
                           <tspan x="29" y="60.374759">Baseline</tspan>
@@ -210,7 +232,7 @@
 import { map, range, filter } from 'lodash'
 import { max, min } from 'd3-array'
 import { scaleLinear } from 'd3-scale'
-import { arc } from 'd3-shape'
+// import { arc } from 'd3-shape'
 import FossilCosts from 'dsv-loader!@/assets/data/SecondaryEnergyAndEmissionCosts-new.csv' // eslint-disable-line import/no-webpack-loader-syntax
 import SensesSelect from 'library/src/components/SensesSelect.vue'
 
@@ -240,7 +262,7 @@ export default {
   data () {
     return {
       FossilCosts,
-      currentScenario: 'NPi_v3',
+      currentScenario: 'Current Policies',
       currentRegion: 'World',
       currentFuel: 'Fossils',
       currentSelection: null,
@@ -267,7 +289,7 @@ export default {
       }
     },
     filteredData () { return filter(this.FossilCosts, f => { return f.Scenario === this.currentScenario }) },
-    baseline () { return filter(this.FossilCosts, f => { return f.Scenario === 'NPi_v3' }) },
+    baseline () { return filter(this.FossilCosts, f => { return f.Scenario === 'Current Policies' }) },
     maxEj () { return max(map(this.FossilCosts, el => { return Number(el.Value) })) },
     maxCost () { return max(map(this.FossilCosts, el => { return Number(el['Indirect Emission Costs']) })) },
     scales () {
@@ -285,7 +307,7 @@ export default {
 
       const rDom = [0, Math.sqrt(maxEj)]
       const rDomDiff = [0, Math.sqrt(maxEj)]
-      const rRange = [0, 40]
+      const rRange = [0, 5]
       const rDomain = comparison === 'relative' ? rDomDiff : rDom
       return {
         x: scaleLinear().domain(xDom).range(xRange),
@@ -293,23 +315,23 @@ export default {
         radius: scaleLinear().domain(rDomain).range(rRange)
       }
     },
-    arcGenerator () {
-      const { scales } = this
-      const pi = Math.PI
-      return {
-        absolute: arc()
-          .innerRadius(0)
-          .outerRadius(f => scales.radius(Math.sqrt(f.Value)))
-          .startAngle(180 * (pi / 180))
-          .endAngle(0),
-        relative: arc()
-          .innerRadius(0)
-          .outerRadius(f => scales.radius(Math.sqrt(f.Value)))
-          // .outerRadius(f => scales.radius(Math.sqrt(-f.Value_diff)))
-          .startAngle(180 * (pi / 180))
-          .endAngle(0)
-      }
-    },
+    // arcGenerator () {
+    //   const { scales } = this
+    //   const pi = Math.PI
+    //   return {
+    //     absolute: arc()
+    //       .innerRadius(0)
+    //       .outerRadius(f => scales.radius(Math.sqrt(f.Value)))
+    //       .startAngle(180 * (pi / 180))
+    //       .endAngle(0),
+    //     relative: arc()
+    //       .innerRadius(0)
+    //       .outerRadius(f => scales.radius(Math.sqrt(f.Value)))
+    //       // .outerRadius(f => scales.radius(Math.sqrt(-f.Value_diff)))
+    //       .startAngle(180 * (pi / 180))
+    //       .endAngle(0)
+    //   }
+    // },
     yTicks () {
       const positiveticks = range(0, this.maxCost, 100000)
       const negativeticks = map(positiveticks, t => {
@@ -318,7 +340,7 @@ export default {
       return this.comparison === 'relative' ? negativeticks : positiveticks
     },
     arcs () {
-      const { scales, arcGenerator, comparison } = this
+      const { scales, comparison } = this
       return map(this.filteredData, (f, i) => {
         const costValue = comparison === 'relative' ? f['Indirect Emission Costs diff'] : f['Indirect Emission Costs']
         const quantityValue = comparison === 'relative' ? f.Value_diff : f.Value
@@ -328,8 +350,8 @@ export default {
           ej: Math.round(quantityValue),
           year: scales.x(f.Year),
           yPos: scales.y(costValue),
-          shape: comparison === 'relative' ? arcGenerator.relative(f) : arcGenerator.absolute(f),
-          baseline: arcGenerator.absolute(this.baseline[i])
+          shape: scales.radius(f.Value),
+          baseline: scales.radius(this.baseline[i].Value)
         }
       })
     }
@@ -337,21 +359,21 @@ export default {
   watch: {
     comparison (current, previous) {
       if (current === 'relative') {
-        const newscenarios = filter(this.scenarios, (s) => { return s !== 'NPi_v3' })
+        const newscenarios = filter(this.scenarios, (s) => { return s !== 'Current Policies' })
         this.scenarios = newscenarios
-        this.currentScenario = 'NPi2020_1000_v3'
+        this.currentScenario = '2.0ºC'
       } else {
         this.scenarios = [...new Set(FossilCosts.map(r => r.Scenario))]
-        this.currentScenario = 'NPi_v3'
+        this.currentScenario = 'Current Policies'
       }
     },
     step (currentStep, previousStep) {
       if (currentStep === 1) {
-        this.currentScenario = 'NPi2020_1000_v3'
+        this.currentScenario = '2.0ºC'
       } if (currentStep === 2) {
         this.comparison = 'relative'
       } if (currentStep === 4) {
-        this.currentScenario = 'NPi_v3'
+        this.currentScenario = 'Current Policies'
         this.comparison = 'absolute'
       }
     }
@@ -423,12 +445,12 @@ $margin-space: $spacing / 2;
         }
     }
 
-    path.invisible {
+    circle.invisible {
       fill-opacity: 0;
       stroke-opacity: 0.5;
     }
 
-    path.selected {
+    circle.selected {
       fill-opacity: 1;
     }
 
@@ -457,24 +479,25 @@ $margin-space: $spacing / 2;
     }
 
     .NPi_v3 {
-      transition: transform 1s ease;
+      transition: cy 0.5s, cx 0.5s;
     }
 
     .NPi2020_1000_v3 {
-      transition: transform 1s ease;
+      transition: cy 0.5s, cx 0.5s;
     }
 
     .NPi2020_400_v3 {
-      transition: transform 1s ease;
+      transition: cy 0.5s, cx 0.5s;
     }
 
-    path {
+    circle {
       stroke: black;
-      transition: transform 1s ease;
+      transition: cy 0.5s, cx 0.5s;
+      fill-opacity: 0.5;
 
       &.Fossils {
-        fill: #6A7687;
-        stroke: darken(#6A7687, 40);
+        fill: getColor(violet, 60);
+        stroke: getColor(violet, 40);
       }
 
       &.Oil {
