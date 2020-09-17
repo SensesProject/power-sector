@@ -16,10 +16,7 @@
           An essential step in reaching that goal is to decarbonize global electricity production.
           In this module we explore the risks and opportunities that result from the decarbonization of
           the power sector and we explain why investors should take climate policy into account in their
-          decision-making.
-          <br>
-          <br>
-          We will explore the changes in electricity production and revenue, the <b>changing risk structure </b>
+          decision-making. We will explore the changes in electricity production and revenue, the <b>changing risk structure </b>
           of the power sector, the <b>risk of fuel costs </b> and emission costs, and the need for clean investments.
         </p>
       </div>
@@ -72,7 +69,7 @@
         <h2 class="chapter-title" id="structure">
           Changing risk Structure
         </h2>
-        <p>Low-carbon energy technologies, such as solar and wind, but also nuclear, require higher
+        <p class="cost-risk-paragraph">Low-carbon energy technologies, such as solar and wind, but also nuclear, require higher
           upfront capital investments than fossil power plants. However, most low-carbon technologies do
           barely need any fuel to operate. This means that the operational costs of low-carbon technologies
           are lower and over the lifetime of the power plant low carbon electricity can be produced for
@@ -80,8 +77,6 @@
           between fossil and low-carbon technologies, the cost structure of the power sector will change
           during the transition. The sector will require more capital investment (CAPEX) and becomes less
           exposed to changes in fuel prices as operational expenditures (OPEX).
-        </p>
-        <p>
           The risk structure of the overall power sector changes in line with this development, from capital
           and fuel-based towards almost purely capital based.
         </p>
@@ -120,10 +115,7 @@
           One of the risks that we observe in the power sector is the fuel cost risk. With the introduction of
           a carbon tax, fuel costs will consequently rise and drive a transition in the power sector from
           fossil fuel based generation to low-carbon. Therefore investors face the risk that fossil-based assets,
-          such as coal or gas-fired power plants lose their value under climate policy.
-          <br>
-          <br>
-          This shift is reflected in the fuel costs changes depicted in the figure below.
+          such as coal or gas-fired power plants lose their value under climate policy. This shift is reflected in the fuel costs changes depicted in the figure below.
           </p>
       </div>
       <LayoutScrollytelling>
@@ -158,13 +150,11 @@
         <h2 class="chapter-title" id="structure">
           Investment need
         </h2>
-        <p>As seen above, if a carbon price is introduced, generating low-carbon energy will become
+        <p class="cost-risk-paragraph">As seen above, if a carbon price is introduced, generating low-carbon energy will become
           more attractive which will lead to a shift in the power sector towards renewables.
           However this low-carbon transition requires a growth in investments in the power sector,
           because both renewables and nuclear are more capital intensive than traditional fossil fuel
-          power production.
-        </p>
-        <p>Therefore, the transition comes with a large investment need in low-carbon
+          power production. Therefore, the transition comes with a large investment need in low-carbon
         electricity production.</p>
       </div>
       <div class="vis-wrapper">
@@ -174,7 +164,7 @@
         <h2 class="chapter-title" id="conclusion">
           Assessing risks with the help of climate scenarios
         </h2>
-        <p>In this module we have seen that the transition in the electricity production sector leads to a
+        <p class="cost-risk-paragraph">In this module we have seen that the transition in the electricity production sector leads to a
           changing cost structure that is strongly dominated by capital expenditures. However, while fossil fuels
           are around, their prices and taxation still pose a fuel cost risk and emission cost risk. Finally,
           to facilitate the transition towards low-carbon technologies, investment needs provide an opportunity
@@ -275,6 +265,7 @@ export default {
 
       .cost-risk-paragraph {
         margin-bottom: $spacing * 2;
+        column-count: 2;
       }
 
       .chapter-title {
