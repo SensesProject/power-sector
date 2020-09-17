@@ -1,7 +1,7 @@
 <template>
   <div class="secondary-energy" ref="inWrapper">
     <div class="key" :class=" mobile ? 'mobile' : 'desktop'">
-      <h4>Electricity production (Ej/year)</h4>
+      <h4>Electricity production in the power sector</h4>
       <p class="selectors">
         Select a scenario and a region:
         <SensesSelect class="scenario_selector" :options="scenarios" v-model="currentScenario"/>
@@ -121,8 +121,8 @@ export default {
     },
     groupPosition () {
       // const dotsArray = this.dots
-      let pos = -90
-      let posDx = -100
+      let pos = -60
+      let posDx = -60
       const positions = []
       _.map(this.regionFilter, (energy, e, l) => {
         if (e > 3) {
@@ -175,7 +175,7 @@ $margin-space: $spacing / 2;
     z-index: 9;
     width: 100%;
     height: 100px;
-    margin-bottom: 10%;
+    margin-bottom: 5%;
     padding: 10px 0px;
 
     position:sticky;
@@ -194,12 +194,12 @@ $margin-space: $spacing / 2;
       color: #424ab9;
       font-weight: normal;
       display: inline;
-      margin-left: 10px;
+      // margin-left: 10px;
       margin-right: $margin-space;
     }
     .selectors {
       display: inline-block;
-      width: 50%;
+      width: 70%;
       margin-left: 10px;
     }
     .scenario_selector {
@@ -210,6 +210,7 @@ $margin-space: $spacing / 2;
 
     h4 {
       padding-left: 10px;
+      padding-bottom: 10px;
     }
 
     .v-popover {
@@ -250,6 +251,7 @@ $margin-space: $spacing / 2;
         text-anchor: middle;
         fill: black;
         font-size: 10px;
+        text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;
       }
       .shadow-label {
         fill-opacity: 0.6;

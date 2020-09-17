@@ -2,8 +2,8 @@
   <section class="investments" ref="inWrapper">
     <header class="key">
       <h4>Energy investment needs</h4>
-      <label><input type="checkbox" v-model="isStacked">is stacked?</label>
-      <label><input type="checkbox" v-model="showDifference">show Difference?</label>
+      <label class= "label"><input class = "checkbox" type="checkbox" v-model="isStacked">not stacked </label>
+      <label class= "label"><input class = "checkbox" type="checkbox" v-model="showDifference">difference highlighted</label>
     </header>
     <div v-for="key in scenarios" :key="key" class="scenario">
       <Chart
@@ -134,10 +134,17 @@ export default {
 
   .key {
     width: 90%;
-    height: 100px;
-    margin: 0 auto;
+    height: 70px;
+    margin-bottom: 1%;
     padding: 0 0px;
-    border-bottom: 0.5px solid grey;
+  //  border-bottom: 0.5px solid grey;
+  }
+
+  .checkbox{
+    margin-right: 5px;
+  }
+  .label {
+    margin-right: 15px;
   }
 }
 

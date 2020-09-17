@@ -14,12 +14,15 @@
       <g v-for="(group, g) in dots.slice(0, 2)" v-bind:key="g + 'group'" :class="`${labels[g]}-group`" :transform="`translate(0, ${groupPosition[g]})`">
         <!-- draws dots for energy carrier with index g   -->
         <g v-for="(dot, d) in group" v-bind:key="d + 'dot'">
-          <circle :class="labels[g]" :cx="dot.year" cy="5" :r="dot.value"/>
+          <g   v-if="d == 0 || d == 2 || d == 4 || d == 6|| d == 8" >
+            <circle :class="labels[g]" :cx="dot.year" cy="5" :r="dot.value"/>
+          </g>
           <!-- year labels for first and last year in dataset -->
           <g v-for="(text, t) in group" :key="t + 'text'" >
             <g v-if="t == 0 || t == 8">
             </g>
           </g>
+        <g   v-if="d == 0 || d == 2 || d == 4 || d == 6|| d == 8" >
         <!-- builds pie chart-->
           <circle :class="'omcost_per'"
           :r="dot.value/2" :cx="dot.year" cy="5" fill="transparent"
@@ -41,6 +44,7 @@
           />
           <!-- white circle on top to create donut chart-->
           <circle :class="'WhiteCirc'" :cx="dot.year" cy="5" v-bind:r="(dot.value/1.5)"/>
+          </g>
         </g>        <!-- :transform="`rotate(-10 ${dot.year + margin.left } ${ margin.left + 5 })`"-->
         <text :x="scale.x(2019)" y="50">{{ labels[g] }}</text>
         <g v-for="(text, t) in group" :key="t + 'text'" >
@@ -344,33 +348,34 @@ $margin-space: $spacing / 2;
     }
     .omcost_per{
       // stroke: getColor(yellow, 60);
-      stroke: #F0E160;
+      stroke: $color-yellow ;
       fill-opacity: 0.6;
+      stroke-opacity: 0.8;
     }
     .capcost_per{
-      stroke: #75D9F0;
-      fill-opacity: 0.6;
-      stroke-opacity: 0.7;
+      stroke: $color-blue;
+      fill-opacity: 0.7;
+      stroke-opacity: 0.5;
     }
     .fuelcost_per{
-      stroke: #A3215B ;
+      stroke: getColor(blue, 20) ;
       fill-opacity: 0.6;
-      stroke-opacity: 0.9;
+      stroke-opacity: 0.7;
 
     }
     .omcost{
-      fill: #F0E160;
+      fill: $color-yellow;
       stroke: #5d5d63;
-
+      fill-opacity: 0.9;
     }
     .capcost{
-      fill: #75D9F0;
-      fill-opacity: 0.7;
+      fill: $color-blue;
+      fill-opacity: 0.5;
       stroke: #5d5d63;
     }
     .fuelcost{
-      fill:#A3215B;
-      fill-opacity: 0.9;
+      fill:getColor(blue, 20);
+      fill-opacity: 0.7;
       stroke: #5d5d63;
     }
   }

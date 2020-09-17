@@ -45,7 +45,7 @@
           </p>
         </IntersectionObserver>
         <IntersectionObserver :step="3"  align="right" class="changeheight">
-          <p>relative values
+          <p>
           </p>
         </IntersectionObserver>
       </div>
@@ -63,7 +63,7 @@
         <IntersectionObserver :step="0"  align="right" class="changeheight">
           <p>Under mitigation scenarios coal is quickly phased out. However, natural gas can play a
             substantial role in power production until mid-century. Rapid growth is expected in low-carbon
-            technologies like solar, wind and nuclear under the 2C and 1.5C scenarios.
+            technologies like solar, wind and nuclear under the 2.0ºC and 1.5ºC scenarios.
           </p>
         </IntersectionObserver>
       </div>
@@ -268,7 +268,7 @@ export default {
       margin-bottom: $spacing;
 
       .module-title {
-        font-size: 60px;
+        font-size: 40px;
         margin-bottom: $spacing / 2;
         padding-top: $spacing;
       }
@@ -292,7 +292,11 @@ export default {
         padding-top: 30px;
       }
     }
-
+    .intersection-observer .default.right {
+      -webkit-box-shadow: 2px 2px 9px 0px rgba(128,128,128,0.12);
+      -moz-box-shadow: 2px 2px 9px 0px rgba(128,128,128,0.12);
+      box-shadow: 2px 2px 9px 0px rgba(128,128,128,0.12);
+    }
     .vis-wrapper {
       margin-top: $spacing;
       // border: 0.5px solid lightblue;

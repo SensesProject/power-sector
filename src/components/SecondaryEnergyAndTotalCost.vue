@@ -1,8 +1,9 @@
 <template>
   <div class="secondary-energy" ref="inWrapper">
     <div class="key" :class=" mobile ? 'mobile' : 'desktop'">
-      <h4 v-if="step < 1" >Changes in electricity production in the power sector</h4>
-      <h4 v-if="step >= 1" >Changes in electricity production and production costs/revenue in the power sector</h4>
+      <h4 v-if="step < 1" >Electricity production </h4>
+      <h4 v-if="step >= 1" >Electricity production and production costs/revenue</h4>
+      <p class="model-label">{{ model[0] }}</p>
       <p v-if="step < 1" class="selectors">
         Select a scenario:
         <SensesSelect class="scenario_selector" :options="scenarios" v-model="currentScenario"/>
@@ -71,6 +72,17 @@
     <g v-if="step >= 1">
     <!-- <line class="axis" :x1="0" :y1="(0.5*innerHeight)" :x2="0.95*innerWidth" :y2="(0.5*innerHeight)" /> -->
     <!--barchart-->
+    <!--x Axis-->
+    <g v-for="(year, j) in years" v-bind:key="j+'year'">
+      <!--vertical lines through all dots-->
+      <line class="axis-vertical" :x1="scale.x(year)" y1="0" :x2="scale.x(year)" :y2="(0.85*innerHeight)"/>
+      <text class="year-label" :x="scale.x(year)" :y="(0.87*innerHeight)">{{ years[j] }}</text>
+    </g>
+    <!--y Axis-->
+    <g v-for="(val, v) in yTicks[0]" v-bind:key="v+'val'">
+      <line class="axis" x1="65" :y1="(0.85 * innerHeight) - yTicks[1][v]" x2="90" :y2="(0.85 * innerHeight) - yTicks[1][v]"/>
+      <text class="year-label" x="35" :y="(0.85 * innerHeight) - yTicks[1][v] -3" > {{ val }} {{ yLabel[0] }} </text>
+    </g>
     <g v-if="comparison == 'absolute'">
     <!--bars for fossils and renewables-->
     <g v-if="currentMWhSel == 'Total Cost per MWh'">
@@ -100,12 +112,12 @@
   </g>
   <!--transparent bar for hover over-->
   <rect v-for="(layer, l) in dots[0]" v-bind:key="l + 'layer'"  @mouseover="[activeLayer = true, over = l + labels[0]]" @mouseleave="activeLayer = false" class="HoverLayer" :width="layer.barWidth*4" :x="(layer.year)" :y="(0.45*innerHeight)" :height="(0.4*innerHeight)"/>
-    <g v-for="(group, g) in dots" v-bind:key="g + 'textgroup'" :class="`${labels[g]}-group`" >
+  <g v-for="(group, g) in dots" v-bind:key="g + 'textgroup'" :class="`${labels[g]}-group`" >
       <!--Text: Values on mouse over for barchart-->
         <g v-for="(text, t) in group" v-bind:key="t + 'textAll'" :class="activeLayer === true & over === t + labels[g] ? 'visible' : 'invisible'">
-          <text class="year-label" :x="(text.year)" :y="(0.93*innerHeight)">Fossils: {{ format(Math.round(dots[0][t].AllCostValue)) }} {{text.Unit}}</text>
-          <text class="year-label" :x="(text.year)" :y="(0.95*innerHeight)">Renewables: {{ format(Math.round(dots[1][t].AllCostValue)) }} {{text.Unit}}</text>
-          <text v-if="comparison == 'absolute' && currentMWhSel == 'Revenue'" class="year-label" :x="(text.year)" :y="(0.97*innerHeight)">Total: {{ format(Math.round(dots[0][t].AllCostValue + dots[1][t].AllCostValue)) }} {{text.Unit}}</text>
+          <text class="year-label" :x="(text.year)" :y="(0.94*innerHeight)">Fossils: {{ format(Math.round(dots[0][t].AllCostValue)) }} {{text.Unit}}</text>
+          <text class="year-label" :x="(text.year)" :y="(0.96*innerHeight)">Renewables: {{ format(Math.round(dots[1][t].AllCostValue)) }} {{text.Unit}}</text>
+          <text v-if="comparison == 'absolute' && currentMWhSel == 'Revenue'" class="year-label" :x="(text.year)" :y="(0.98*innerHeight)">Total: {{ format(Math.round(dots[0][t].AllCostValue + dots[1][t].AllCostValue)) }} {{text.Unit}}</text>
           <!--Line and circle for hover over indicator-->
           <line class="line-label" :x1="text.year" :x2="text.year" :y1="(0.91*innerHeight)" :y2="(0.88*innerHeight)"/>
           <circle class="year-dot" :cx="text.year" :cy="(0.91*innerHeight)" r="2"/>
@@ -114,20 +126,6 @@
         <g v-if="comparison == 'relative' && currentMWhSel == 'Revenue'" >
           <line class="line-label-dashed" :x1="scale.x(2020)" :x2="scale.x(2104.5)" :y1="(0.85*innerHeight) - scaleCoDiff.y(0)" :y2="(0.85*innerHeight)- scaleCoDiff.y(0)"/>
         </g>
-      </g>
-      <!--x Axis-->
-      <g v-for="(year, j) in years" v-bind:key="j+'year'">
-        <!--vertical lines through all dots-->
-        <line class="axis-vertical" :x1="scale.x(year)" y1="0" :x2="scale.x(year)" :y2="(0.85*innerHeight)"/>
-        <text class="year-label" :x="scale.x(year)" :y="(0.87*innerHeight)">{{ years[j] }}</text>
-      </g>
-      <!--y Axis-->
-      <g v-for="(val, v) in yTicks[0]" v-bind:key="v+'val'">
-        <line class="axis" x1="65" :y1="(0.85 * innerHeight) - yTicks[1][v]" x2="90" :y2="(0.85 * innerHeight) - yTicks[1][v]"/>
-        <text class="year-label" x="35" :y="(0.85 * innerHeight) - yTicks[1][v] -3" > {{ val }} {{ yLabel[0] }} </text>
-      </g>
-      <g>
-        <!-- <text class="year-label" x="27" :y="(0.765 * innerHeight) - yLabel[1]" > {{ yLabel[0] }} </text> -->
       </g>
       </g>
     </svg>
@@ -603,7 +601,16 @@ $margin-space: $spacing / 2;
       }
   }
     h4 {
-      padding-bottom: 5px;
+      padding-bottom: 10px;
+      display: inline-block;
+    }
+    .model-label    {
+      margin-top: 5px;
+      color: #424ab9;
+      font-weight: normal;
+      display: inline;
+      margin-left: $margin-space;
+      font-size: 0.9em;
     }
 
     .v-popover {
@@ -620,6 +627,7 @@ $margin-space: $spacing / 2;
         margin-top: 15px;
         margin-left: 10px;
       }
+
     }
   }
   svg {
@@ -645,8 +653,8 @@ $margin-space: $spacing / 2;
         text-anchor: middle;
         fill: black;
         font-size: 10px;
-        -webkit-text-stroke-width: 10px;
-        -webkit-text-stroke-color: white;
+        text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;
+
       }
       .cost-label {
         fill: black;

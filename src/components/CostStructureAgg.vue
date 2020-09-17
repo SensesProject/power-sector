@@ -365,33 +365,34 @@ $margin-space: $spacing / 2;
     }
     .omcost_per{
       // stroke: getColor(yellow, 60);
-      stroke: #F0E160;
+      stroke: $color-yellow ;
       fill-opacity: 0.6;
+      stroke-opacity: 0.8;
     }
     .capcost_per{
-      stroke: #75D9F0;
-      fill-opacity: 0.6;
-      stroke-opacity: 0.7;
+      stroke: $color-blue;
+      fill-opacity: 0.7;
+      stroke-opacity: 0.5;
     }
     .fuelcost_per{
-      stroke: #A3215B ;
+      stroke: getColor(blue, 20) ;
       fill-opacity: 0.6;
-      stroke-opacity: 0.9;
+      stroke-opacity: 0.7;
 
     }
     .omcost{
-      fill: #F0E160;
+      fill: $color-yellow;
       stroke: #5d5d63;
-
+      fill-opacity: 0.9;
     }
     .capcost{
-      fill: #75D9F0;
-      fill-opacity: 0.7;
+      fill: $color-blue;
+      fill-opacity: 0.5;
       stroke: #5d5d63;
     }
     .fuelcost{
-      fill:#A3215B;
-      fill-opacity: 0.9;
+      fill:getColor(blue, 20);
+      fill-opacity: 0.7;
       stroke: #5d5d63;
     }
   }

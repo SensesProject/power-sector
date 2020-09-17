@@ -37,7 +37,7 @@
         <g v-for="(text, t) in group" v-bind:key="t + 'text'" :class="active === true & over === t + labels[g] ? 'visible' : 'invisible'">
           <circle class="year-dot" :cx="text.year" cy="5" r="2.5"/>
           <text class="year-label" :x="text.year" y="20">{{ years[t] }}</text>
-          <text class="year-label" :x="text.year" y="-15">{{ Math.round(text.valueEJ) }} Ej/year</text>
+          <text class="year-label" :x="text.year" y="-30">{{ Math.round(text.valueEJ) }} Ej/year</text>
           <line class="line-label" :x1="text.year" :x2="text.year" y1="-25" y2="5"/>
         </g>
       </g>
@@ -257,7 +257,7 @@ $margin-space: $spacing / 2;
     }
 
     h4 {
-      margin-bottom: 10px;
+      margin: 0px 0px 10px 0px;
     }
 
     .v-popover {
