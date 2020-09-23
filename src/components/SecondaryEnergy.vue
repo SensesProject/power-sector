@@ -2,12 +2,12 @@
   <div class="secondary-energy" ref="inWrapper">
     <div class="key" :class=" mobile ? 'mobile' : 'desktop'">
       <h4>Electricity production in the power sector</h4>
+      <p class="model-label">(MODEL: {{ model[0] }})</p>
       <p class="selectors">
         Select a scenario and a region:
         <SensesSelect class="scenario_selector" :options="scenarios" v-model="currentScenario"/>
         <SensesSelect class="region_selector" :options="regions" v-model="currentRegion"/>
       </p>
-      <p class="model-label">{{ model[0] }}</p>
     </div>
     <div></div>
     <svg :width="innerWidth" :height="innerHeight" :transform="`translate(0, 0)`">
@@ -194,8 +194,8 @@ $margin-space: $spacing / 2;
       color: #424ab9;
       font-weight: normal;
       display: inline;
-      // margin-left: 10px;
-      margin-right: $margin-space;
+      margin-left: $margin-space;
+      font-size: 0.8em;
     }
     .selectors {
       display: inline-block;
@@ -211,6 +211,7 @@ $margin-space: $spacing / 2;
     h4 {
       padding-left: 10px;
       padding-bottom: 10px;
+      display: inline-block;
     }
 
     .v-popover {
@@ -288,8 +289,8 @@ $margin-space: $spacing / 2;
       stroke: getColor(blue, 40);
     }
     .Hydro {
-      fill: getColor(violet, 80);
-      stroke: getColor(violet, 40);
+      fill: getColor(purple, 80);
+      stroke: getColor(purple, 40);
     }
     .Geothermal {
       fill: lighten(#663333, 40);

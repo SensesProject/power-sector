@@ -7,12 +7,12 @@
     dominant-baseline="hanging"
     class="label"
     style="opacity: 0;"
-  >{{ showDifference ? diff : label }}</text>
+  >{{ showDifference ? diff : name }}</text>
 </template>
 
 <script>
 export default {
-  props: ['x', 'y', 'height', 'diff', 'label', 'showDifference', 'widths', 'id'],
+  props: ['x', 'y', 'height', 'diff', 'label', 'showDifference', 'widths', 'id', 'name'],
   mounted () {
     this.show()
   },
@@ -23,7 +23,7 @@ export default {
     show () {
       const { label } = this.$refs
       const { width } = label.getBBox()
-      label.style.opacity = width < this.widths ? 1 : 0
+      label.style.opacity = width < this.widths ? 1 : 1
     }
   }
 }

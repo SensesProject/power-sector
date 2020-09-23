@@ -1,15 +1,15 @@
 <template>
   <section class="investments" ref="inWrapper">
     <header class="key">
-      <h4>Energy investment needs</h4>
-      <label class= "label"><input class = "checkbox" type="checkbox" v-model="isStacked">not stacked </label>
+      <h4>Energy investment needs within the power sector (yearly average 2016–2030)</h4>
+      <label class= "label"><input class = "checkbox" type="checkbox" v-model="isStacked">not stacked</label>
       <label class= "label"><input class = "checkbox" type="checkbox" v-model="showDifference">difference highlighted</label>
     </header>
     <div v-for="key in scenarios" :key="key" class="scenario">
       <Chart
         :isStacked="isStacked"
         :showDifference="showDifference"
-        :gap="30"
+        :gap="35"
         :data="dataByScenario[key]"
         :scenario="key"
         :extents="extents"

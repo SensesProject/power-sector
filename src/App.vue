@@ -12,12 +12,12 @@
         <h2 class="chapter-title" id="introduction">
           What risks will be discussed?
         </h2>
-        <p class="cost-risk-paragraph">The Paris agreement aims to limit global warming to well-below 2°C.
+        <p class="cost-risk-paragraph">The Paris Agreement aims to limit global warming to well-below 2°C.
           An essential step in reaching that goal is to decarbonize global electricity production.
           In this module we explore the risks and opportunities that result from the decarbonization of
           the power sector and we explain why investors should take climate policy into account in their
-          decision-making. We will explore the changes in electricity production and revenue, the <b>changing risk structure </b>
-          of the power sector, the <b>risk of fuel costs </b> and emission costs, and the need for clean investments.
+          decision-making. We will explore the <strong>changes in electricity production and revenue</strong>, the <strong>changing risk structure </strong>
+          of the power sector, the <strong>risk of fuel costs and emission costs</strong>, and the <strong>need for clean investments</strong>.
         </p>
       </div>
       <LayoutScrollytelling>
@@ -28,7 +28,7 @@
         </template>
         <div slot="text" class="observer">
         <IntersectionObserver :step="0"  align="right">
-          <p>In climate stabilization scenarios, the power sector is expected to go through a
+          <p>In climate stabilization scenarios, such as the 1.5ºC scenario shown here, the power sector is expected to go through a
             major transition from fossil fuel electricity production to low carbon electricity. </p>
         </IntersectionObserver>
         <IntersectionObserver :step="1"  align="right">
@@ -37,11 +37,11 @@
           </p>
         </IntersectionObserver>
         <IntersectionObserver :step="2"  align="right">
-          <p>As a result, revenue within the power sector shifts from fossil utilities to low-carbon
+          <p>As a result, if we look at the revenue within the power sector, there is a shift from fossil utilities to low-carbon
             based utilities.
           </p>
         </IntersectionObserver>
-        <IntersectionObserver :step="3"  align="right" class="changeheight">
+        <IntersectionObserver no-styling :step="3"  align="right" class="changeheight">
           <p>
           </p>
         </IntersectionObserver>
@@ -96,7 +96,7 @@
         <IntersectionObserver :step="1"  align="right">
           <p>Capital expenditure (CAPEX) currently accounts for about 1/3rd of total fossil electricity costs,
             but this shrinks over time as the increase of fuel costs and emission costs raises operational
-            expenditures (OPEX)
+            expenditures (OPEX). <br>
             Low-carbon options have a much higher share of capital expenditure, accounting for more than 90%
             of the cost structure.
           </p>
@@ -126,22 +126,26 @@
         </template>
         <div slot="text" class="observer">
         <IntersectionObserver :step="0"  align="right">
-          <p>Without climate policy, total fuel costs for electricity production increase as gas becomes
+          <p>As can be seen in the figure when selecting the current policy scenario, total fuel costs for electricity production increase as gas becomes
             more dominant in the power sector.
           </p>
         </IntersectionObserver>
         <IntersectionObserver :step="1"  align="right">
-          <p>Despite increasing costs per unit of electricity production from fossil sources, the total
-            fuel costs decrease because energy production from fossil fuels is declining.
-            Later in the century, fossil fuels are almost phased out and the increase in fuel prices and
-            carbon taxes is leading to an increase in total fuel costs.
+          <p>In a 2.0º scenario the total fuel costs decrease despite increasing costs per unit of
+            electricity production from fossil sources, because energy production from fossil fuels is declining.
           </p>
         </IntersectionObserver>
         <IntersectionObserver :step="2"  align="right">
-          <p>Relative to the current policy scenario, fuel costs are reduced strongly under mitigation,
+          <p> In a 1.5º scenario, the increase in fuel prices and carbon taxes is so significant that,
+            although fossil fuels are almost phased out later in the century, they will lead to an increase
+            in total fuel costs.
+          </p>
+        </IntersectionObserver>
+        <IntersectionObserver :step="3"  align="right">
+          <p>Relative to the current policy scenario, total fuel costs are reduced strongly under mitigation,
             saving the total global sector up to 800 million USD per year by mid-century. </p>
         </IntersectionObserver>
-        <IntersectionObserver :step="4"  align="right" class="changeheight">
+        <IntersectionObserver no-styling :step="4"  align="right" class="changeheight">
           <p></p>
         </IntersectionObserver>
       </div>

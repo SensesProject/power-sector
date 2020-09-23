@@ -1,7 +1,7 @@
 <template>
   <div class="fossil-costs" ref="inCosts">
     <div class="key" :class=" mobile ? 'mobile' : 'desktop'">
-      <h4>Fuel Costs Changes (Mn/$) in relation to Volume (Ej/year)</h4>
+      <h4>Fuel costs changes (MN$) and electricity production (Ej/year)</h4>
       <p class="selectors">
         Select a scenario:
         <SensesSelect class="scenario_selector" :options="scenarios" v-model="currentScenario"/>
@@ -101,14 +101,14 @@
       </g>
     </g>
     <g class="legend" :transform="`translate(${margin.left}, ${innerGraph.height + 60})`">
-      <text>Energy Volume (EJ/yr)</text>
+      <text>Electricity production (EJ/yr)</text>
           <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
               <g id="Group-11" transform="translate(100, -20)">
                   <text id="&lt;-5-EJ/yr" fill="#000000" fill-rule="nonzero">
-                      <tspan x="-7.10542736e-15" y="47">&lt; 5 EJ/yr</tspan>
+                      <tspan x="-7.10542736e-15" y="47">&lt; 10 EJ/yr</tspan>
                   </text>
                   <text id="&gt;-80-EJ/yr" fill="#000000" fill-rule="nonzero">
-                      <tspan x="169" y="48">&gt; 80 EJ/yr</tspan>
+                      <tspan x="169" y="48">&gt; 130 EJ/yr</tspan>
                   </text>
                   <line x1="158" y1="51" x2="204" y2="51" id="Path-12-Copy" stroke="#000000" stroke-width="0.5"></line>
                   <line x1="18" y1="51" x2="64" y2="51" id="Path-12-Copy-Copy" stroke="#000000" stroke-width="0.5"></line>
@@ -371,6 +371,8 @@ export default {
       if (currentStep === 1) {
         this.currentScenario = '2.0ºC'
       } if (currentStep === 2) {
+        this.currentScenario = '1.5ºC'
+      } if (currentStep === 3) {
         this.comparison = 'relative'
       } if (currentStep === 4) {
         this.currentScenario = 'Current Policies'

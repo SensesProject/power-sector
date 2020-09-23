@@ -22,6 +22,11 @@
             :widths="widths[i]"
             v-if="!(showDifference && scenario === 'CPol') && isStacked"
             :showDifference="showDifference" />
+          <Label
+            v-bind="el"
+            :widths="widths[i]"
+            v-if="(scenario === 'CPol') && isStacked"
+            :showDifference="false" />
         </g>
       </g>
       <PatternDefs />
@@ -45,10 +50,10 @@ const colors = {
   'Gas|w/ CCS': '#f8cbd4',
   'Gas|w/o CCS': '#ed96ab',
   'Oil|w/ CCS': '#fcb69f',
-  'Biomass|w/ CCS': '#e31a1c',
+  'Biomass|w/ CCS': '#931547',
   'Biomass|w/o CCS': '#dca0e5',
   Nuclear: '#a3d1ea',
-  Hydro: '#ac9bd9',
+  Hydro: '#dca0e5',
   Solar: '#ffd89a',
   Wind: '#99cccc',
   Geothermal: '#cc9999',
@@ -56,9 +61,28 @@ const colors = {
   'Transmission and Distribution': '#47474c',
   'Electricity Storage': '#a2e7c0'
 }
-
 function getColorFromVariable (variable) {
   return get(colors, variable, '#000')
+}
+const names = {
+  'Coal|w/ CCS': 'Coal|w/ CCS',
+  'Coal|w/o CCS': 'Coal',
+  'Gas|w/ CCS': 'Gas|w/ CC',
+  'Gas|w/o CCS': 'Gas',
+  'Oil|w/ CCS': 'Oil',
+  'Biomass|w/ CCS': 'Biomass',
+  'Biomass|w/o CCS': 'Biomass|w/o CCS',
+  Nuclear: 'Nuclear',
+  Hydro: 'Hydro',
+  Solar: 'Solar',
+  Wind: 'Wind',
+  Geothermal: 'Geothermal',
+  Ocean: 'Ocean',
+  'Transmission and Distribution': 'Transmission and Distribution',
+  'Electricity Storage': 'Electricity Storage'
+}
+function getNameFromVariable (variable) {
+  return get(names, variable, '?')
 }
 
 export default {
@@ -87,8 +111,8 @@ export default {
   computed: {
     label () {
       const labels = {
-        CPol: 'What we are <strong>currently</strong> investing <small>(Current policies)</small>',
-        NDC: 'What we <strong>pledged</strong> to invest <small>(Nationally Determined Contributions)</small>',
+        CPol: 'What we are <strong>currently</strong> investing (Current policies)',
+        NDC: 'What we <strong>pledged</strong> to invest (Nationally Determined Contributions)',
         '2C': 'What we <strong>should</strong> invest for <strong>2°C</strong>',
         '1.5C': 'What we <strong>should</strong> invest for <strong>1.5°C</strong>'
       }
@@ -102,7 +126,7 @@ export default {
     },
     scaleX () {
       return scaleLinear()
-        .range([this.margin.left, this.width - (this.variables.length - 1) * this.gap - this.margin.right])
+        .range([this.margin.left, this.width - (this.variables.length - 1) * 1.2 * this.gap - this.margin.right])
         .domain([0, this.total])
     },
     widths () {
@@ -118,6 +142,7 @@ export default {
       let x0 = 0
       return map(this.variables, (variable) => {
         const color = getColorFromVariable(variable)
+        const name = getNameFromVariable(variable)
         const data = get(filter(this.data, { variable }), 0)
 
         const value = get(data, 'value', 0)
@@ -144,6 +169,7 @@ export default {
           widthRef,
           value,
           color,
+          name,
           tooltip,
           diff: (diff > 0 ? '+' : '') + this.formatNumber(diff).replace('-', '–')
         }
@@ -221,26 +247,26 @@ export default {
 
   .bars {
     .label {
-      margin-bottom: $spacing / 8;
+      margin-bottom: $spacing / 100;
       display: block;
-      font-size: 12px;
+      font-size: 0.8em;
 
       small {
-        font-size: 10px;
-        color: getColor(gray, 60);
+        font-size: 0.8em;
+        //color: getColor(gray, 60);
       }
     }
 
     .intro {
-      font-size: 10px;
-      margin-bottom: $spacing / 2;
+      font-size: 0.8em;
+      margin-bottom: $spacing / 4;
       display: block;
       color: getColor(gray, 40);
     }
 
     .vis {
       width: 100%;
-      height: calc(100px + 5px + #{8px});
+      height: calc(70px + 5px + #{8px});
 
       rect, text {
         transition: opacity 0.3s, width 0.3s, height 0.3s, y 0.3s, x 0.3s;
@@ -296,8 +322,8 @@ export default {
   }
 
   .tooltip {
-    $background-color: getColor(gray, 10);
-    $text-color: #fff;
+    $background-color: #fff ;
+    $text-color: getColor(gray, 10);
 
     display: block !important;
     z-index: 10000;

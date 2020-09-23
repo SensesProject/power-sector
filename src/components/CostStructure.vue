@@ -2,12 +2,12 @@
   <div class="secondary-energy" ref="inWrapper">
     <div class="key" :class=" mobile ? 'mobile' : 'desktop'">
       <h4>Electricity production and changing costs structure</h4>
+      <p class="model-label">(MODEL: {{ model[0] }})</p>
       <p class="selectors">
         Select a scenario and a region:
         <SensesSelect class="scenario_selector" :options="scenarios" v-model="currentScenario"/>
         <SensesSelect class="region_selector" :options="regions" v-model="currentRegion"/>
       </p>
-      <p class="model-label">{{ model[0] }}</p>
     </div>
     <div></div>
     <svg :width="innerWidth" :height="innerHeight" :transform="`translate(${margin.left}, 0)`">
@@ -43,7 +43,7 @@
           :transform="transform(dot, 2)"
           />
           <!-- white circle on top to create donut chart-->
-          <circle :class="'WhiteCirc'" :cx="dot.year" cy="5" v-bind:r="(dot.value/1.5)"/>
+          <circle :class="'WhiteCirc'" :cx="dot.year" cy="5" v-bind:r="(dot.value-margin.left*1.5)"/>
           </g>
         </g>        <!-- :transform="`rotate(-10 ${dot.year + margin.left } ${ margin.left + 5 })`"-->
         <text :x="scale.x(2019)" y="50">{{ labels[g] }}</text>
@@ -199,7 +199,7 @@ export default {
   methods: {
     // compute rotation for each pieces of pie chart
     transform (dot, ind) {
-      // console.log('costruc', this.scale.y(100))
+      console.log('dots_f+r', this.dots)
       let perIni = 0
       let deg = 0
       if (ind === 0) {
@@ -257,13 +257,15 @@ $margin-space: $spacing / 2;
     }
     .selectors {
       display: inline-block;
-    }
+      width: 70%;
+      }
     .model-label    {
       margin-top: 5px;
       color: #424ab9;
       font-weight: normal;
       display: inline;
       margin-left: $margin-space;
+      font-size: 0.8em;
     }
     .scenario_selector {
       margin-top: $margin-space;
@@ -273,6 +275,7 @@ $margin-space: $spacing / 2;
 
     h4 {
       margin-bottom: 10px;
+      display: inline-block;
     }
 
     .v-popover {
@@ -299,11 +302,11 @@ $margin-space: $spacing / 2;
       stroke-width: 0.3;
     }
     circle {
-      fill: $color-gray;
       transition: r 0.5s;
     }
     .axis-dot {
       fill-opacity: 1;
+      fill: $color-gray;
     }
     .world {
       fill-opacity: 0.2;
@@ -333,11 +336,11 @@ $margin-space: $spacing / 2;
         transition: opacity 0.5s;
       }
     }
-    .Fossils {
+    .Fossil {
       fill: getColor(gray, 100);
       stroke: getColor(gray, 40);
     }
-    .Renewables {
+    .Low-carbon {
       fill: getColor(gray, 100);
       stroke: getColor(gray, 40);
     }
@@ -350,10 +353,10 @@ $margin-space: $spacing / 2;
       // stroke: getColor(yellow, 60);
       stroke: $color-yellow ;
       fill-opacity: 0.6;
-      stroke-opacity: 0.8;
+      stroke-opacity: 0.6;
     }
     .capcost_per{
-      stroke: $color-blue;
+      stroke: getColor(blue, 60);
       fill-opacity: 0.7;
       stroke-opacity: 0.5;
     }
@@ -361,15 +364,14 @@ $margin-space: $spacing / 2;
       stroke: getColor(blue, 20) ;
       fill-opacity: 0.6;
       stroke-opacity: 0.7;
-
     }
     .omcost{
       fill: $color-yellow;
       stroke: #5d5d63;
-      fill-opacity: 0.9;
+      fill-opacity: 0.6;
     }
     .capcost{
-      fill: $color-blue;
+      fill: getColor(blue, 60);
       fill-opacity: 0.5;
       stroke: #5d5d63;
     }

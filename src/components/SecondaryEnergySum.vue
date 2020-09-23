@@ -3,12 +3,12 @@
     <div v-if="step < 1">
       <div class="key" :class=" mobile ? 'mobile' : 'desktop'">
       <h4>Electricity production</h4>
+      <p class="model-label">(MODEL: MESSAGEix-GLOBIOM_1.0)</p>
       <p class="selectors">
         Select a scenario and a region:
         <SensesSelect class="scenario_selector" :options="scenarios" v-model="currentScenario"/>
         <SensesSelect class="region_selector" :options="regions" v-model="currentRegion"/>
       </p>
-      <p class="model-label">MESSAGEix-GLOBIOM_1.0</p>
     </div>
     <div></div>
     <svg  :width="(innerWidth)" :height="innerHeight" :transform="`translate(${margin.left}, 0)`">
@@ -242,6 +242,7 @@ $margin-space: $spacing / 2;
     }
     .selectors {
       display: inline-block;
+      width: 70%;
     }
     .model-label    {
       margin-top: 5px;
@@ -249,6 +250,7 @@ $margin-space: $spacing / 2;
       font-weight: normal;
       display: inline;
       margin-left: $margin-space;
+      font-size: 0.8em;
     }
     .scenario_selector {
       margin-top: $margin-space;
@@ -258,6 +260,7 @@ $margin-space: $spacing / 2;
 
     h4 {
       margin: 0px 0px 10px 0px;
+      display: inline-block;
     }
 
     .v-popover {
@@ -313,11 +316,11 @@ $margin-space: $spacing / 2;
         transition: opacity 0.5s;
       }
     }
-    .Fossils {
-      fill: #6A7687;
-      stroke: darken(#6A7687, 40);
+    .Fossil {
+      fill: getColor(violet, 60);
+      stroke: getColor(violet, 40);
     }
-    .Renewables {
+    .Low-carbon {
       fill: getColor(green, 80);
       stroke: getColor(green, 40);
     }

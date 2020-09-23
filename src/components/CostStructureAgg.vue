@@ -2,12 +2,12 @@
   <div class="secondary-energy" ref="inWrapper">
     <div class="key" :class=" mobile ? 'mobile' : 'desktop'">
       <h4>Total costs structure of the power sector</h4>
+      <p class="model-label">(MODEL: MESSAGEix-GLOBIOM_1.0)</p>
       <p class="selectors">
         Select a scenario and a region:
         <SensesSelect class="scenario_selector" :options="scenarios" v-model="currentScenario"/>
         <SensesSelect class="region_selector" :options="regions" v-model="currentRegion"/>
       </p>
-      <p class="model-label">MESSAGEix-GLOBIOM_1.0</p>
     </div>
     <div></div>
     <svg :width="innerWidth" :height="innerHeight" :transform="`translate(${margin.left}, 0)`">
@@ -46,6 +46,7 @@
           </g>
         </g>
         <!-- year labels for every second year in dataset-->
+        <text :x="scale.x(2019)" :y="innerHeight*0.15">Total power sector</text>
         <g v-for="(text, t) in group" :key="t + 'text'" >
           <g v-if="t == 0 || t == 2 || t == 4 || t == 6|| t == 8">
           <text class="year-label" :x="text.year" y="75">{{ years[t] }}</text>
@@ -208,6 +209,7 @@ export default {
   methods: {
     // compute rotation for each pieces of pie chart
     transform (dot, ind) {
+      console.log('dots_agg', this.dots)
       let perIni = 0
       let deg = 0
       if (ind === 0) {
@@ -278,10 +280,12 @@ $margin-space: $spacing / 2;
       font-weight: normal;
       display: inline;
       margin-left: $margin-space;
+      font-size: 0.8em;
     }
     .selectors {
       display: inline-block;
-    }
+      width: 70%;
+      }
     .scenario_selector {
       margin-top: $margin-space;
       margin-left: $margin-space;
@@ -290,6 +294,7 @@ $margin-space: $spacing / 2;
 
     h4 {
       margin-bottom: 10px;
+      display: inline-block;
     }
 
     .v-popover {
@@ -367,10 +372,10 @@ $margin-space: $spacing / 2;
       // stroke: getColor(yellow, 60);
       stroke: $color-yellow ;
       fill-opacity: 0.6;
-      stroke-opacity: 0.8;
+      stroke-opacity: 0.6;
     }
     .capcost_per{
-      stroke: $color-blue;
+      stroke: getColor(blue, 60);
       fill-opacity: 0.7;
       stroke-opacity: 0.5;
     }
@@ -383,10 +388,10 @@ $margin-space: $spacing / 2;
     .omcost{
       fill: $color-yellow;
       stroke: #5d5d63;
-      fill-opacity: 0.9;
+      fill-opacity: 0.6;
     }
     .capcost{
-      fill: $color-blue;
+      fill: getColor(blue, 60);
       fill-opacity: 0.5;
       stroke: #5d5d63;
     }

@@ -3,7 +3,7 @@
     <div class="key" :class=" mobile ? 'mobile' : 'desktop'">
       <h4 v-if="step < 1" >Electricity production </h4>
       <h4 v-if="step >= 1" >Electricity production and production costs/revenue</h4>
-      <p class="model-label">{{ model[0] }}</p>
+      <p class="model-label">(MODEL: {{ model[0] }})</p>
       <p v-if="step < 1" class="selectors">
         Select a scenario:
         <SensesSelect class="scenario_selector" :options="scenarios" v-model="currentScenario"/>
@@ -81,8 +81,10 @@
     <!--y Axis-->
     <g v-for="(val, v) in yTicks[0]" v-bind:key="v+'val'">
       <line class="axis" x1="65" :y1="(0.85 * innerHeight) - yTicks[1][v]" x2="90" :y2="(0.85 * innerHeight) - yTicks[1][v]"/>
-      <text class="year-label" x="35" :y="(0.85 * innerHeight) - yTicks[1][v] -3" > {{ val }} {{ yLabel[0] }} </text>
+      <text class="yAxis" x="50" :y="(0.85 * innerHeight) - yTicks[1][v] -3" > {{ val }} </text>
     </g>
+    <!-- <text class="value-label" x="35" :y="(0.47 * innerHeight)" >{{ yAxisLabel[0] }} </text> -->
+    <text class="yAxis-label" x="0" y="40" :transform='`translate(${-margin.left * 2.5} ${innerHeight*0.7} ) rotate(-90)`'>{{ yAxisLabel[0] }}</text>
     <g v-if="comparison == 'absolute'">
     <!--bars for fossils and renewables-->
     <g v-if="currentMWhSel == 'Total Cost per MWh'">
@@ -115,8 +117,8 @@
   <g v-for="(group, g) in dots" v-bind:key="g + 'textgroup'" :class="`${labels[g]}-group`" >
       <!--Text: Values on mouse over for barchart-->
         <g v-for="(text, t) in group" v-bind:key="t + 'textAll'" :class="activeLayer === true & over === t + labels[g] ? 'visible' : 'invisible'">
-          <text class="year-label" :x="(text.year)" :y="(0.94*innerHeight)">Fossils: {{ format(Math.round(dots[0][t].AllCostValue)) }} {{text.Unit}}</text>
-          <text class="year-label" :x="(text.year)" :y="(0.96*innerHeight)">Renewables: {{ format(Math.round(dots[1][t].AllCostValue)) }} {{text.Unit}}</text>
+          <text class="year-label" :x="(text.year)" :y="(0.94*innerHeight)">Fossil: {{ format(Math.round(dots[0][t].AllCostValue)) }} {{text.Unit}}</text>
+          <text class="year-label" :x="(text.year)" :y="(0.96*innerHeight)">Low-carbon: {{ format(Math.round(dots[1][t].AllCostValue)) }} {{text.Unit}}</text>
           <text v-if="comparison == 'absolute' && currentMWhSel == 'Revenue'" class="year-label" :x="(text.year)" :y="(0.98*innerHeight)">Total: {{ format(Math.round(dots[0][t].AllCostValue + dots[1][t].AllCostValue)) }} {{text.Unit}}</text>
           <!--Line and circle for hover over indicator-->
           <line class="line-label" :x1="text.year" :x2="text.year" :y1="(0.91*innerHeight)" :y2="(0.88*innerHeight)"/>
@@ -509,9 +511,17 @@ export default {
       const tickVal = this.currentMWhSel === 'Revenue' && this.comparison === 'absolute' ? revTicksArray : this.currentMWhSel === 'Revenue' && this.comparison === 'relative' ? revDiffTicksArray : this.currentMWhSel === 'Total Cost per MWh' && this.comparison === 'relative' ? costMwhDiffTicksArray : costMwhTicksArray
       return tickVal
     },
+    // returns Units for Y axis
     yLabel () {
       const labelCost = ['BN$/yr', this.scaleCo_MWh.y(1450)]
       const labelCostMwh = ['$/MWh', this.scaleCo_MWh.y(1450)]
+      const ylab = this.currentMWhSel === 'Revenue' ? labelCost : labelCostMwh
+      return ylab
+    },
+    // returns Units for Y axis
+    yAxisLabel () {
+      const labelCost = ['Revenue in BN$/yr', this.scaleCo_MWh.y(1450)]
+      const labelCostMwh = ['Total costs in $/MWh', this.scaleCo_MWh.y(1450)]
       const ylab = this.currentMWhSel === 'Revenue' ? labelCost : labelCostMwh
       return ylab
     }
@@ -610,7 +620,7 @@ $margin-space: $spacing / 2;
       font-weight: normal;
       display: inline;
       margin-left: $margin-space;
-      font-size: 0.9em;
+      font-size: 0.8em;
     }
 
     .v-popover {
@@ -652,9 +662,19 @@ $margin-space: $spacing / 2;
       .year-label {
         text-anchor: middle;
         fill: black;
-        font-size: 10px;
+        font-size: 0.7em;
         text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;
-
+      }
+      .yAxis{
+        fill: black;
+        font-size: 10px;
+        text-anchor: middle;
+      }
+      .yAxis-label{
+        fill: black;
+        font-size: 10px;
+        text-anchor: middle;
+        letter-spacing: 0.05em;
       }
       .cost-label {
         fill: black;
@@ -663,7 +683,7 @@ $margin-space: $spacing / 2;
       }
       .value-label {
         fill: black;
-        font-size: 10px;
+        font-size: 0.7em;
       }
       .shadow-label {
         fill-opacity: 0.6;
@@ -688,47 +708,37 @@ $margin-space: $spacing / 2;
         transition: opacity 0.5s;
       }
     }
-    .Fossils {
-      fill: #6A7687;
-      stroke: darken(#6A7687, 40);
+    .Fossil {
+      fill: getColor(violet, 60);
+      stroke: getColor(violet, 40);
     }
-    .Fossils-bar {
-      fill: #6A7687;
-      stroke: darken(#6A7687, 40);
+    .Fossil-bar {
+      fill: getColor(violet, 60);
+      stroke: getColor(violet, 40);
       fill-opacity: 0.5;
     }
-    .Fossils-barActive {
-      fill: #6A7687;
-      stroke: darken(#6A7687, 40);
-      fill-opacity: 1;
-    }
-    .Fossils-Carb {
+    .Fossil-Carb {
       fill: getColor(red, 50);
       stroke: darken(#6A7687, 40);
     }
-    .Renewables {
+    .Low-carbon {
       fill: getColor(green, 80);
       stroke: getColor(green, 40);
     }
-    .Renewables-bar {
+    .Low-carbon-bar {
       fill: getColor(green, 80);
       stroke: getColor(green, 40);
       fill-opacity: 0.6;
     }
-    .Renewables-barActive {
-      fill: getColor(green, 60);
-      stroke: getColor(green, 40);
-      fill-opacity: 1;
-    }
     .HoverLayer{
       fill-opacity: 0;
     }
-    .Fossils-base {
+    .Fossil-base {
       stroke: darken(#6A7687, 40);
       stroke-dasharray: 4 2;
       fill-opacity: 0;
     }
-    .Renewables-base {
+    .Low-carbon-base {
       stroke: getColor(green, 40);
       stroke-dasharray: 4 2;
       fill-opacity: 0;
