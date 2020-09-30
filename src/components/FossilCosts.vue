@@ -2,7 +2,9 @@
   <div class="fossil-costs" ref="inCosts">
     <div class="key" :class=" mobile ? 'mobile' : 'desktop'">
       <h4>Fuel costs changes (MN$) and electricity production (Ej/year)</h4>
-      <p class="selectors">
+      <a href="https://docs.messageix.org/projects/global/en/latest/" target="_blank">(MODEL: MESSAGEix-GLOBIOM_1.0)</a>
+      <div>
+        <p class="selectors">
         Select a scenario:
         <SensesSelect class="scenario_selector" :options="scenarios" v-model="currentScenario"/>
       </p>
@@ -18,10 +20,11 @@
         v-on:click="comparison = 'relative'"
         >Relative to current policy scenario</span>
       </p>
+      </div>
     </div>
     <svg :width="innerWidth" :height="innerHeight - margin.bottom" :transform="`translate(${margin.left}, 0)`">
       <g :transform="`translate(${margin.left + 10}, 0)`">
-      <text class="yaxis-label" x="0" y="40" :transform='`translate(${-margin.left * 3} 90) rotate(-90)`'>Costs (Mn/$)</text>
+      <text class="yaxis-label" x="0" y="40" :transform='`translate(${-margin.left * 3} 90) rotate(-90)`'>Costs (Mn$)</text>
       <g v-for="(arc, a) in arcs" :key="`${a}-arc`">
         <line
         class="yaxis"
@@ -433,6 +436,17 @@ $margin-space: $spacing / 2;
       color: $color-neon;
       text-decoration: underline;
     }
+  }
+  a {
+    margin-top: 5px;
+    color: #424ab9;
+    font-weight: normal;
+    display: inline;
+    margin-left: $margin-space;
+    font-size: 0.8em;
+  }
+  h4 {
+    display: inline-block;
   }
 
   svg {

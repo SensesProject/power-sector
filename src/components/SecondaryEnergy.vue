@@ -2,7 +2,7 @@
   <div class="secondary-energy" ref="inWrapper">
     <div class="key" :class=" mobile ? 'mobile' : 'desktop'">
       <h4>Electricity production in the power sector</h4>
-      <p class="model-label">(MODEL: {{ model[0] }})</p>
+      <a href="https://docs.messageix.org/projects/global/en/latest/" target="_blank">(MODEL: MESSAGEix-GLOBIOM_1.0)</a>
       <p class="selectors">
         Select a scenario and a region:
         <SensesSelect class="scenario_selector" :options="scenarios" v-model="currentScenario"/>
@@ -13,7 +13,7 @@
     <svg :width="innerWidth" :height="innerHeight" :transform="`translate(0, 0)`">
       <g v-for="(group, g) in dots" v-bind:key="g + 'group'" :class="`${labels[g]}-group`" :transform="`translate(${verticalPosition[g]}, ${groupPosition[g]})`">
         <circle v-for="(dot, d) in group" v-bind:key="d + 'dot'" @mouseover="[active = true, over = d + labels[g]]" @mouseleave="active = false" :class="labels[g]" :cx="dot.year" cy="5" :r="dot.value"/>
-        <text :x="scale.x(2019)" y="40">{{ labels[g] }}</text>
+        <text class="carrier-label" :x="scale.x(2019)" y="40">{{ labels[g] }}</text>
       </g>
       <g v-for="(group, g) in world" v-bind:key="g + 'wgroup'" :class="`${labels[g]}-wgroup`" :transform="`translate(${verticalPosition[g]}, ${groupPosition[g]})`">
         <g class="axis_group">
@@ -30,6 +30,10 @@
         <circle v-for="(dot, d) in group" v-bind:key="d + 'wdot'" @mouseover="[active = true, over = d + labels[g]]" @mouseleave="active = false" class="world" :class="labels[g]" :cx="dot.year" cy="5" :r="dot.value"/>
       </g>
     </svg>
+    <p class="legend">
+      <span class="dot"></span>
+      <span > = 10Ej/yr</span>
+    </p>
   </div>
 </template>
 
@@ -175,13 +179,13 @@ $margin-space: $spacing / 2;
     z-index: 9;
     width: 100%;
     height: 100px;
-    margin-bottom: 5%;
+    margin-bottom: 1%;
     padding: 10px 0px;
 
     position:sticky;
     top: 50px;
 
-    border-bottom:0.5px solid blue;
+    //border-bottom:0.5px solid grey;
     background: hsla(0,0%,100%,.90);
 
     .highlight {
@@ -189,7 +193,7 @@ $margin-space: $spacing / 2;
       margin-top: 5px;
       margin-left: 10px;
     }
-    .model-label    {
+    a {
       margin-top: 5px;
       color: #424ab9;
       font-weight: normal;
@@ -200,7 +204,7 @@ $margin-space: $spacing / 2;
     .selectors {
       display: inline-block;
       width: 70%;
-      margin-left: 10px;
+      margin-left: 25px;
     }
     .scenario_selector {
       margin-top: $margin-space;
@@ -212,6 +216,7 @@ $margin-space: $spacing / 2;
       padding-left: 10px;
       padding-bottom: 10px;
       display: inline-block;
+      margin-left: $margin-space;
     }
 
     .v-popover {
@@ -230,8 +235,24 @@ $margin-space: $spacing / 2;
       }
     }
   }
-
+  .legend{
+    padding-top: 1.5%;
+    margin-left: 25px;
+    font-size: 0.7em;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    .dot {
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      display: inline-block;
+      border: 1px solid grey;
+      margin-right: 3px;
+    }
+  }
   svg {
+    height: 85%;
     .axis {
       stroke: $color-gray;
     }
@@ -248,6 +269,9 @@ $margin-space: $spacing / 2;
       stroke-dasharray: 2 2;
     }
     g {
+      .carrier-label {
+        font-size: 0.7em;
+      }
       .year-label {
         text-anchor: middle;
         fill: black;

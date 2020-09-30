@@ -3,12 +3,12 @@
     <nav class="risk-menu pathway">
       <section>
         <a class="wrapper">
-          <div><span class="glyph-oil"/></div>
+          <div><span class="glyph-oil" href="https://climatescenarios.org/fossil-fuels/"/></div>
           <div><h4>Chapter 1</h4><span>Fossil Fuels</span></div>
         </a>
       </section>
       <section>
-        <a class="wrapper active" href="https://dev.climatescenarios.org/">
+        <a class="wrapper active">
           <div><span class="glyph-power"/></div>
           <div><h4>Chapter 2</h4><span>Power Sector&nbsp;&nearr;</span></div>
         </a>

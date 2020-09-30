@@ -4,7 +4,7 @@
     <div class="content" :class="mobile ? 'isMobile' : 'isDesktop'" ref="container">
       <div class="text-wrapper">
         <h1 class="module-title">Transition Risks – Power Sector Transformation</h1>
-        <p>This is the second chapter of the Finance Risks Pathway.
+        <p>This is the second chapter of the Risks Factor Pathway.
           You can select another chapter below.</p>
       </div>
       <RiskPathway :mobile="mobile"/>
@@ -48,7 +48,7 @@
       </div>
       </LayoutScrollytelling>
       <div class="text-wrapper">
-        <p>Let’s have a look at the volume in electricity production of different energy carrier:</p>
+        <p>Let’s have a look at the volume in electricity production of different energy carriers:</p>
       </div>
       <LayoutScrollytelling>
         <template v-slot:vis="{ width, height, step }">
@@ -88,7 +88,7 @@
           </div>
         </template>
         <div slot="text" class="observer">
-        <IntersectionObserver :step="0"  align="right">
+        <IntersectionObserver :step="0"  align="right" class="halfheight">
           <p>The transition changes electricity production from fossil to low-carbon technologies,
             which have different cost structures.
         </p>
@@ -131,12 +131,12 @@
           </p>
         </IntersectionObserver>
         <IntersectionObserver :step="1"  align="right">
-          <p>In a 2.0º scenario the total fuel costs decrease despite increasing costs per unit of
+          <p>In a 2.0ºC scenario the total fuel costs decrease despite increasing costs per unit of
             electricity production from fossil sources, because energy production from fossil fuels is declining.
           </p>
         </IntersectionObserver>
         <IntersectionObserver :step="2"  align="right">
-          <p> In a 1.5º scenario, the increase in fuel prices and carbon taxes is so significant that,
+          <p> In a 1.5ºC scenario, the increase in fuel prices and carbon taxes is so significant that,
             although fossil fuels are almost phased out later in the century, they will lead to an increase
             in total fuel costs.
           </p>
@@ -251,6 +251,9 @@ export default {
 
   .changeheight {
     padding-bottom: 2000px;
+  }
+  .changeheight {
+    height: 60%;
   }
 
   .content {

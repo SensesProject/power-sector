@@ -3,11 +3,10 @@
     <div v-if="step < 1">
       <div class="key" :class=" mobile ? 'mobile' : 'desktop'">
       <h4>Electricity production</h4>
-      <p class="model-label">(MODEL: MESSAGEix-GLOBIOM_1.0)</p>
+      <a href="https://docs.messageix.org/projects/global/en/latest/" target="_blank">(MODEL: MESSAGEix-GLOBIOM_1.0)</a>
       <p class="selectors">
-        Select a scenario and a region:
+        Select a scenario:
         <SensesSelect class="scenario_selector" :options="scenarios" v-model="currentScenario"/>
-        <SensesSelect class="region_selector" :options="regions" v-model="currentRegion"/>
       </p>
     </div>
     <div></div>
@@ -17,7 +16,7 @@
         <g>
         <circle v-for="(dot, d) in group" v-bind:key="d + 'dot'" @mouseover="[active = true, over = d + labels[g]]" @mouseleave="active = false" :class="labels[g]" :cx="dot.year" cy="5" :r="dot.value"/>
         <!-- labels for energy carrier g-->
-        <text :x="scale.x(2019)" y="50">{{ labels[g] }}</text>
+        <text class="carrier-label" :x="scale.x(2019)" y="50">{{ labels[g] }}</text>
         </g>
         <!-- year labels for first and last year in dataset -->
         <g v-for="(text, t) in group" :key="t + 'text'" >
@@ -154,7 +153,7 @@ export default {
       // domain-> observartio EJ/yr, range-> visual variable px
       return {
         x: d3.scaleLinear()
-          .range([50, this.innerWidth - (this.margin.right * 12)])
+          .range([52, this.innerWidth - (this.margin.right * 12)])
           .domain([2020, 2100]),
         y: d3.scaleLinear()
           .range([2, 1500])
@@ -229,7 +228,7 @@ $margin-space: $spacing / 2;
     z-index: 9;
     width: 100%;
     height: 100px;
-    margin-bottom: 1%;
+    margin-bottom: 5%;
     padding: 40px 0px;
 
     top: 50px;
@@ -243,8 +242,10 @@ $margin-space: $spacing / 2;
     .selectors {
       display: inline-block;
       width: 70%;
+      margin-left: $margin-space*2.8;
     }
-    .model-label    {
+
+    a {
       margin-top: 5px;
       color: #424ab9;
       font-weight: normal;
@@ -259,7 +260,8 @@ $margin-space: $spacing / 2;
     }
 
     h4 {
-      margin: 0px 0px 10px 0px;
+      margin-left: $margin-space*2.8;
+      margin-bottom: 10px;
       display: inline-block;
     }
 
@@ -279,7 +281,24 @@ $margin-space: $spacing / 2;
       }
     }
   }
+  .legend{
+    padding-top: 1.5%;
+    margin-left: $margin-space*2.8;
+    font-size: 0.7em;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    .dot {
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      display: inline-block;
+      border: 1px solid grey;
+      margin-right: 3px;
+    }
+  }
   svg {
+    height: 60%;
     .axis {
       stroke: $color-gray;
       stroke-width: 0.3;
@@ -293,6 +312,9 @@ $margin-space: $spacing / 2;
       fill-opacity: 1;
     }
     g {
+      .carrier-label {
+        font-size: 0.7em;
+      }
       .year-label {
         text-anchor: middle;
         fill: black;

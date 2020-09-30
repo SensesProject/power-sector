@@ -2,7 +2,7 @@
   <div class="bars">
     <span class="label" v-html="label" />
     <div class="intro">
-      <span>{{ region }}: <strong>{{ sumThis }}</strong> Billion US-Dollar per year.</span>
+      <span>{{ region }}: <strong>{{ sumThis }}</strong> Billion US-Dollar per year average 2016–2030.</span>
     </div>
     <svg ref="vis" class="vis">
       <g v-if="width">
@@ -66,12 +66,12 @@ function getColorFromVariable (variable) {
 }
 const names = {
   'Coal|w/ CCS': 'Coal|w/ CCS',
-  'Coal|w/o CCS': 'Coal',
+  'Coal|w/o CCS': 'Coal|w/o CCS',
   'Gas|w/ CCS': 'Gas|w/ CC',
-  'Gas|w/o CCS': 'Gas',
+  'Gas|w/o CCS': 'Gas|w/o CCS',
   'Oil|w/ CCS': 'Oil',
-  'Biomass|w/ CCS': 'Biomass',
-  'Biomass|w/o CCS': 'Biomass|w/o CCS',
+  'Biomass|w/ CCS': 'Biomass |w/ CCS',
+  'Biomass|w/o CCS': 'Biomass',
   Nuclear: 'Nuclear',
   Hydro: 'Hydro',
   Solar: 'Solar',

@@ -1,9 +1,12 @@
 <template>
   <section class="investments" ref="inWrapper">
     <header class="key">
-      <h4>Energy investment needs within the power sector (yearly average 2016–2030)</h4>
+      <h4>Energy investment needs within the power sector</h4>
+      <a href="https://docs.messageix.org/projects/global/en/latest/" target="_blank">(MODEL: MESSAGEix-GLOBIOM_1.0)</a>
+      <div >
       <label class= "label"><input class = "checkbox" type="checkbox" v-model="isStacked">not stacked</label>
       <label class= "label"><input class = "checkbox" type="checkbox" v-model="showDifference">difference highlighted</label>
+      </div>
     </header>
     <div v-for="key in scenarios" :key="key" class="scenario">
       <Chart
@@ -66,10 +69,10 @@ export default {
         'Hydro',
         'Solar',
         'Wind',
-        'Geothermal',
         'Ocean',
         'Transmission and Distribution',
-        'Electricity Storage'
+        'Electricity Storage',
+        'Geothermal'
       ],
       scenarios: ['CPol', 'NDC', '2C', '1.5C']
     }
@@ -139,7 +142,17 @@ export default {
     padding: 0 0px;
   //  border-bottom: 0.5px solid grey;
   }
-
+  h4{
+    display: inline-block;
+  }
+  a {
+    margin-top: 5px;
+    color: #424ab9;
+    font-weight: normal;
+    display: inline;
+    margin-left: 2%;
+    font-size: 0.8em;
+  }
   .checkbox{
     margin-right: 5px;
   }
