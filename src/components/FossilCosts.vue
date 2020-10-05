@@ -372,14 +372,18 @@ export default {
     },
     step (currentStep, previousStep) {
       if (currentStep === 0) {
-        this.currentScenario = '2.0ºC'
+        this.currentScenario = 'Current Policies'
         this.comparison = 'absolute'
       } else if (currentStep === 1) {
-        this.currentScenario = '1.5ºC'
+        this.currentScenario = '2.0ºC'
         this.comparison = 'absolute'
       } else if (currentStep === 2) {
+        this.currentScenario = '1.5ºC'
+        this.comparison = 'absolute'
+      } else if (currentStep === 3) {
+        this.currentScenario = '2.0ºC'
         this.comparison = 'relative'
-      } else if (currentStep >= 3) {
+      } else if (currentStep === 4) {
         this.currentScenario = 'Current Policies'
         this.comparison = 'absolute'
       }

@@ -5,6 +5,7 @@ import store from './store'
 
 Vue.config.productionTip = false
 Vue.use(VTooltip)
+VTooltip.options.defaultClass = 'senses'
 
 new Vue({
   store,
