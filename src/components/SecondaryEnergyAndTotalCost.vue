@@ -331,7 +331,6 @@ export default {
     },
     // ScaleCo for Barchart for Revenue
     scaleCo () {
-      // console.log('MaxMin', d3.min(this.worldFilterAllCostTotal, s => +s), d3.max(this.worldFilterAllCostTotal, s => +s))
       return {
         x: d3.scaleLinear()
           .range([4 * this.margin.left, this.innerWidth - (this.margin.right * 4)])
@@ -354,7 +353,6 @@ export default {
     },
     // ScaleCo_MWh for Barchart for Costs per MWh
     scaleCo_MWh () {
-      console.log('MaxMinRevenueDiff', d3.min(this.worldFilterAllRevenueDiffTotal, s => +s), d3.max(this.worldFilterAllRevenueDiffTotal, s => +s))
       return {
         x: d3.scaleLinear()
           .range([4 * this.margin.left, this.innerWidth - (this.margin.right * 4)])
@@ -366,7 +364,6 @@ export default {
     },
     // ScaleCo_MWh for Barchart for Costs per MWh diference to baseline
     scaleCo_MWhDiff () {
-      console.log('CostMWHDiffMaxMin', d3.min(this.worldFilterAllCostDiffTotal_MWh, s => +s), d3.max(this.worldFilterAllCostDiffTotal_MWh, s => +s))
       return {
         x: d3.scaleLinear()
           .range([4 * this.margin.left, this.innerWidth - (this.margin.right * 4)])
@@ -379,9 +376,7 @@ export default {
     dots () {
       const basedata = this.worldBaseFilter
       return _.map(this.worldFilter, (energy, e) => {
-        // console.log('e', e)
         return _.map(energy, (single, s) => {
-          // console.log('s', s)
           if (this.currentMWhSel === 'Revenue' && this.comparison === 'absolute') {
             return {
               year: this.scale.x(single.Year),
@@ -482,8 +477,6 @@ export default {
       }
     },
     world () {
-      console.log('partdots', this.dots.slice(0, 1))
-      console.log('scenfilter', this.scenarioFilter)
       return _.map(this.worldFilter, (energy, e) => {
         return _.map(energy, (single, s) => {
           return {
@@ -495,8 +488,6 @@ export default {
       })
     },
     groupPosition () {
-      console.log('worldpart', this.world.slice(0, 2))
-      console.log('dots', this.dots)
       // length of dotsArray is  = nr of energy carrier
       // returns array with the position for each energy carrier
       const dotsArray = this.dots.slice(0, 2)

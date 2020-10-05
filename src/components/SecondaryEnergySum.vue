@@ -183,7 +183,6 @@ export default {
       })
     },
     groupPosition () {
-      // console.log('dots', this.dots)
       // length of dotsArray is  = nr of energy carrier
       // returns array with the position for each energy carrier
       const dotsArray = this.dots.slice(0, 2)
@@ -202,9 +201,7 @@ export default {
     }
   },
   mounted () {
-    // console.log('thisdots', this.dots)
     this.calcSizes()
-    // console.log(this.areachart)
     window.addEventListener('resize', this.calcSizes, false)
   },
   updated () {

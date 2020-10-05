@@ -138,11 +138,6 @@ export default {
   },
   computed: {
     innerWidth () { return this.width - (this.margin.left + this.margin.right) },
-    // scenario Filter takes Energy Array and returns Array where Objects with Scenario = currentScenario are filtered
-    // ["coal": [{scenario: 1.5,...},{scenario: 1.5,...}...],
-    //   "wind": [{scenario: 1.5,...},{scenario: 1.5,...}...],
-    //    ...
-    //  ]
     scenarioFilter () { return _.map(this.energy, (sc, s) => _.filter(sc, d => d.Scenario === this.scenDict[this.currentScenario])) },
     // filters over scenrioFilter Array, returns same array only with objects with CurrentRegion
     regionFilter () { return _.map(this.scenarioFilter, (re, r) => _.filter(re, d => d.Region === this.currentRegion)) },
@@ -161,12 +156,6 @@ export default {
     },
     // dots returns values for year and value in pixel, and Costs in percentage
     dots () {
-      // const scenarios = this.scenarios
-      // console.log('scenariosAgg')
-      // console.log(scenarios)
-      // const regionFilter = this.regionFilter
-      // console.log('regionFilter')
-      // console.log(regionFilter)
       return _.map(this.regionFilter, (energy, e) => {
         return _.map(energy, (single, s) => {
           return {
@@ -195,8 +184,6 @@ export default {
       // length of dotsArray is  = nr of energy carrier
       // returns array with the position for each energy carrier
       const dotsArray = this.dots
-      // console.log('dotsArrayAGG')
-      // console.log(dotsArray)
       let pos = 150
       return _.map(this.regionFilter, (energy, e, l) => {
         if (e !== 0) { pos = pos + this.innerHeight / dotsArray.length - 100 }
@@ -207,7 +194,6 @@ export default {
   methods: {
     // compute rotation for each pieces of pie chart
     transform (dot, ind) {
-      console.log('dots_agg', this.dots)
       let perIni = 0
       let deg = 0
       if (ind === 0) {

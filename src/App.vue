@@ -4,8 +4,6 @@
     <div class="content" :class="mobile ? 'isMobile' : 'isDesktop'" ref="container">
       <div class="text-wrapper">
         <h1 class="module-title">Transition Risks – Power Sector Transformation</h1>
-        <p>This is the second chapter of the Risks Factor Pathway.
-          You can select another chapter below.</p>
       </div>
       <RiskPathway :mobile="mobile"/>
       <div class="text-wrapper">

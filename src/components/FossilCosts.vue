@@ -106,7 +106,7 @@
     <g class="legend" :transform="`translate(${margin.left}, ${innerGraph.height + 60})`">
       <text>Electricity production (EJ/yr)</text>
           <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-              <g id="Group-11" transform="translate(100, -20)">
+              <g id="Group-11" transform="translate(150, 10)">
                   <text id="&lt;-5-EJ/yr" fill="#000000" fill-rule="nonzero">
                       <tspan x="-7.10542736e-15" y="47">&lt; 10 EJ/yr</tspan>
                   </text>
@@ -371,13 +371,15 @@ export default {
       }
     },
     step (currentStep, previousStep) {
-      if (currentStep === 1) {
+      if (currentStep === 0) {
         this.currentScenario = '2.0ºC'
-      } if (currentStep === 2) {
+        this.comparison = 'absolute'
+      } else if (currentStep === 1) {
         this.currentScenario = '1.5ºC'
-      } if (currentStep === 3) {
+        this.comparison = 'absolute'
+      } else if (currentStep === 2) {
         this.comparison = 'relative'
-      } if (currentStep === 4) {
+      } else if (currentStep >= 3) {
         this.currentScenario = 'Current Policies'
         this.comparison = 'absolute'
       }
@@ -463,7 +465,7 @@ $margin-space: $spacing / 2;
 
     circle.invisible {
       fill-opacity: 0;
-      stroke-opacity: 0.5;
+      stroke-opacity: 0.3;
     }
 
     circle.selected {
@@ -531,6 +533,10 @@ $margin-space: $spacing / 2;
         stroke: getColor(gray, 40);
       }
       &.baseline {
+        &.invisible {
+          fill-opacity: 0.1;
+          stroke-opacity: 0.1;
+        }
         fill-opacity: 1;
       }
       &.no_baseline {

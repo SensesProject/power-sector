@@ -1,22 +1,26 @@
 <template>
   <div class="risk-card" :class="mobile ? 'mobileCard' : 'desktopCard'">
+    <div class="other-chapters">
+      <p>This is the second chapter of the Risk Factors Pathway. Available chapters:
+      </p>
+    </div>
     <nav class="risk-menu pathway">
       <section>
         <a class="wrapper">
           <div><span class="glyph-oil" href="https://climatescenarios.org/fossil-fuels/"/></div>
-          <div><h4>Chapter 1</h4><span>Fossil Fuels</span></div>
+          <div><h4>Chapter 1</h4><span>Fossil Fuels&nbsp;&nearr;</span></div>
         </a>
       </section>
       <section>
         <a class="wrapper active">
           <div><span class="glyph-power"/></div>
-          <div><h4>Chapter 2</h4><span>Power Sector&nbsp;&nearr;</span></div>
+          <div><h4>Chapter 2</h4><span>Power Sector</span></div>
         </a>
       </section>
       <section>
-        <a class="wrapper" href="https://dev.climatescenarios.org/">
+        <a class="wrapper not-available" href="#">
           <div><span class="glyph-building"/></div>
-          <div><h4>Chapter 3</h4><span>End Use&nbsp;&nearr;</span></div>
+          <div><h4>Chapter 3</h4><span>End Use</span></div>
         </a>
       </section>
     </nav>
@@ -44,6 +48,12 @@ export default {
   padding: $spacing;
   border-radius: 4px;
   margin-top: $spacing;
+
+  .other-chapters {
+    text-align: center;
+    font-size: 11px;
+    // text-transform: uppercase;
+  }
 }
 
 .pathway {
@@ -60,6 +70,15 @@ export default {
 
   .active {
     color: #B035C9;
+  }
+
+  .not-available {
+    cursor: not-allowed;
+
+    div {
+      color: gray;
+      opacity: 0.8;
+    }
   }
 
   .risk-menu {
@@ -83,11 +102,11 @@ export default {
     font-size: 5rem;
   }
 
-  .glyph-power {
+  .glyph-power, .glyph-oil {
     color: #B035C9;
   }
 
-  .glyph-building, .glyph-oil {
+  .glyph-building {
     color: #d8d8e4;
   }
 }

@@ -169,7 +169,6 @@ export default {
     },
     // dots returns values for year and value in pixel, and Costs in percentage
     dots () {
-      // console.log('CostScale', this.scale.y(2000))
       return _.map(this.regionFilter, (energy, e) => {
         return _.map(energy, (single, s) => {
           return {
@@ -206,7 +205,6 @@ export default {
   methods: {
     // compute rotation for each pieces of pie chart
     transform (dot, ind) {
-      console.log('dots_f+r', this.dots)
       let perIni = 0
       let deg = 0
       if (ind === 0) {
