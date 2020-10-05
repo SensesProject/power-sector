@@ -367,7 +367,7 @@ export default {
         this.currentScenario = '2.0ºC'
       } else {
         this.scenarios = [...new Set(FossilCosts.map(r => r.Scenario))]
-        this.currentScenario = 'Current Policies'
+        // this.currentScenario = 'Current Policies'
       }
     },
     step (currentStep, previousStep) {
@@ -378,8 +378,8 @@ export default {
         this.currentScenario = '2.0ºC'
         this.comparison = 'absolute'
       } else if (currentStep === 2) {
-        this.currentScenario = '1.5ºC'
         this.comparison = 'absolute'
+        this.currentScenario = '1.5ºC'
       } else if (currentStep === 3) {
         this.currentScenario = '2.0ºC'
         this.comparison = 'relative'
