@@ -1,8 +1,8 @@
 <template>
   <section class="investments" ref="inWrapper">
     <header class="key">
-      <h4>Energy investment needs within the power sector</h4>
-      <a href="https://docs.messageix.org/projects/global/en/latest/" target="_blank">(MODEL: MESSAGEix-GLOBIOM_1.0)</a>
+      <h3>Energy investment needs within the power sector</h3>
+      <a href="https://docs.messageix.org/projects/global/en/latest/" target="_blank">(Model: MESSAGEix-GLOBIOM_1.0)</a>
       <div >
       <label class= "label"><input class = "checkbox" type="checkbox" v-model="isStacked">not stacked</label>
       <label class= "label"><input class = "checkbox" type="checkbox" v-model="showDifference">difference highlighted</label>
@@ -133,25 +133,27 @@ export default {
 @import "library/src/style/variables.scss";
 
 .investments {
-  height: 85vh;
+  height: 90vh;
 
   .key {
     width: 90%;
     height: 70px;
-    margin-bottom: 1%;
+    margin-bottom: 3%;
     padding: 0 0px;
   //  border-bottom: 0.5px solid grey;
   }
-  h4{
+  h3{
     display: inline-block;
+    padding-bottom: 5px;
   }
   a {
     margin-top: 5px;
-    color: #424ab9;
+    color: getColor(neon, 40);
     font-weight: normal;
     display: inline;
-    margin-left: 2%;
-    font-size: 0.8em;
+    margin-left: 10px;
+    text-decoration: none;
+    background: none;
   }
   .checkbox{
     margin-right: 5px;

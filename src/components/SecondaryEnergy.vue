@@ -1,12 +1,18 @@
 <template>
   <div class="secondary-energy" ref="inWrapper">
     <div class="key" :class=" mobile ? 'mobile' : 'desktop'">
-      <h4>Electricity production in the power sector</h4>
-      <a href="https://docs.messageix.org/projects/global/en/latest/" target="_blank">(MODEL: MESSAGEix-GLOBIOM_1.0)</a>
+      <h3>Electricity production in the power sector</h3>
+      <a href="https://docs.messageix.org/projects/global/en/latest/" target="_blank">(Model: MESSAGEix-GLOBIOM_1.0)</a>
       <p class="selectors">
         Select a scenario and a region:
         <SensesSelect class="scenario_selector" :options="scenarios" v-model="currentScenario"/>
         <SensesSelect class="region_selector" :options="regions" v-model="currentRegion"/>
+      </p>
+      <p class="legend">
+        <span class="dot"></span>
+        <span > = 10Ej/yr</span>
+        <span class="dot" id="world"></span>
+        <span > World (reference)</span>
       </p>
     </div>
     <div></div>
@@ -30,10 +36,6 @@
         <circle v-for="(dot, d) in group" v-bind:key="d + 'wdot'" @mouseover="[active = true, over = d + labels[g]]" @mouseleave="active = false" class="world" :class="labels[g]" :cx="dot.year" cy="5" :r="dot.value"/>
       </g>
     </svg>
-    <p class="legend">
-      <span class="dot"></span>
-      <span > = 10Ej/yr</span>
-    </p>
   </div>
 </template>
 
@@ -195,24 +197,26 @@ $margin-space: $spacing / 2;
     }
     a {
       margin-top: 5px;
-      color: #424ab9;
+      color: getColor(neon, 40);
       font-weight: normal;
       display: inline;
-      margin-left: $margin-space;
-      font-size: 0.8em;
+      margin-left: $margin-space/2;
+      text-decoration: none;
+      background: none;
     }
     .selectors {
+      padding-left: 10px;
       display: inline-block;
       width: 70%;
-      margin-left: 25px;
+      margin-left: $margin-space;
     }
     .scenario_selector {
       margin-top: $margin-space;
-      margin-left: $margin-space;
-      margin-right: $margin-space;
+      margin-left: $margin-space/2;
+      //margin-right: $margin-space;
     }
 
-    h4 {
+    h3 {
       padding-left: 10px;
       padding-bottom: 10px;
       display: inline-block;
@@ -249,6 +253,11 @@ $margin-space: $spacing / 2;
       display: inline-block;
       border: 1px solid grey;
       margin-right: 3px;
+      &#world {
+        border-style: dashed;
+        margin-left: $margin-space;
+        margin-right: $margin-space/3;
+        }
     }
   }
   svg {

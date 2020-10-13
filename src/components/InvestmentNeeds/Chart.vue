@@ -253,7 +253,7 @@ export default {
 
       small {
         font-size: 0.8em;
-        //color: getColor(gray, 60);
+        //color: getColor(gray, 80);
       }
     }
 

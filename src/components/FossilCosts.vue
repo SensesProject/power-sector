@@ -1,8 +1,9 @@
 <template>
   <div class="fossil-costs" ref="inCosts">
     <div class="key" :class=" mobile ? 'mobile' : 'desktop'">
-      <h4>Fuel costs changes (MN$) and electricity production (Ej/year)</h4>
-      <a href="https://docs.messageix.org/projects/global/en/latest/" target="_blank">(MODEL: MESSAGEix-GLOBIOM_1.0)</a>
+      <h3 v-if="comparison === 'absolute'">Fuel costs and electricity production</h3>
+      <h3 v-else >Fuel costs changes and electricity production</h3>
+      <a href="https://docs.messageix.org/projects/global/en/latest/" target="_blank">(Model: MESSAGEix-GLOBIOM_1.0)</a>
       <div>
         <p class="selectors">
         Select a scenario:
@@ -99,7 +100,7 @@
         <text :x="5" y="5" text-anchor="end">{{tick / 1000}}</text>
       </g>
       <g class="xaxis" v-for="year in years" :key="year" :transform="`translate(${scales.x(year)}, 0)`">
-        <line x1="0" x2="0" y1="10" :y2="innerGraph.height" stroke="black"/>
+        <line class="verticalLines" x1="0" x2="0" y1="10" :y2="innerGraph.height" />
         <text x="5" :y="innerGraph.height + 20" text-anchor="middle">{{year}}</text>
       </g>
     </g>
@@ -236,7 +237,7 @@ import { map, range, filter } from 'lodash'
 import { max, min } from 'd3-array'
 import { scaleLinear } from 'd3-scale'
 // import { arc } from 'd3-shape'
-import FossilCosts from 'dsv-loader!@/assets/data/SecondaryEnergyAndEmissionCosts-new.csv' // eslint-disable-line import/no-webpack-loader-syntax
+import FossilCosts from 'dsv-loader!@/assets/data/SecondaryEnergyAndEmissionCosts.csv' // eslint-disable-line import/no-webpack-loader-syntax
 import SensesSelect from 'library/src/components/SensesSelect.vue'
 
 export default {
@@ -423,9 +424,10 @@ $margin-space: $spacing / 2;
   .selectors {
     margin-top: 10px;
     display: inline-flex;
+    margin-left: $margin-space;
 
     .senses-select {
-      margin-left: 5px;
+      margin-left: $margin-space;
     }
   }
 
@@ -439,22 +441,26 @@ $margin-space: $spacing / 2;
     }
 
     .active-comparison {
-      color: $color-neon;
+      color: getColor(neon, 40);
       text-decoration: underline;
     }
   }
   a {
     margin-top: 5px;
-    color: #424ab9;
+    color: getColor(neon, 40);
     font-weight: normal;
     display: inline;
-    margin-left: $margin-space;
-    font-size: 0.8em;
+    margin-left: $margin-space/2;
+    text-decoration: none;
+    background: none;
   }
-  h4 {
+  h3 {
     display: inline-block;
+    margin-left: $margin-space;
   }
-
+  text {
+    font-size: 0.7em;
+  }
   svg {
     .yaxis {
       stroke-opacity: 0;
@@ -463,10 +469,13 @@ $margin-space: $spacing / 2;
 
         text {
           stroke: none;
-          font-size: 10px;
+          font-size: 0.7em;
         }
     }
-
+    .verticalLines {
+      stroke: $color-gray;
+      stroke-width: 0.4;
+    }
     circle.invisible {
       fill-opacity: 0;
       stroke-opacity: 0.3;
@@ -487,7 +496,7 @@ $margin-space: $spacing / 2;
     }
 
     text.selected {
-      font-size: 11px;
+      font-size: 0.7em;
     }
 
     text.shadow {

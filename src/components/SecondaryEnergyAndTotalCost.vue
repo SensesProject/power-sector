@@ -1,19 +1,21 @@
 <template>
   <div class="secondary-energy" ref="inWrapper">
     <div class="key" :class=" mobile ? 'mobile' : 'desktop'">
-      <h4 v-if="step < 1" >Electricity production </h4>
-      <h4 v-if="step >= 1" >Electricity production and production costs/revenue</h4>
-      <a href="https://docs.messageix.org/projects/global/en/latest/" target="_blank">(MODEL: MESSAGEix-GLOBIOM_1.0)</a>
-      <p v-if="step < 1" class="selectors">
+      <h3 v-if="step < 1" >Electricity production </h3>
+      <h3 v-else>Electricity production and production costs/revenue</h3>
+      <a href="https://docs.messageix.org/projects/global/en/latest/" target="_blank">(Model: MESSAGEix-GLOBIOM_1.0)</a>
+    </div>
+    <div class="key" :class=" mobile ? 'mobile' : 'desktop'">
+      <p v-if="step<1" class="selectors">
         Select a scenario:
         <SensesSelect class="scenario_selector" :options="scenarios" v-model="currentScenario"/>
       </p>
-      <p v-if="step >= 1" class="selectors">
+      <p v-else class="selectors">
         Select a scenario and cost type:
         <SensesSelect class="scenario_selector" :options="scenarios" v-model="currentScenario"/>
         <!-- selector for bar chart between revenue and costs per MWh -->
         <SensesSelect class="MWh_selector" :options="MWhSel" v-model="currentMWhSel"/>
-        <!-- selector for abs and rel values-->
+        <!-- selector for abs and rel values -->
         <span class="comparison_selector" v-if="step > 2"> <span
           class="comparison"
           :class="comparison === 'absolute' ? '' : 'active-comparison'"
@@ -27,6 +29,13 @@
         </span>
       </p>
     </div>
+    <p class="legend">
+      <span class="dot"></span>
+      <span > = 10Ej/yr</span>
+      <span class="-fossil">Fossil</span>
+      <span class="-carbon">Low-carbon</span>
+      <span v-if="step >= 1 && currentMWhSel == 'Cost per MWh' && comparison == 'absolute' && currentScenario !== 'Current Policies'" class="-tax">Carbon price </span>
+    </p>
     <div></div>
     <svg :width="(innerWidth)" :height="innerHeight" :transform="`translate(${margin.left}, 0)`">
       <!--  <circle class="year-dot" cx="20" cy="12" r="10"/> -->
@@ -142,29 +151,12 @@
           <circle class="year-dot" :cx="text.year" :cy="(0.81*innerHeight)" r="2"/>
         </g>
         <!--horizontal dashed line at y=0 for case of rel value -->
-        <g v-if="comparison == 'relative' && currentMWhSel == 'Revenue'" >
+        <g v-if="currentMWhSel == 'Revenue'" >
           <line class="line-label-dashed" :x1="scale.x(2020)" :x2="scale.x(2104.5)" :y1="(0.75*innerHeight) - scaleCoDiff.y(0)" :y2="(0.75*innerHeight)- scaleCoDiff.y(0)"/>
         </g>
       </g>
       </g>
-      <!--Legend
-      <g :transform="`translate(0, ${innerHeight*0.01})`">
-            <text x="31" y="14">= 10 Ej/yr </text>
-            <text  x="128" y="14">Fossil </text>
-            <text  x="203" y="14">Low-carbon </text>
-            <text  x="309" y="14">Carbon price </text>
-            <rect class="Fossil-bar" x="108" y="2" width="14" height="14"/>
-            <rect class="Low-carbon-bar" x="184" y="2" width="14" height="14"/>
-            <rect class="Tax-bar-legend" x="290" y="2" width="14" height="14"/>
-      </g>-->
     </svg>
-    <p class="legend">
-      <span class="dot"></span>
-      <span > = 10Ej/yr</span>
-      <span class="-fossil">Fossil</span>
-      <span class="-carbon">Low-carbon</span>
-      <span v-if="step >= 1 && currentMWhSel == 'Cost per MWh' && comparison == 'absolute' && currentScenario !== 'Current Policies'" class="-tax">Carbon price </span>
-    </p>
   </div>
 </template>
 
@@ -217,6 +209,7 @@ export default {
       years: [...new Set(SecondaryEnergyAndAllCosts.map(r => r.Year))],
       labels: [...new Set(SecondaryEnergyAndAllCosts.map(r => r.Variable))],
       scenarios: ['1.5ºC', '2.0ºC', 'Current Policies'],
+      liste: ['test', '2.0ºC', 'Current Policies'],
       scenDict: { '1.5ºC': 'NPi2020_400_v3', '2.0ºC': 'NPi2020_1000_v3', 'Current Policies': 'NPi_v3' },
       regions: [...new Set(SecondaryEnergyAndAllCosts.map(r => r.Region))],
       allValues: [...new Set(SecondaryEnergyAndAllCosts.map(r => r.Value))],
@@ -229,6 +222,7 @@ export default {
       currentMWhSel: 'Cost per MWh',
       currentScenario: '1.5ºC',
       currentRegion: 'World',
+      currenttest: 'test',
       comparison: 'absolute',
       active: false,
       activeTax: false,
@@ -336,7 +330,7 @@ export default {
           .range([4 * this.margin.left, this.innerWidth - (this.margin.right * 4)])
           .domain([2020, 2110]),
         y: d3.scaleLinear()
-          .range([0, 0.25 * this.innerHeight])
+          .range([0, 0.2 * this.innerHeight])
           .domain([0, d3.max(this.worldFilterAllRevenue, s => +s)])
       }
     },
@@ -347,7 +341,7 @@ export default {
           .range([4 * this.margin.left, this.innerWidth - (this.margin.right * 4)])
           .domain([2020, 2110]),
         y: d3.scaleLinear()
-          .range([0, 0.25 * this.innerHeight])
+          .range([0, 0.2 * this.innerHeight])
           .domain([d3.min(this.worldFilterAllRevenueDiffTotal, s => +s), d3.max(this.worldFilterAllRevenueDiffTotal, s => +s)])
       }
     },
@@ -391,8 +385,10 @@ export default {
               RevVar: this.scaleCo.y(single.Revenue_var),
               AllCostsDiff: this.scaleCo.y(single.Revenue_diff),
               // Y Values for Barchart
-              AllY: (0.4 * this.innerHeight) - this.scaleCo.y(single.Revenue) - this.scaleCo.y(single.Revenue_var),
-              RevVarY: (0.4 * this.innerHeight) - this.scaleCo.y(single.Revenue_var),
+              // need to substract "this.scaleCoDiff.y(0)" because of neg values, y(0) is not 0 but a section from 0.4 *innerHeight
+              AllY: (0.4 * this.innerHeight) - this.scaleCo.y(single.Revenue) - this.scaleCo.y(single.Revenue_var) - this.scaleCoDiff.y(0),
+              // need to substract "this.scaleCoDiff.y(0)" because of neg values, y(0) is not 0 but a section from 0.4 *innerHeight
+              RevVarY: (0.4 * this.innerHeight) - this.scaleCo.y(single.Revenue_var) - this.scaleCoDiff.y(0),
               // Hover Over real values
               RevVarValue: parseFloat(single.Revenue_var),
               AllCostValue: parseFloat(single.Revenue),
@@ -509,9 +505,9 @@ export default {
         [this.scaleCo_MWh.y(0), this.scaleCo_MWh.y(400), this.scaleCo_MWh.y(800), this.scaleCo_MWh.y(1200), this.scaleCo_MWh.y(1600), this.scaleCo_MWh.y(2000)]]
       const costMwhDiffTicksArray = [['0', '400', '800', '1200', '1600', '2000'],
         [this.scaleCo_MWh.y(0), this.scaleCo_MWh.y(400), this.scaleCo_MWh.y(800), this.scaleCo_MWh.y(1200), this.scaleCo_MWh.y(1600), this.scaleCo_MWh.y(2000)]]
-      const revTicksArray = [['0', '4 000', '8 000', '12 000'],
-        [this.scaleCo.y(0), this.scaleCo.y(4000), this.scaleCo.y(8000), this.scaleCo.y(12000)]]
-      const revDiffTicksArray = [['-4 000', '0', '4 000', '8 000'],
+      const revTicksArray = [['-4 000', '0', '4 000', '8 000', '12 000'],
+        [this.scaleCoDiff.y(-4000), this.scaleCoDiff.y(0), this.scaleCoDiff.y(4000), this.scaleCoDiff.y(8000), this.scaleCoDiff.y(12000)]]
+      const revDiffTicksArray = [['-4 000', '0', '4 000', '8 000', '12 000'],
         [this.scaleCoDiff.y(-4000), this.scaleCoDiff.y(0), this.scaleCoDiff.y(4000), this.scaleCoDiff.y(8000), this.scaleCoDiff.y(12000)]]
       const tickVal = this.currentMWhSel === 'Revenue' && this.comparison === 'absolute' ? revTicksArray : this.currentMWhSel === 'Revenue' && this.comparison === 'relative' ? revDiffTicksArray : this.currentMWhSel === 'Cost per MWh' && this.comparison === 'relative' ? costMwhDiffTicksArray : costMwhTicksArray
       return tickVal
@@ -578,9 +574,9 @@ $margin-space: $spacing / 2;
   .key {
     z-index: 9;
     width: 100%;
-    height: 50px;
-    padding: 0px 0px;
-    top: 50px;
+    height: 10px;
+    padding: 20px 0px;
+    top: 10px;
     background: hsla(0,0%,100%,.90);
 
     .highlight {
@@ -595,13 +591,14 @@ $margin-space: $spacing / 2;
     }
     .scenario_selector {
       margin-top: $margin-space;
-      margin-left: $margin-space;
-      margin-right: $margin-space;
+      margin-left: $margin-space/2;
+      //margin-right: $margin-space/2;
     }
     .comparison_selector{
       display: inline-flex;
       display: inline;
       margin: 5px;
+      margin-left: $margin-space*2;
 
     .comparison {
 
@@ -609,22 +606,23 @@ $margin-space: $spacing / 2;
     }
 
     .active-comparison {
-        color: $color-neon;
+        color: getColor(neon, 40);
         text-decoration: underline;
       }
   }
-    h4 {
+    h3 {
       padding-bottom: 10px;
       display: inline-block;
       margin-left: $margin-space;
     }
-    a    {
+    a {
       margin-top: 5px;
-      color: #424ab9;
+      color: getColor(neon, 40);
       font-weight: normal;
       display: inline;
-      margin-left: $margin-space;
-      font-size: 0.8em;
+      margin-left: $margin-space/2;
+      text-decoration: none;
+      background: none;
     }
 
     .v-popover {
@@ -645,7 +643,8 @@ $margin-space: $spacing / 2;
     }
   }
   .legend{
-    margin-left: $margin-space*5.5;
+    margin-top: $margin-space*1.5;
+    margin-left: $margin-space;
     font-size: 0.7em;
     display: flex;
     flex-direction: row;

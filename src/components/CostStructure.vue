@@ -1,8 +1,8 @@
 <template>
   <div class="secondary-energy" ref="inWrapper">
     <div class="key" :class=" mobile ? 'mobile' : 'desktop'">
-      <h4>Electricity production and changing costs structure</h4>
-      <a href="https://docs.messageix.org/projects/global/en/latest/" target="_blank">(MODEL: MESSAGEix-GLOBIOM_1.0)</a>
+      <h3>Electricity production and changing costs structure</h3>
+      <a href="https://docs.messageix.org/projects/global/en/latest/" target="_blank">(Model: MESSAGEix-GLOBIOM_1.0)</a>
       <p class="selectors">
         Select a scenario and a region:
         <SensesSelect class="scenario_selector" :options="scenarios" v-model="currentScenario"/>
@@ -13,7 +13,7 @@
     <svg :width="innerWidth" :height="innerHeight" :transform="`translate(${margin.left}, 0)`">
       <g v-for="(group, g) in dots.slice(0, 2)" v-bind:key="g + 'group'" :class="`${labels[g]}-group`" :transform="`translate(0, ${groupPosition[g]})`">
         <!-- draws dots for energy carrier with index g   -->
-        <g v-for="(dot, d) in group" v-bind:key="d + 'dot'">
+        <g v-for="(dot, d) in group" v-bind:key="d + 'dot'" @mouseover="[active = true, over = d + labels[g]]" @mouseleave="active = false">
           <g   v-if="d == 0 || d == 2 || d == 4 || d == 6|| d == 8" >
             <circle :class="labels[g]" :cx="dot.year" cy="5" :r="dot.value"/>
           </g>
@@ -60,24 +60,25 @@
           <circle class="axis-dot" :cx="scale.x(2020)" cy="5" r="2.5"/>
           <circle class="axis-dot" :cx="scale.x(2100)" cy="5" r="2.5"/>
         </g>
+        <!--hover over values for data -->
+        <g v-for="(text, t) in group" v-bind:key="t + 'text'" :class="active === true & over === t + labels[g] ? 'visible' : 'invisible'">
+          <circle class="axis-dot" :cx="text.year" cy="5" r="2.5"/>
+          <text class="year-label" :x="text.year" y="-60">Fuel cost: {{ Math.round(text.perFuel) }} % </text>
+          <text class="year-label" :x="text.year" y="-90">Oper. cost: {{ Math.round(text.perOM) }} % </text>
+          <text class="year-label" :x="text.year" y="-75">Capital cost: {{ Math.round(text.perCap) }} % </text>
+          <line class="line-label" :x1="text.year" :x2="text.year" y1="-55" y2="5"/>
+        </g>
       </g>
-      <!--legend for pie chart
+      <!--legend for pie chart  -->
       <g>
-        <text :x="scale.x(2020)" :y="innerHeight*0.65" >Fuel cost, incl. carbon emission costs</text>
-        <circle :cx="scale.x(2018)" :cy="innerHeight*0.644" r="8" :class="'fuelcost'"/>
-        <text :x="scale.x(2020)" :y="innerHeight*0.7" >Capital cost</text>
-        <circle :cx="scale.x(2018)" :cy="innerHeight*0.695" r="8" :class="'capcost'"/>
-        <text :x="scale.x(2020)" :y="innerHeight*0.75" >Operational cost</text>
-        <circle :cx="scale.x(2018)" :cy="innerHeight*0.744" r="8" :class="'omcost'" />
-      </g> -->
+      <circle class="legend" id="capital" :r="25" :cx="scale.x(2017)" :cy="innerHeight*0.75" fill="transparent"/>
+      <text class="carrier-label" :x="scale.x(2021)" :y="innerHeight*0.74" >Capital cost</text>
+      <circle class="legend" id="oper" :r="25" :cx="scale.x(2030)" :cy="innerHeight*0.75" fill="transparent"/>
+      <text class="carrier-label" :x="scale.x(2034)" :y="innerHeight*0.74" >Operational cost</text>
+      <circle class="legend" id="fuel" :r="25" :cx="scale.x(2045.5)" :cy="innerHeight*0.75" fill="transparent"/>
+      <text class="carrier-label" :x="scale.x(2049.5)" :y="innerHeight*0.74" >Fuel cost, incl. carbon emission costs</text>
+      </g>
     </svg>
-    <p class="legend">
-      <!-- <span class="dot"></span>
-      <span > = 10Ej/yr</span> -->
-      <span class="-capital">Capital cost</span>
-      <span class="-oper">Operational cost</span>
-      <span class="-fuel">Fuel cost, incl. carbon emission costs</span>
-    </p>
   </div>
 </template>
 
@@ -186,7 +187,10 @@ export default {
         return _.map(energy, (single, s) => {
           return {
             year: this.scale.x(single.Year),
-            value: this.scale.y(Math.sqrt(single.Value))
+            value: this.scale.y(Math.sqrt(single.Value)),
+            perCap: single.CAPCOST_p,
+            perFuel: single.FUELCOST_p,
+            perOM: single.OMCOST_p
           }
         })
       })
@@ -195,7 +199,7 @@ export default {
       // length of dotsArray is  = nr of energy carrier
       // returns array with the position for each energy carrier
       const dotsArray = this.dots.slice(0, 2)
-      let pos = 70
+      let pos = 100
       return _.map(this.regionFilter, (energy, e, l) => {
         if (e !== 0) { pos = pos + this.innerHeight / dotsArray.length - 100 }
         return pos
@@ -249,7 +253,7 @@ $margin-space: $spacing / 2;
     z-index: 9;
     width: 100%;
     height: 100px;
-    margin-bottom: 5%;
+    margin-bottom: 2%;
     padding: 40px 0px;
 
     top: 50px;
@@ -266,21 +270,22 @@ $margin-space: $spacing / 2;
       margin-left: $margin-space*2.8;
       margin-bottom: $margin-space/10;
       }
-    a  {
-      margin-top: 5px;
-      color: #424ab9;
-      font-weight: normal;
-      display: inline;
-      margin-left: $margin-space;
-      font-size: 0.8em;
-    }
+      a {
+        margin-top: 5px;
+        color: getColor(neon, 40);
+        font-weight: normal;
+        display: inline;
+        margin-left: $margin-space/2;
+        text-decoration: none;
+        background: none;
+      }
     .scenario_selector {
       margin-top: $margin-space;
-      margin-left: $margin-space;
-      margin-right: $margin-space;
+      margin-left: $margin-space/2;
+      //margin-right: $margin-space;
     }
 
-    h4 {
+    h3 {
       margin-left: $margin-space*2.8;
       margin-bottom: 10px;
       display: inline-block;
@@ -302,46 +307,8 @@ $margin-space: $spacing / 2;
       }
     }
   }
-  .legend{
-    padding-top: 1.5%;
-    padding-top: 1.5%;
-    margin-left: $margin-space*2.8;
-    font-size: 0.7em;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    .-fuel{
-      background-color: rgba(29,80,101,0.4);
-      color: getColor(blue, 20);
-      padding: 0 0.25em 0 0.25em;
-      border-radius: 2px;
-      margin-left:  5px;
-    }
-    .-capital{
-      background-color: rgba(109,187,224, 0.5);
-      color: getColor(blue, 20);
-      padding: 0 0.25em 0 0.25em;
-      border-radius: 2px;
-      margin-left: 10px;
-    }
-    .-oper{
-      background-color: rgba(255,172,0,0.5);
-      color: getColor(orange, 20);
-      padding: 0 0.25em 0 0.25em;
-      border-radius: 2px;
-      margin-left:  5px;
-    }
-    .dot {
-      border-radius: 50%;
-      width: 20px;
-      height: 20px;
-      display: inline-block;
-      border: 1px solid grey;
-      margin-right: 3px;
-    }
-  }
   svg {
-    height: 60%;
+    height: 80%;
     .axis {
       stroke: $color-gray;
       stroke-width: 0.3;
@@ -412,6 +379,21 @@ $margin-space: $spacing / 2;
       stroke: getColor(blue, 20) ;
       fill-opacity: 0.6;
       stroke-opacity: 0.7;
+    }
+
+    .legend{
+      stroke-dasharray: 0 135 60;
+      stroke-width: 14;
+      stroke-opacity: 0.7;
+        &#capital {
+          stroke: getColor(blue, 60);
+        }
+        &#fuel {
+          stroke: getColor(blue, 20);
+        }
+        &#oper {
+          stroke: $color-yellow;
+        }
     }
   }
 }

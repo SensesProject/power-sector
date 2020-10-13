@@ -1,15 +1,17 @@
 <template>
   <div id="app">
-    <SensesMenu :id="'power-sector'"/>
+    <SensesMenu :id="'power-sector'" :minWidth="900"/>
     <div class="content" :class="mobile ? 'isMobile' : 'isDesktop'" ref="container">
-      <div class="text-wrapper">
-        <h1 class="module-title">Transition Risks – Power Sector Transformation</h1>
+      <div class="title-wrapper">
+        <h1 class="module-title">Transition Risks <br>Power Sector Transformation</h1>
       </div>
+      <h3 id="header"> This is the second chapter of the Risk Factors Pathway. Available chapters:
+      </h3>
       <RiskPathway :mobile="mobile"/>
       <div class="text-wrapper">
-        <h2 class="chapter-title" id="introduction">
+        <h3 class="chapter-title" id="introduction">
           What risks will be discussed?
-        </h2>
+        </h3>
         <p class="cost-risk-paragraph">The Paris Agreement aims to limit global warming to well-below 2°C.
           An essential step in reaching that goal is to decarbonize global electricity production.
           In this module we explore the risks and opportunities that result from the decarbonization of
@@ -18,6 +20,9 @@
           of the power sector, the <strong>risk of fuel costs and emission costs</strong>, and the <strong>need for clean investments</strong>.
         </p>
       </div>
+      <h2 class="chapter-title" id="transition">
+        Physical transition
+      </h2>
       <LayoutScrollytelling>
         <template v-slot:vis="{ width, height, step }">
           <div class="vis-inner" :style="{width: `${width}px`, height: `${height}px`}">
@@ -99,7 +104,7 @@
             of the cost structure.
           </p>
         </IntersectionObserver>
-        <IntersectionObserver :step="2"  align="right" class="changeheight">
+        <IntersectionObserver :step="2"  align="right" class="changeheightstructure">
           <p>As a result of the transition, the cost structure of the total power sector evolves from the current
             balance between  capital/operational expenditures towards a capital-dominated structure. </p>
         </IntersectionObserver>
@@ -250,23 +255,27 @@ export default {
   .changeheight {
     padding-bottom: 2000px;
   }
-  .changeheight {
-    height: 60%;
+  .changeheightstructure {
+    padding-bottom: 1000px;
   }
 
   .content {
     max-width: 900px;
     margin: 0 auto;
-
-    .text-wrapper {
-      margin-top: $spacing*2;
+    #header{
+       margin-bottom: $spacing/2;
+    }
+    .title-wrapper {
       margin-bottom: $spacing;
-
       .module-title {
         font-size: 40px;
-        margin-bottom: $spacing / 2;
+        margin-bottom: $spacing *1.5;
         padding-top: $spacing;
       }
+    }
+    .text-wrapper {
+      margin-top: $spacing;
+      margin-bottom: $spacing;
 
       .cost-risk-paragraph {
         margin-bottom: $spacing * 2;
@@ -275,8 +284,12 @@ export default {
 
       .chapter-title {
         margin-bottom: $spacing;
-        border-top: 1px solid $color-gray;
-        padding-top: $spacing * 2;
+        padding-top: $spacing;
+        &#introduction {
+          margin-bottom: $spacing/3;
+
+        }
+
       }
 
       &#last-text {
@@ -284,7 +297,6 @@ export default {
       }
 
       #conclusion {
-        border-top: 1px solid $color-gray;
         padding-top: 30px;
       }
     }
@@ -296,7 +308,7 @@ export default {
     .vis-wrapper {
       margin-top: $spacing;
       // border: 0.5px solid lightblue;
-      height: 100vh;
+      // height: 100vh;
 
       &.secondaryenergy  {
         height: 100vh;
@@ -316,6 +328,12 @@ export default {
     &.isMobile {
       .text-wrapper {
         padding: 0 20px;
+      }
+      .module-title {
+        padding-left: $spacing/2;
+      }
+      #header {
+        padding-left: $spacing/2;
       }
     }
   }

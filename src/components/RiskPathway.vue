@@ -1,26 +1,24 @@
 <template>
   <div class="risk-card" :class="mobile ? 'mobileCard' : 'desktopCard'">
     <div class="other-chapters">
-      <p>This is the second chapter of the Risk Factors Pathway. Available chapters:
-      </p>
     </div>
     <nav class="risk-menu pathway">
       <section>
-        <a class="wrapper">
+        <a class="wrapper" id="fossil">
           <div><span class="glyph-oil" href="https://climatescenarios.org/fossil-fuels/"/></div>
-          <div><h4>Chapter 1</h4><span>Fossil Fuels&nbsp;&nearr;</span></div>
+          <div><p>Chapter 1</p><span>Fossil Fuels&nbsp;&nearr;</span></div>
         </a>
       </section>
       <section>
         <a class="wrapper active">
           <div><span class="glyph-power"/></div>
-          <div><h4>Chapter 2</h4><span>Power Sector</span></div>
+          <div><p>Chapter 2</p><span>Power Sector</span></div>
         </a>
       </section>
       <section>
         <a class="wrapper not-available" href="#">
           <div><span class="glyph-building"/></div>
-          <div><h4>Chapter 3</h4><span>End Use</span></div>
+          <div><p>Chapter 3</p><span>End Use</span></div>
         </a>
       </section>
     </nav>
@@ -44,14 +42,23 @@ export default {
 @import "library/src/style/variables.scss";
 
 .risk-card {
-  border: 1px solid #d8d8e4;
-  padding: $spacing;
+  // border: 1px solid #d8d8e4;
+  padding: $spacing/1.5;
   border-radius: 4px;
-  margin-top: $spacing;
+  //margin-top: $spacing*0.3;
+  background-color: rgba(221,214,255,.3);
+
+  #header{
+    color: getColor(neon, 40);
+    margin-bottom: $spacing*0.5;
+  opacity: 0.9;
+    font-size: 0.8em;
+  }
 
   .other-chapters {
     text-align: center;
     font-size: 11px;
+
     // text-transform: uppercase;
   }
 }
@@ -61,12 +68,14 @@ export default {
   grid-template-columns: repeat(3, 1fr);
   max-width: 1100px;
   flex-direction: column;
-
   a {
     text-decoration: none;
     background: none;
-    color: #000;
-  }
+    color: getColor(neon, 40);
+    &#fossil {
+      opacity: 0.6;
+    }
+    }
 
   .active {
     color: #B035C9;
@@ -77,7 +86,7 @@ export default {
 
     div {
       color: gray;
-      opacity: 0.8;
+      opacity: 0.7;
     }
   }
 
@@ -91,7 +100,7 @@ export default {
   }
 
   .wrapper {
-    padding: $spacing / 2 $spacing / 1.5 $spacing / 2 0;
+    padding: 0 $spacing / 1.5 $spacing / 2 0;
     display: flex;
     align-items: center;
     width: 100%;
@@ -102,12 +111,14 @@ export default {
     font-size: 5rem;
   }
 
-  .glyph-power, .glyph-oil {
+  .glyph-power {
     color: #B035C9;
   }
-
+  .glyph-oil {
+    color: getColor(neon, 40);
+  }
   .glyph-building {
-    color: #d8d8e4;
+    color: #75757b;
   }
 }
 

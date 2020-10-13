@@ -2,8 +2,8 @@
   <div  class="secondary-energy" ref="inWrapper">
     <div v-if="step < 1">
       <div class="key" :class=" mobile ? 'mobile' : 'desktop'">
-      <h4>Electricity production</h4>
-      <a href="https://docs.messageix.org/projects/global/en/latest/" target="_blank">(MODEL: MESSAGEix-GLOBIOM_1.0)</a>
+      <h3>Electricity production</h3>
+      <a href="https://docs.messageix.org/projects/global/en/latest/" target="_blank">(Model: MESSAGEix-GLOBIOM_1.0)</a>
       <p class="selectors">
         Select a scenario:
         <SensesSelect class="scenario_selector" :options="scenarios" v-model="currentScenario"/>
@@ -186,7 +186,7 @@ export default {
       // length of dotsArray is  = nr of energy carrier
       // returns array with the position for each energy carrier
       const dotsArray = this.dots.slice(0, 2)
-      let pos = 70
+      let pos = 100
       return _.map(this.regionFilter, (energy, e, l) => {
         if (e !== 0) { pos = pos + this.innerHeight / dotsArray.length - 100 }
         return pos
@@ -225,7 +225,7 @@ $margin-space: $spacing / 2;
     z-index: 9;
     width: 100%;
     height: 100px;
-    margin-bottom: 5%;
+    margin-bottom: 2%;
     padding: 40px 0px;
 
     top: 50px;
@@ -244,19 +244,20 @@ $margin-space: $spacing / 2;
 
     a {
       margin-top: 5px;
-      color: #424ab9;
+      color: getColor(neon, 40);
       font-weight: normal;
       display: inline;
-      margin-left: $margin-space;
-      font-size: 0.8em;
+      margin-left: $margin-space/2;
+      text-decoration: none;
+      background: none;
     }
     .scenario_selector {
       margin-top: $margin-space;
-      margin-left: $margin-space;
-      margin-right: $margin-space;
+      margin-left: $margin-space/2;
+      // margin-right: $margin-space;
     }
 
-    h4 {
+    h3 {
       margin-left: $margin-space*2.8;
       margin-bottom: 10px;
       display: inline-block;
