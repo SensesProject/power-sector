@@ -62,7 +62,7 @@
         </g>
         <!--hover over values for data -->
         <g v-for="(text, t) in group" v-bind:key="t + 'text'" :class="active === true & over === t + labels[g] ? 'visible' : 'invisible'">
-          <circle class="year-dot" :cx="text.year" cy="5" r="2.5"/>
+          <circle class="axis-dot" :cx="text.year" cy="5" r="2.5"/>
           <text class="year-label" :x="text.year" y="-60">Fuel cost: {{ Math.round(text.perFuel) }} % </text>
           <text class="year-label" :x="text.year" y="-90">Oper. cost: {{ Math.round(text.perOM) }} % </text>
           <text class="year-label" :x="text.year" y="-75">Capital cost: {{ Math.round(text.perCap) }} % </text>
@@ -320,6 +320,7 @@ $margin-space: $spacing / 2;
       stroke-dasharray: 2 2;
     }
     g {
+
       .carrier-label {
         font-size: 0.7em;
       }

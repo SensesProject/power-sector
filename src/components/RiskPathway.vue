@@ -4,8 +4,8 @@
     </div>
     <nav class="risk-menu pathway">
       <section>
-        <a class="wrapper" id="fossil">
-          <div><span class="glyph-oil" href="https://climatescenarios.org/fossil-fuels/"/></div>
+        <a class="wrapper" id="fossil" href="https://climatescenarios.org/fossil-fuels/" target="_blank">
+          <div><span class="glyph-oil"/></div>
           <div><p>Chapter 1</p><span>Fossil Fuels&nbsp;&nearr;</span></div>
         </a>
       </section>

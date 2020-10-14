@@ -318,12 +318,12 @@ $margin-space: $spacing / 2;
       stroke: getColor(orange, 40);
     }
     .Nuclear {
-      fill: getColor(blue, 80);
-      stroke: getColor(blue, 40);
-    }
-    .Hydro {
       fill: getColor(purple, 80);
       stroke: getColor(purple, 40);
+    }
+    .Hydro {
+      fill: getColor(blue, 80);
+      stroke: getColor(blue, 40);
     }
     .Geothermal {
       fill: lighten(#663333, 40);

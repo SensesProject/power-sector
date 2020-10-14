@@ -44,6 +44,10 @@ export default {
     mobile: {
       type: Boolean,
       default: true
+    },
+    step: {
+      type: Number,
+      default: 0
     }
   },
   data () {
@@ -136,11 +140,10 @@ export default {
   height: 90vh;
 
   .key {
-    width: 90%;
+    // width: 90%;
     height: 70px;
     margin-bottom: 3%;
     padding: 0 0px;
-  //  border-bottom: 0.5px solid grey;
   }
   h3{
     display: inline-block;
