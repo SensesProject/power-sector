@@ -7,12 +7,16 @@
         Select a scenario and a region:
         <SensesSelect class="scenario_selector" :options="scenarios" v-model="currentScenario"/>
         <SensesSelect class="region_selector" :options="regions" v-model="currentRegion"/>
+        <span class="legend">
+          <span class="dot"></span>
+          <span > = 5 000 TWh/yr</span>
+          <span class="dot" id="world"></span>
+          <span > World (reference)</span>
+        </span>
       </p>
-      <p class="legend">
-        <span class="dot"></span>
-        <span > = 10Ej/yr</span>
-        <span class="dot" id="world"></span>
-        <span > World (reference)</span>
+      <p class="Carrier-groups">
+        <span>Low-carbon electricity production</span>
+        <span class="Fossil-group">Fossil fuel electricity production</span>
       </p>
     </div>
     <div></div>
@@ -30,7 +34,7 @@
         <g v-for="(text, t) in group" v-bind:key="t + 'text'" :class="active === true & over === t + labels[g] ? 'visible' : 'invisible'">
           <circle class="year-dot" :cx="text.year" cy="5" r="2.5"/>
           <text class="year-label" :x="text.year" y="20">{{ years[t] }}</text>
-          <text class="year-label" :x="text.year" y="-35">{{ Math.round(text.value) }} Ej/year</text>
+          <text class="year-label" :x="text.year" y="-35">{{ format(Math.round(text.valueTWh)) }} TWh/yr</text>
           <line class="line-label" :x1="text.year" :x2="text.year" y1="-25" y2="5"/>
         </g>
         <circle v-for="(dot, d) in group" v-bind:key="d + 'wdot'" @mouseover="[active = true, over = d + labels[g]]" @mouseleave="active = false" class="world" :class="labels[g]" :cx="dot.year" cy="5" :r="dot.value"/>
@@ -110,7 +114,8 @@ export default {
         return _.map(energy, (single, s) => {
           return {
             year: this.scale.x(single.Year),
-            value: this.scale.y(Math.sqrt(single.Value))
+            value: this.scale.y(Math.sqrt(single.Value)),
+            valueTWh: single.Value * 277.78 // conversion from EJ to TWh
           }
         })
       })
@@ -120,18 +125,20 @@ export default {
         return _.map(energy, (single, s) => {
           return {
             year: this.scale.x(single.Year),
-            value: this.scale.y(Math.sqrt(single.Value))
+            value: this.scale.y(Math.sqrt(single.Value)),
+            valueTWh: single.Value * 277.78 // conversion from EJ to TWh
           }
         })
       })
     },
     groupPosition () {
+      console.log('regionFilter', this.regionFilter)
       // const dotsArray = this.dots
-      let pos = -60
-      let posDx = -60
+      let pos = -70
+      let posDx = -70
       const positions = []
       _.map(this.regionFilter, (energy, e, l) => {
-        if (e > 3) {
+        if (e > 2) {
           pos = pos + this.innerHeight / 5
           positions.push(pos)
         } else {
@@ -144,7 +151,7 @@ export default {
     verticalPosition () {
       let pos = 0
       return _.map(this.regionFilter, (energy, e, l) => {
-        if (e <= 3) { pos = this.innerWidth / 2 + 5 } else { pos = 0 }
+        if (e <= 2) { pos = this.innerWidth / 2 + 5 } else { pos = 0 }
         return pos
       })
     }
@@ -154,6 +161,9 @@ export default {
       const { inWrapper: el } = this.$refs
       const innerHeight = el.clientHeight || el.parentNode.clientHeight
       this.innerHeight = Math.max(innerHeight, 500)
+    },
+    format (value) {
+      return d3.format(',')(value).replace(/,/g, ' ')
     }
   },
   mounted () {
@@ -180,10 +190,8 @@ $margin-space: $spacing / 2;
   .key {
     z-index: 9;
     width: 100%;
-    height: 100px;
-    margin-bottom: 1%;
-    padding: 10px 0px;
-
+    height: 110px;
+    margin-bottom: 0.5%;
     position:sticky;
     top: 50px;
 
@@ -204,16 +212,49 @@ $margin-space: $spacing / 2;
       text-decoration: none;
       background: none;
     }
+    .Carrier-groups {
+      margin-top: 2%;
+      padding-left: 10px;
+      margin-left: $margin-space;
+      font-size: 0.7em;
+      font-weight: bold;
+      .Fossil-group{
+        //margin-left: $margin-space*17;
+        margin-left: 30%;
+      }
+    }
     .selectors {
       padding-left: 10px;
-      display: inline-block;
-      width: 70%;
+      display: flex;
+      width: 100%;
       margin-left: $margin-space;
+      .legend{
+        padding-bottom: 0.5%;
+        margin-left: $margin-space*1.5;
+        font-size: 0.7em;
+        flex-direction: row;
+        align-items: center;
+        .dot {
+          border-radius: 50%;
+          width: 32px;
+          height: 32px;
+          display: inline-block;
+          border: 1px solid grey;
+          margin-right: 3px;
+          &#world {
+            border-style: dashed;
+            margin-left: $margin-space;
+            margin-right: $margin-space/3;
+            }
+        }
+      }
     }
     .scenario_selector {
-      margin-top: $margin-space;
       margin-left: $margin-space/2;
-      //margin-right: $margin-space;
+      margin-right: $margin-space/2;
+    }
+    .region_selector {
+      margin-right: $margin-space*2;
     }
 
     h3 {
@@ -240,16 +281,16 @@ $margin-space: $spacing / 2;
     }
   }
   .legend{
-    padding-top: 1.5%;
-    margin-left: 25px;
+    padding-bottom: 2%;
+    margin-left: $margin-space*1.5;
     font-size: 0.7em;
     display: flex;
     flex-direction: row;
     align-items: center;
     .dot {
       border-radius: 50%;
-      width: 20px;
-      height: 20px;
+      width: 32px;
+      height: 32px;
       display: inline-block;
       border: 1px solid grey;
       margin-right: 3px;
@@ -261,7 +302,7 @@ $margin-space: $spacing / 2;
     }
   }
   svg {
-    height: 85%;
+    height: 100%;
     .axis {
       stroke: $color-gray;
     }

@@ -2,7 +2,7 @@
   <div class="bars">
     <span class="label" v-html="label" />
     <div class="intro">
-      <span>{{ region }}: <strong>{{ sumThis }}</strong> Billion US-Dollar per year average 2016–2030.</span>
+      <span>{{ region }}: <strong>{{ sumThis }}</strong> BN US$ per year average 2020–2030</span>
     </div>
     <svg ref="vis" class="vis">
       <g v-if="width">
@@ -49,15 +49,12 @@ const colors = {
   'Coal|w/o CCS': '#d7d7e3',
   'Gas|w/ CCS': '#f8cbd4',
   'Gas|w/o CCS': '#ed96ab',
-  'Oil|w/ CCS': '#fcb69f',
   'Biomass|w/ CCS': '#931547',
   'Biomass|w/o CCS': '#dca0e5',
   Nuclear: '#dca0e5',
   Hydro: '#a3d1ea',
   Solar: '#ffd89a',
   Wind: '#99cccc',
-  Geothermal: '#cc9999',
-  Ocean: '#8d88ff',
   'Transmission and Distribution': '#47474c',
   'Electricity Storage': '#a2e7c0'
 }
@@ -65,19 +62,16 @@ function getColorFromVariable (variable) {
   return get(colors, variable, '#000')
 }
 const names = {
-  'Coal|w/ CCS': 'Coal|w/ CCS',
+  'Coal|w/ CCS': 'Coal',
   'Coal|w/o CCS': 'Coal|w/o CCS',
   'Gas|w/ CCS': 'Gas|w/ CC',
-  'Gas|w/o CCS': 'Gas|w/o CCS',
-  'Oil|w/ CCS': 'Oil',
-  'Biomass|w/ CCS': 'Biomass |w/ CCS',
-  'Biomass|w/o CCS': 'Biomass',
+  'Gas|w/o CCS': 'Gas',
+  'Biomass|w/ CCS': 'Biomass',
+  'Biomass|w/o CCS': 'Biomass|w/o CCS',
   Nuclear: 'Nuclear',
   Hydro: 'Hydro',
   Solar: 'Solar',
   Wind: 'Wind',
-  Geothermal: 'Geothermal',
-  Ocean: 'Ocean',
   'Transmission and Distribution': 'Transmission and Distribution',
   'Electricity Storage': 'Electricity Storage'
 }
@@ -194,14 +188,14 @@ export default {
           return `
             <header>${variable}</header>
             <p>
-              We are currently investing <strong>${fN(reference)}</strong> Billion US-Dollar per year in ${variable}.
+              We are currently investing <strong>${fN(reference)}</strong> BN US$ per year in ${variable}.
             </p>
           `
         case 'NDC':
           return `
             <header>${variable}</header>
             <p>
-              We are currently investing <strong>${fN(reference)}</strong> Billion US-Dollar per year in ${variable},<br />
+              We are currently investing <strong>${fN(reference)}</strong> BN US$ per year in ${variable},<br />
               but we pledged to invest <strong>${fN(value)}</strong>.
               That means, we pledged<br />
               to invest <strong>${fN(Math.abs(diff))} ${diff > 0 ? 'more' : 'less'}</strong> in ${variable}.
@@ -211,7 +205,7 @@ export default {
           return `
             <header>${variable}</header>
             <p>
-              We are currently investing <strong>${fN(reference)}</strong> Billion US-Dollar per year in ${variable},<br />
+              We are currently investing <strong>${fN(reference)}</strong> BN US$ per year in ${variable},<br />
               but for for the 1.5C target we should invest <strong>${fN(value)}</strong>.
               That means,<br />
               we should invest <strong>${fN(Math.abs(diff))} ${diff > 0 ? 'more' : 'less'}</strong> in ${variable}.
@@ -221,7 +215,7 @@ export default {
           return `
             <header>${variable}</header>
             <p>
-              We are currently investing <strong>${fN(reference)}</strong> Billion US-Dollar per year in ${variable},<br />
+              We are currently investing <strong>${fN(reference)}</strong> BN US$ per year in ${variable},<br />
               but for for the 2C target we should invest <strong>${fN(value)}</strong>.
               That means,<br />
               we should invest <strong>${fN(Math.abs(diff))} ${diff > 0 ? 'more' : 'less'}</strong> in ${variable}.

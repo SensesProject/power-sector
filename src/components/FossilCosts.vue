@@ -68,7 +68,7 @@
          :y="arc.yPos - 5"
          :text-anchor="arc.year !== scales.x(2020) ? 'end' : 'start'"
          >
-         {{arc.ej}} Ej/yr
+         {{arc.ej}} TWh/yr
        </text>
         <text
         :class="currentSelection === a ? 'selected' : 'not-selected'"
@@ -76,7 +76,7 @@
         :y="arc.yPos - 5"
         :text-anchor="arc.year !== scales.x(2020) ? 'end' : 'start'"
         >
-        {{arc.ej}} Ej/yr
+        {{arc.ej}} TWh/yr
         </text>
         <text
           class="shadow"
@@ -105,19 +105,19 @@
       </g>
     </g>
     <g class="legend" :transform="`translate(${margin.left}, ${innerGraph.height + 60})`">
-      <text>Electricity production (EJ/yr)</text>
+      <text>Electricity production (TWh/yr)</text>
           <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
               <g id="Group-11" transform="translate(150, 10)">
                   <text id="&lt;-5-EJ/yr" fill="#000000" fill-rule="nonzero">
-                      <tspan x="-7.10542736e-15" y="47">&lt; 10 EJ/yr</tspan>
+                      <tspan x="-25" y="47">&lt; 5 000 TWh/yr</tspan>
                   </text>
                   <text id="&gt;-80-EJ/yr" fill="#000000" fill-rule="nonzero">
-                      <tspan x="169" y="48">&gt; 130 EJ/yr</tspan>
+                      <tspan x="169" y="48">&gt; 35 000 TWh/yr</tspan>
                   </text>
                   <line x1="158" y1="51" x2="204" y2="51" id="Path-12-Copy" stroke="#000000" stroke-width="0.5"></line>
                   <line x1="18" y1="51" x2="64" y2="51" id="Path-12-Copy-Copy" stroke="#000000" stroke-width="0.5"></line>
                   <g id="Group-8" transform="translate(64, 0)" fill-rule="nonzero" stroke="#4E40B2">
-                      <circle id="Oval" cx="3.98" cy="48.98" r="3.98" stroke="#4E40B2"></circle>
+                      <circle id="Oval" cx="6.45" cy="48.98" r="6.45" stroke="#4E40B2"></circle>
                       <circle id="Oval" cx="46.9827628" cy="46.9827628" r="46.9827628" stroke="#4E40B2"></circle>
                       <circle id="Oval-Copy" cx="41.3380862" cy="47.3380862" r="41.3380862" stroke="#4E40B2"></circle>
                       <circle id="Oval-Copy" cx="34.5" cy="47.3380862" r="34.5" stroke="#4E40B2"></circle>
@@ -126,7 +126,7 @@
                   </g>
               </g>
           </g>
-      <text transform="translate(450, -1)">Energy Carriers</text>
+      <text transform="translate(450, -1)">Select energy carrier:</text>
         <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
             <g id="Group-14" transform="translate(450, 20)">
                 <g id="Coal">
@@ -351,7 +351,7 @@ export default {
         return {
           klass: [f.Scenario, f.Variable],
           price: Math.round(costValue),
-          ej: Math.round(quantityValue),
+          ej: Math.round(quantityValue * 277.78),
           year: scales.x(f.Year),
           yPos: scales.y(costValue),
           shape: scales.radius(f.Value),

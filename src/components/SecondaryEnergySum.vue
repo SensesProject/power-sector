@@ -36,7 +36,7 @@
         <g v-for="(text, t) in group" v-bind:key="t + 'text'" :class="active === true & over === t + labels[g] ? 'visible' : 'invisible'">
           <circle class="year-dot" :cx="text.year" cy="5" r="2.5"/>
           <text class="year-label" :x="text.year" y="20">{{ years[t] }}</text>
-          <text class="year-label" :x="text.year" y="-30">{{ Math.round(text.valueEJ) }} Ej/year</text>
+          <text class="year-label" :x="text.year" y="-30">{{ format(Math.round(text.valueTWh)) }} TWh/yr</text>
           <line class="line-label" :x1="text.year" :x2="text.year" y1="-25" y2="5"/>
         </g>
       </g>
@@ -177,7 +177,7 @@ export default {
           return {
             year: this.scale.x(single.Year),
             value: this.scale.y(Math.sqrt(single.Value)),
-            valueEJ: single.Value
+            valueTWh: single.Value * 277.78
           }
         })
       })
@@ -198,6 +198,9 @@ export default {
       const { inWrapper: el } = this.$refs
       const innerHeight = el.clientHeight || el.parentNode.clientHeight
       this.innerHeight = Math.max(innerHeight, 500)
+    },
+    format (value) {
+      return d3.format(',')(value).replace(/,/g, ' ')
     }
   },
   mounted () {

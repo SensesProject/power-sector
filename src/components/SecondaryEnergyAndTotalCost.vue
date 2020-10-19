@@ -31,7 +31,7 @@
     </div>
     <p class="legend">
       <span class="dot"></span>
-      <span > = 10Ej/yr</span>
+      <span > = 5 000 TWh/yr</span>
       <span class="-fossil">Fossil</span>
       <span class="-carbon">Low-carbon</span>
       <span v-if="step >= 1 && currentMWhSel == 'Cost per MWh' && comparison == 'absolute' && currentScenario !== 'Current Policies'" class="-tax">Carbon price </span>
@@ -71,14 +71,14 @@
         <g v-for="(text, t) in group" v-bind:key="t + 'text'" :class="active === true & over === t + labels[g] & comparison === 'absolute' ? 'visible' : 'invisible'">
           <circle class="year-dot" :cx="text.year" cy="5" r="2.5"/>
           <text class="year-label" :x="text.year" y="22">{{ years[t] }}</text>
-          <text class="year-label" :x="text.year" y="-32">{{ Math.round(text.valueEJ) }} Ej/year</text>
+          <text class="year-label" :x="text.year" y="-32">{{ format(Math.round(text.valueTWh)) }} TWh/yr</text>
           <line class="line-label" :x1="text.year" :x2="text.year" y1="-25" y2="5"/>
         </g>
         <g v-for="(text, t) in dots[g]" v-bind:key="t + 'textDiff'" :class="active === true & over === t + labels[g] & comparison === 'relative' ? 'visible' : 'invisible'">
           <circle class="year-dot" :cx="text.year" cy="5" r="2.5"/>
           <text class="year-label" :x="text.year" y="20">{{ years[t] }}</text>
           <text class="year-label" :x="text.year" y="-28">Diff to baseline:</text>
-          <text class="year-label" :x="text.year" y="-15">{{ Math.round(text.valueDiff) }} Ej/year</text>
+          <text class="year-label" :x="text.year" y="-15">{{ format(Math.round(text.valueDiff)) }} TWh/yr</text>
         </g>
       </g>
     <!-- Bar Graph -->
@@ -137,7 +137,7 @@
   <g v-for="(group, g) in dots" v-bind:key="g + 'textgroup'" :class="`${labels[g]}-group`" >
       <!--Text: Values on mouse over for barchart-->
       <g v-for="(text, t) in group" v-bind:key="t + 'texttax'" :class="activeTax === true & over === t + labels[g] ? 'visible' : 'invisible'">
-        <text class="year-label" :x="(text.year)" :y="(0.84*innerHeight)">Carbon price: {{ Math.round(text.TaxValue) }} {{text.Unit}}</text>
+        <text class="year-label" :x="(text.year)" :y="(0.84*innerHeight)">Carbon price: {{ format(Math.round(text.TaxValue)) }} {{text.Unit}}</text>
         <!--Line and circle for hover over indicator-->
         <line class="line-label" :x1="text.year" :x2="text.year" :y1="(0.81*innerHeight)" :y2="(0.78*innerHeight)"/>
         <circle class="year-dot" :cx="text.year" :cy="(0.81*innerHeight)" r="2"/>
@@ -379,7 +379,7 @@ export default {
               // Values for circles
               value: this.scale.y(Math.sqrt(single.Value)),
               basevalue: this.scale.y(Math.sqrt(basedata[e][s].Value)),
-              valueDiff: single.Value_diff,
+              valueDiff: single.Value_diff * 277.78,
               // Values for Bars Height
               AllCosts: this.scaleCo.y(single.Revenue),
               RevVar: this.scaleCo.y(single.Revenue_var),
@@ -402,7 +402,7 @@ export default {
               // Values for circles
               value: this.scale.y(Math.sqrt(single.Value)),
               basevalue: this.scale.y(Math.sqrt(basedata[e][s].Value)),
-              valueDiff: single.Value_diff,
+              valueDiff: single.Value_diff * 277.78,
               // Values for Bars Height
               // due to neg values the absolute number of CostTotal_diff is needed
               // need to substract "this.scaleCoDiff.y(0)" because of neg values, y(0) is not 0 but a section from 0.4 *innerHeight
@@ -422,7 +422,7 @@ export default {
               // Values for circles
               value: this.scale.y(Math.sqrt(single.Value)),
               basevalue: this.scale.y(Math.sqrt(basedata[e][s].Value)),
-              valueDiff: single.Value_diff,
+              valueDiff: single.Value_diff * 277.78,
               // Values for Bars Height
               AllCosts: this.scaleCo_MWh.y(single.CostTotal_MWh),
               CpolCosts: this.scaleCo_MWh.y(single.Cost_MWh_Cpol),
@@ -443,7 +443,7 @@ export default {
               // Values for circles
               value: this.scale.y(Math.sqrt(single.Value)),
               basevalue: this.scale.y(Math.sqrt(basedata[e][s].Value)),
-              valueDiff: single.Value_diff,
+              valueDiff: single.Value_diff * 277.78,
               // Values for Bars Height
               AllCosts: this.scaleCo_MWhDiff.y(single.CostTotal_MWh_diff),
               OmCosts: this.scaleCo_MWhDiff.y(single.OMCOST_MWh_diff),
@@ -478,7 +478,8 @@ export default {
           return {
             year: this.scale.x(single.Year),
             value: this.scale.y(Math.sqrt(single.Value)),
-            valueEJ: single.Value
+            // Hover Over real values convert EJ values to TWh by multiplying them with 277,78
+            valueTWh: single.Value * 277.78
           }
         })
       })
@@ -672,8 +673,8 @@ $margin-space: $spacing / 2;
     }
     .dot {
       border-radius: 50%;
-      width: 20px;
-      height: 20px;
+      width: 32px;
+      height: 32px;
       display: inline-block;
       border: 1px solid grey;
       margin-right: 3px;

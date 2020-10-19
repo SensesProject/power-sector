@@ -66,17 +66,14 @@ export default {
         'Coal|w/o CCS',
         'Gas|w/ CCS',
         'Gas|w/o CCS',
-        'Oil|w/ CCS',
         'Biomass|w/ CCS',
         'Biomass|w/o CCS',
         'Nuclear',
         'Hydro',
         'Solar',
         'Wind',
-        'Ocean',
         'Transmission and Distribution',
-        'Electricity Storage',
-        'Geothermal'
+        'Electricity Storage'
       ],
       scenarios: ['CPol', 'NDC', '2C', '1.5C']
     }
