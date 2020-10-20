@@ -10,10 +10,10 @@
         </a>
       </section>
       <section>
-        <a class="wrapper active">
+        <div class="wrapper active">
           <div><span class="glyph-power"/></div>
           <div><p>Chapter 2</p><span>Power Sector</span></div>
-        </a>
+        </div>
       </section>
       <section>
         <a class="wrapper not-available" href="#">
@@ -71,14 +71,12 @@ export default {
   a {
     text-decoration: none;
     background: none;
-    color: getColor(neon, 40);
-    &#fossil {
-      opacity: 0.6;
-    }
+    color: #B035C9;
     }
 
   .active {
-    color: #B035C9;
+    color: getColor(neon, 40);
+    opacity: 0.8;
   }
 
   .not-available {
@@ -112,10 +110,11 @@ export default {
   }
 
   .glyph-power {
-    color: #B035C9;
+    color: getColor(neon, 40);
+    opacity: 0.9;
   }
   .glyph-oil {
-    color: getColor(neon, 40);
+    color: #B035C9;
   }
   .glyph-building {
     color: #75757b;

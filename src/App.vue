@@ -31,7 +31,8 @@
           <br>
           In this module, we will explore <strong> the changes in electricity production and
           revenues</strong>, <strong>the changing risk structure</strong> of the power sector, <strong>the risk of fuel costs and emission costs</strong>,
-          and <strong>the need for clean investments</strong>.
+          and <strong>the need for clean investments</strong>. Each of these risks relates to one of the Risk Factor Pathways developed
+          by the UNEP Finance Initiative.
         </p>
       </div>
       <h2 class="chapter-title" id="transition">
@@ -45,8 +46,8 @@
         </template>
         <div slot="text" class="observer">
         <IntersectionObserver :step="0"  align="right">
-          <p>In climate stabilization scenarios, such as the 1.5ºC scenario shown here, the power sector is expected to go through a
-            major transition from fossil fuel electricity production to low carbon electricity. </p>
+          <p>In climate stabilization scenarios, the power sector is expected to go through a major transition from
+            fossil fuel electricity production (based on coal and gas) to low carbon electricity (mostly solar, wind and nuclear).</p>
         </IntersectionObserver>
         <IntersectionObserver :step="1"  align="right">
           <p>In the scenarios, this transition is driven by a carbon tax that increases the relative costs per MWh
@@ -108,8 +109,8 @@
         </template>
         <div slot="text" class="observer">
         <IntersectionObserver :step="0"  align="right" class="halfheight">
-          <p>The transition changes electricity production from fossil to low-carbon technologies,
-            which have different cost structures.
+          <p>As we have seen above, the physical transition changes electricity production from fossil to
+            low-carbon technologies, which have different cost structures.
         </p>
         </IntersectionObserver>
         <IntersectionObserver :step="1"  align="right">
@@ -157,9 +158,9 @@
           </p>
         </IntersectionObserver>
         <IntersectionObserver :step="1"  align="right">
-          <p>In a 2.0ºC scenario the total fuel costs decrease both abolute and relative to the Current Policy
+          <p>In a 2.0ºC scenario the total fuel costs decrease both absolute and relative to the Current Policy
             scenario, despite increasing costs per unit of electricity production from fossil sources. This is
-            the result of declining energy production from fossil fuels , reducing fuel use and therefore fuel costs.
+            the result of declining energy production from fossil fuels, reducing fuel use and therefore fuel costs.
           </p>
         </IntersectionObserver>
         <IntersectionObserver :step="2"  align="right">
@@ -195,21 +196,24 @@
           </div>
         </template>
         <div slot="text" class="observer">
-        <IntersectionObserver :step="0"  align="right">
-          <p>About half of the 700 Billion USD per year for power sector investments in the Current Policy
-            scenario goes to Transmission and Distribution, the rest is distributed over fossil and
-            low-carbon electricity production technologies.
-            With more stringent climate goals, moving form the Nationally Determined Contributions (NDCs)
-            to the 2 degree and 1.5 degree scenarios, the investments in fossil power generation decrease
-            and the investments in low-carbon technologies increase considerably.
-          </p>
-        </IntersectionObserver>
-      </div>
+          <IntersectionObserver :step="0"  align="right">
+            <p>Just under  half of the 1066 Billion USD per year for power sector investments in the Current Policy
+              scenario goes to Transmission and Distribution, the rest is distributed over a range of fossil
+              and low-carbon electricity production technologies.
+              With more stringent climate goals, moving from the Nationally Determined Contributions (NDCs)
+              to the 2 degree and 1.5 degree scenarios, the investments in fossil power generation decrease
+              and the investments in low-carbon technologies increase considerably.
+            </p>
+          </IntersectionObserver>
+          <IntersectionObserver :step="1"  align="right">
+            <p>This figure provides just a single example from a single model. For more insights on the
+              uncertainty investment requirements see the module
+              <a class="not-available" href="#" target="_blank">"Investment Opportunities and Alignment"</a>
+              <i> (coming soon)</i>.
+            </p>
+          </IntersectionObserver>
+        </div>
       </LayoutScrollytelling>
-
-      <div class="vis-wrapper">
-        <InvestmentNeed :width="width" :height="height"/>
-      </div>
       <div class="text-wrapper" id="last-text">
         <h2 class="chapter-title" id="conclusion">
           Assessing risks with the help of climate scenarios
@@ -219,6 +223,8 @@
           are around, their prices and taxation still pose a fuel cost risk and emission cost risk. Finally,
           to facilitate the transition towards low-carbon technologies, investment needs provide an opportunity
           for the financial sector.
+          The examples shown in this module are all based on a single Integrated Assessment Model.
+          For more information on uncertainty across models, see the <a class="not-available" href="#" target="_blank">Guided Explore Module</a> <i>(coming soon)</i>.
           </p>
       </div>
       <SensesMeta :id="'power-sector'"/>
@@ -315,7 +321,12 @@ export default {
         padding-top: $spacing;
       }
     }
-
+    .not-available {
+      cursor: not-allowed;
+        color: gray;
+        opacity: 0.7;
+        background: none;
+    }
     #header {
       margin-bottom: $spacing/2;
     }

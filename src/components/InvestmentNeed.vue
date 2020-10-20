@@ -2,7 +2,7 @@
   <section class="investments" ref="inWrapper">
     <header class="key">
       <h3>Energy investment needs within the power sector</h3>
-      <a href="https://docs.messageix.org/projects/global/en/latest/" target="_blank">(Model: MESSAGEix-GLOBIOM_1.0)</a>
+      <p class="model">(Model: REMIND-MAgPIE)</p>
       <div >
       <label class= "label"><input class = "checkbox" type="checkbox" v-model="isStacked">not stacked</label>
       <label class= "label"><input class = "checkbox" type="checkbox" v-model="showDifference">difference highlighted</label>
@@ -146,7 +146,7 @@ export default {
     display: inline-block;
     padding-bottom: 5px;
   }
-  a {
+  .model {
     margin-top: 5px;
     color: getColor(neon, 40);
     font-weight: normal;

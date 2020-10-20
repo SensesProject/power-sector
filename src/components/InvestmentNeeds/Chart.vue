@@ -174,7 +174,7 @@ export default {
     }
   },
   mounted () {
-    this.calcSizes()
+    this.$nextTick(() => { this.calcSizes() })
     window.addEventListener('resize', this.calcSizes, false)
   },
   beforeDestroy () {

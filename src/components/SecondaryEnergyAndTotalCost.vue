@@ -31,7 +31,7 @@
     </div>
     <p class="legend">
       <span class="dot"></span>
-      <span > = 5 000 TWh/yr</span>
+      <span > = 3 000 TWh/yr</span>
       <span class="-fossil">Fossil</span>
       <span class="-carbon">Low-carbon</span>
       <span v-if="step >= 1 && currentMWhSel == 'Cost per MWh' && comparison == 'absolute' && currentScenario !== 'Current Policies'" class="-tax">Carbon price </span>
@@ -673,8 +673,8 @@ $margin-space: $spacing / 2;
     }
     .dot {
       border-radius: 50%;
-      width: 32px;
-      height: 32px;
+      width: 27px;
+      height: 27px;
       display: inline-block;
       border: 1px solid grey;
       margin-right: 3px;

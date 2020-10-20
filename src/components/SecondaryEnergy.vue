@@ -9,7 +9,7 @@
         <SensesSelect class="region_selector" :options="regions" v-model="currentRegion"/>
         <span class="legend">
           <span class="dot"></span>
-          <span > = 5 000 TWh/yr</span>
+          <span > = 3 000 TWh/yr</span>
           <span class="dot" id="world"></span>
           <span > World (reference)</span>
         </span>
@@ -213,13 +213,12 @@ $margin-space: $spacing / 2;
       background: none;
     }
     .Carrier-groups {
-      margin-top: 2%;
+      margin-top: 3%;
       padding-left: 10px;
       margin-left: $margin-space;
       font-size: 0.7em;
       font-weight: bold;
       .Fossil-group{
-        //margin-left: $margin-space*17;
         margin-left: 30%;
       }
     }
@@ -236,8 +235,8 @@ $margin-space: $spacing / 2;
         align-items: center;
         .dot {
           border-radius: 50%;
-          width: 32px;
-          height: 32px;
+          width: 27px;
+          height: 27px;
           display: inline-block;
           border: 1px solid grey;
           margin-right: 3px;
