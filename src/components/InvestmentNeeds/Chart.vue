@@ -91,7 +91,7 @@ export default {
   },
   data: () => {
     return {
-      width: 0,
+      width: 100,
       height: 100,
       margin: {
         left: 0,
@@ -174,7 +174,7 @@ export default {
     }
   },
   mounted () {
-    this.$nextTick(() => { this.calcSizes() })
+    this.$nextTick(() => { this.$nextTick(() => { this.calcSizes() }) })
     window.addEventListener('resize', this.calcSizes, false)
   },
   beforeDestroy () {
@@ -227,6 +227,9 @@ export default {
       const { vis: el } = this.$refs
       if (el !== 'undefined') {
         this.width = el.clientWidth || el.parentNode.clientWidth
+        console.log(this.width)
+      } else {
+        // this.$nextTick(() => { this.calcSizes() })
       }
     },
     formatNumber (n) {
