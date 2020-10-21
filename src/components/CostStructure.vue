@@ -46,7 +46,7 @@
           <circle :class="'WhiteCirc'" :cx="dot.year" cy="5" v-bind:r="(dot.value-margin.left*1.5)"/>
           </g>
         </g>        <!-- :transform="`rotate(-10 ${dot.year + margin.left } ${ margin.left + 5 })`"-->
-        <text class="carrier-label" :x="scale.x(2019)" y="45">{{ labels[g] }}</text>
+        <text class="carrier-label" :x="scale.x(2019)" y="45">{{ labelsGraph[g] }}</text>
         <g v-for="(text, t) in group" :key="t + 'text'" >
           <g v-if="t == 0 || t == 8">
           <text class="year-label" :x="text.year" y="20">{{ years[t] }}</text>
@@ -63,9 +63,9 @@
         <!--hover over values for data -->
         <g v-for="(text, t) in group" v-bind:key="t + 'text'" :class="active === true & over === t + labels[g] ? 'visible' : 'invisible'">
           <circle class="axis-dot" :cx="text.year" cy="5" r="2.5"/>
-          <text class="year-label" :x="text.year" y="-60">Fuel cost: {{ Math.round(text.perFuel) }} % </text>
-          <text class="year-label" :x="text.year" y="-90">Oper. cost: {{ Math.round(text.perOM) }} % </text>
-          <text class="year-label" :x="text.year" y="-75">Capital cost: {{ Math.round(text.perCap) }} % </text>
+          <text class="year-label" :x="text.year" y="-63">Fuel cost: {{ Math.round(text.perFuel) }} % </text>
+          <text class="year-label" :x="text.year" y="-93">Oper. cost: {{ Math.round(text.perOM) }} % </text>
+          <text class="year-label" :x="text.year" y="-78">Capital cost: {{ Math.round(text.perCap) }} % </text>
           <line class="line-label" :x1="text.year" :x2="text.year" y1="-55" y2="5"/>
         </g>
       </g>
@@ -126,6 +126,7 @@ export default {
       model: [...new Set(SecondaryEnergyAndAllCosts.map(r => r.Model))],
       years: [...new Set(SecondaryEnergyAndAllCosts.map(r => r.Year))],
       labels: [...new Set(SecondaryEnergyAndAllCosts.map(r => r.Variable))],
+      labelsGraph: ['Fossil fuels', 'Renewables and nuclear'],
       perLabels: ['perCap', 'perFuel', 'perOM'],
       scenarios: ['1.5ºC', '2.0ºC', 'Current Policies'],
       scenDict: { '1.5ºC': 'NPi2020_400_v3', '2.0ºC': 'NPi2020_1000_v3', 'Current Policies': 'NPi_v3' },

@@ -32,8 +32,8 @@
     <p class="legend">
       <span class="dot"></span>
       <span > = 3 000 TWh/yr</span>
-      <span class="-fossil">Fossil</span>
-      <span class="-carbon">Low-carbon</span>
+      <span class="-fossil">Fossil fuels</span>
+      <span class="-carbon">Renewables and nuclear</span>
       <span v-if="step >= 1 && currentMWhSel == 'Cost per MWh' && comparison == 'absolute' && currentScenario !== 'Current Policies'" class="-tax">Carbon price </span>
     </p>
     <div></div>

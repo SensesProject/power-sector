@@ -16,7 +16,7 @@
         <g>
         <circle v-for="(dot, d) in group" v-bind:key="d + 'dot'" @mouseover="[active = true, over = d + labels[g]]" @mouseleave="active = false" :class="labels[g]" :cx="dot.year" cy="5" :r="dot.value"/>
         <!-- labels for energy carrier g-->
-        <text class="carrier-label" :x="scale.x(2019)" y="50">{{ labels[g] }}</text>
+        <text class="carrier-label" :x="scale.x(2019)" y="50">{{ labelsGraph[g] }}</text>
         </g>
         <!-- year labels for first and last year in dataset -->
         <g v-for="(text, t) in group" :key="t + 'text'" >
@@ -103,6 +103,7 @@ export default {
       model: [...new Set(SecondaryEnergyAndAllCosts.map(r => r.Model))],
       years: [...new Set(SecondaryEnergyAndAllCosts.map(r => r.Year))],
       labels: [...new Set(SecondaryEnergyAndAllCosts.map(r => r.Variable))],
+      labelsGraph: ['Fossil fuels', 'Renewables and nuclear'],
       scenarios: ['1.5ºC', '2.0ºC', 'Current Policies'],
       scenDict: { '1.5ºC': 'NPi2020_400_v3', '2.0ºC': 'NPi2020_1000_v3', 'Current Policies': 'NPi_v3' },
       regions: [...new Set(SecondaryEnergyAndAllCosts.map(r => r.Region))],

@@ -15,8 +15,8 @@
         </span>
       </p>
       <p class="Carrier-groups">
-        <span>Low-carbon electricity production</span>
-        <span class="Fossil-group">Fossil fuel electricity production</span>
+        <span>Renewables and nuclear</span>
+        <span class="Fossil-group">Fossil fuels</span>
       </p>
     </div>
     <div></div>
@@ -132,13 +132,14 @@ export default {
       })
     },
     groupPosition () {
-      console.log('regionFilter', this.regionFilter)
+      console.log('dots', this.dots)
+      console.log('world', this.world)
       // const dotsArray = this.dots
       let pos = -70
       let posDx = -70
       const positions = []
       _.map(this.regionFilter, (energy, e, l) => {
-        if (e > 2) {
+        if (e > 3) {
           pos = pos + this.innerHeight / 5
           positions.push(pos)
         } else {
@@ -151,7 +152,7 @@ export default {
     verticalPosition () {
       let pos = 0
       return _.map(this.regionFilter, (energy, e, l) => {
-        if (e <= 2) { pos = this.innerWidth / 2 + 5 } else { pos = 0 }
+        if (e <= 3) { pos = this.innerWidth / 2 + 5 } else { pos = 0 }
         return pos
       })
     }
@@ -219,7 +220,7 @@ $margin-space: $spacing / 2;
       font-size: 0.7em;
       font-weight: bold;
       .Fossil-group{
-        margin-left: 30%;
+        margin-left: 35%;
       }
     }
     .selectors {
@@ -349,7 +350,11 @@ $margin-space: $spacing / 2;
       fill: getColor(gray, 80);
       stroke: getColor(gray, 40);
     }
-    .Gas {
+    .Gas.without.CCS {
+      fill: getColor(red, 80);
+      stroke: getColor(red, 40);
+    }
+    .Gas.with.CCS {
       fill: getColor(red, 80);
       stroke: getColor(red, 40);
     }

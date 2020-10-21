@@ -9,7 +9,7 @@
         <p class="intro-paragraph"> This is the second chapter of the Transition Risks modules. You can select another chapter below.
         The Transition Risks modules are based on the Risk Factor Pathways as created by the UNEP Finance Initiative and
         Olyver Wyman in their report <a id="link" href="https://www.unepfi.org/wordpress/wp-content/uploads/2018/04/EXTENDING-OUR-HORIZONS.pdf" target="_blank">Extending Our Horizons</a>.
-        These Risk Factor Pathways (or RFPs) structure the different
+        These Risk Factor Pathways (RFPs) structure the different
         types of risks that emerge for the finance sector from the transition to a low-carbon future.
       </p>
       </div>
@@ -28,11 +28,17 @@
           policies, and two scenarios that aim to stabilize global mean temperature at 2 degrees and 1.5 degrees
           above pre-industrial by 2100.
           <br>
-          <br>
-          In this module, we will explore <strong> the changes in electricity production and
-          revenues</strong>, <strong>the changing risk structure</strong> of the power sector, <strong>the risk of fuel costs and emission costs</strong>,
+          In this module, we will explore <strong>the changes in electricity production and revenues</strong>,
+          <strong>the changing risk structure</strong> of the power sector, <strong>the risk of fuel costs and emission costs</strong>,
           and <strong>the need for clean investments</strong>. Each of these risks relates to one of the Risk Factor Pathways developed
           by the UNEP Finance Initiative.
+          <br>
+          <br>
+          In this module we group technologies by “renewables and nuclear” and “fossil-based” electricity production,
+          based on their different risk profiles during the transition. Fossil electricity production, especially when
+          based on natural gas, can be combined with carbon capture and sequestration (CCS) to produce low-carbon electricity,
+          but this technology will then still be exposed to fuel costs and high operational expenditures and therefore is treated
+          as a single category in this module.
         </p>
       </div>
       <h2 class="chapter-title" id="transition">
@@ -47,16 +53,17 @@
         <div slot="text" class="observer">
         <IntersectionObserver :step="0"  align="right">
           <p>In climate stabilization scenarios, the power sector is expected to go through a major transition from
-            fossil fuel electricity production (based on coal and gas) to low carbon electricity (mostly solar, wind and nuclear).</p>
+            fossil fuel electricity production (based on coal and gas) to renewable and nuclear-based electricity.
+          </p>
         </IntersectionObserver>
         <IntersectionObserver :step="1"  align="right">
-          <p>In the scenarios, this transition is driven by a carbon tax that increases the relative costs per MWh
-            of fossil fuels compared to renewables and other low-carbon technologies
+          <p>In the scenarios, this transition is driven by a carbon price that increases the relative costs per
+            MWh of fossil fuels compared to renewables and nuclear technologies.
           </p>
         </IntersectionObserver>
         <IntersectionObserver :step="2"  align="right">
-          <p>As a result, total revenues within the power sector (based on the MWh’s produced times the electricity
-            price) shifts from fossil utilities to low-carbon based utilities.
+          <p>As a result, total revenues within the power sector (based on the MWh’s produced times the electricity price)
+            shifts from fossil utilities to renewable and nuclear based utilities.
           </p>
         </IntersectionObserver>
         <IntersectionObserver no-styling :step="3"  align="right" class="changeheight">
@@ -76,9 +83,10 @@
         </template>
         <div slot="text" class="observer">
         <IntersectionObserver :step="0"  align="right" class="changeheight">
-          <p>Coal is quickly phased out under mitigation scenarios. However, natural gas can play a
-            substantial role in power production until mid-century. Rapid growth is expected in low-carbon
-            technologies like solar, wind and nuclear under the 2.0ºC and 1.5ºC scenarios.
+          <p>Coal is quickly phased out under mitigation scenarios. However, natural gas can play a substantial
+            role in power production until mid-century (partly combined with carbon capture and sequestation, CCS).
+            Rapid growth is expected in low-carbon technologies like solar, wind and nuclear under the 2.0ºC and 1.5ºC
+            scenarios.
           </p>
         </IntersectionObserver>
       </div>
@@ -87,18 +95,18 @@
         <h2 class="chapter-title" id="structure">
           Changing risk Structure
         </h2>
-        <p class="cost-risk-paragraph">Low-carbon energy technologies, such as solar and wind,
-          but also nuclear, require higher upfront capital investments than fossil power plants.
-          However, most low-carbon technologies do barely require fuel to operate. This means that
-          the operational costs of low-carbon technologies are lower and over the lifetime of the
-          power plant low carbon electricity can be produced for lower costs per MWh than fossil-based
-          electricity. As a result of this difference in cost structure between fossil and low-carbon
-          technologies, the cost structure of the power sector will change during the transition.
-          The sector will require more capital investment (CAPEX) and becomes less exposed to
-          volatility and other changes in fuel prices, which as part of the operational expenditures (OPEX).
+        <p class="cost-risk-paragraph">Renewable energy technologies, such as solar and wind, but nuclear electricity
+          as well, require higher upfront capital investments than fossil power plants. However, most renewable
+          technologies do barely require fuel to operate (and to some extend this holds for nuclear as well). This
+          means that the operational costs of renewable and nuclear technologies are lower and over the lifetime of the
+          power plant and renewable and nuclear electricity can be produced for lower costs per MWh than fossil-based
+          electricity. As a result of this difference in cost structure between fossil and renewable and nuclear
+          technologies, the cost structure of the power sector will change during the transition. The sector will require
+          more capital investment (CAPEX) and becomes less exposed to volatility and other changes in fuel prices,
+          which as part of the operational expenditures (OPEX).
 
           The risk structure of the overall power sector changes in line with this development,
-          from capital and fuel-related risks  towards almost purely capita-related risks.
+          from capital and fuel-related risks towards almost purely capital-related risks.
         </p>
       </div>
       <LayoutScrollytelling>
@@ -110,21 +118,21 @@
         <div slot="text" class="observer">
         <IntersectionObserver :step="0"  align="right" class="halfheight">
           <p>As we have seen above, the physical transition changes electricity production from fossil to
-            low-carbon technologies, which have different cost structures.
+            renewable and nuclear technologies, which have different cost structures.
         </p>
         </IntersectionObserver>
         <IntersectionObserver :step="1"  align="right">
-          <p>Capital expenditure (CAPEX) currently accounts for about 1/3rd of total fossil electricity
-            costs, but this declines over time as the rising fuel costs and emission costs increases
-            operational expenditures (OPEX)
+          <p>Capital expenditure (CAPEX) currently accounts for about 1/3rd of total fossil electricity costs
+            (including fossil + CCS technologies), but this declines over time as the rising fuel costs and
+            emission costs increases operational expenditures (OPEX).
             <br>
-            Low-carbon options, such as solar, wind and nuclear, have a much higher share of capital
-            expenditures, accounting for more than 90% of the cost structure.
+            Renewable technologies, such as solar and wind but also nuclear, have a much higher share of
+            capital expenditures, accounting for more than 90% of the cost structure.
           </p>
         </IntersectionObserver>
         <IntersectionObserver :step="2"  align="right" class="changeheightstructure">
-          <p>As a result of the transition, the cost structure of the total power sector evolves from the current
-            balance between capital/operational expenditures towards a capital-dominated structure. </p>
+          <p>As a result of the transition, the cost structure of the total power sector evolves from
+            the current balance between capital/operational expenditures towards a capital-dominated structure.</p>
         </IntersectionObserver>
       </div>
       </LayoutScrollytelling>
@@ -133,14 +141,17 @@
           Fuel Cost Risk
         </h2>
         <p class="cost-risk-paragraph">
-          One of the risks that we observe in the power sector is the fuel cost risk. Fuel cost risks include all potential
-          changes to fuel costs, either due to market developments or as result of the introduction of a carbon price.
-          As such, the indicator here includes both the Direct Emission Costs indicator as well as the Indirect Emission
-          Cost indicator from the <a id="link" href="https://www.unepfi.org/wordpress/wp-content/uploads/2018/04/EXTENDING-OUR-HORIZONS.pdf" target="_blank">UNEP-FI RFPs</a>. With the introduction of a carbon tax, fuel costs per MWh will rise,
-          increasing the costs of fossil-based electricity production and drive a transition in the power sector from
-          fossil fuel based generation to low-carbon electricity. Therefore investors face the risk that fossil-based
-          assets, such as coal or gas-fired power plants lose their value under climate policy. This shift is
-          reflected in the fuel costs changes depicted in the figure below.
+          One of the risks that we observe in the power sector is the fuel cost risk. Fuel cost risks include all
+          potential changes to fuel costs, either due to market developments or as result of the introduction of a
+          carbon price. As such, the indicator shown here includes both the Direct Emission Costs indicator as well
+          as the Indirect Emission Cost indicator from the
+          <a id="link" href="https://www.unepfi.org/wordpress/wp-content/uploads/2018/04/EXTENDING-OUR-HORIZONS.pdf" target="_blank">UNEP-FI RFPs</a>.
+          With the introduction of a carbon price,
+          fuel costs per MWh will rise, increasing the costs of fossil-based electricity production and driving a
+          transition in the power sector from carbon-emitting generation to low-carbon electricity. Therefore
+          investors face the risk that fossil-based assets, such as coal or gas-fired power plants without CCS
+          lose their value under climate policy.
+          This shift is reflected in the fuel costs changes depicted in the figure below.
           </p>
       </div>
       <LayoutScrollytelling>
@@ -152,15 +163,14 @@
         <div slot="text" class="observer">
         <IntersectionObserver :step="0"  align="right">
           <p>When selecting the Current Policy scenario, we see that total fuel cost expenditures for electricity
-            production increase over the next few decades as result of both an increased role of natural gas in the
-            power sector and changes in fossil fuel prices However, later in the century total fuel costs decline
-            due to fuel price developments.
+            power sector and changes in fossil fuel prices. However, later in the century total fuel costs decline in
+            this scenario due to fuel price developments.
           </p>
         </IntersectionObserver>
         <IntersectionObserver :step="1"  align="right">
-          <p>In a 2.0ºC scenario the total fuel costs decrease both absolute and relative to the Current Policy
-            scenario, despite increasing costs per unit of electricity production from fossil sources. This is
-            the result of declining energy production from fossil fuels, reducing fuel use and therefore fuel costs.
+          <p>In a 2.0ºC scenario the total fuel costs decrease both absolute and relative to the Current Policy scenario,
+            despite increasing costs per unit of electricity production from fossil sources. This is the result
+            of declining energy production from fossil fuels, reducing fuel use and therefore fuel costs.
           </p>
         </IntersectionObserver>
         <IntersectionObserver :step="2"  align="right">
@@ -170,7 +180,7 @@
           </p>
         </IntersectionObserver>
         <IntersectionObserver :step="3"  align="right">
-          <p>Relative to the current policy scenario, fuel costs are reduced strongly under mitigation,
+          <p>Relative to the Current Policy scenario, fuel costs are reduced strongly under mitigation,
             saving the total global power sector up to 800 million USD per year by mid-century.</p>
         </IntersectionObserver>
         <IntersectionObserver no-styling :step="4"  align="right" class="changeheight">
@@ -184,7 +194,7 @@
         </h2>
         <p class="cost-risk-paragraph">As discussed above, if a carbon price is introduced, generating
           low-carbon energy will become more attractive which will lead to a shift in the power sector
-          towards renewables and nuclear. However this low-carbon transition requires a growth in investments
+          towards renewables and nuclear. However this transition requires a growth in investments
           in the power sector, because both renewables and nuclear are more capital intensive than fossil fuel
           power production. Therefore, the transition comes with a large investment need in low-carbon
           electricity production.</p>
@@ -198,8 +208,8 @@
         <div slot="text" class="observer">
           <IntersectionObserver :step="0"  align="right">
             <p>Just under  half of the 1066 Billion USD per year for power sector investments in the Current Policy
-              scenario goes to Transmission and Distribution, the rest is distributed over a range of fossil
-              and low-carbon electricity production technologies.
+              scenario goes to Transmission and Distribution, the rest is distributed over a range of fossil,
+              renewable and nuclear electricity production technologies.
               With more stringent climate goals, moving from the Nationally Determined Contributions (NDCs)
               to the 2 degree and 1.5 degree scenarios, the investments in fossil power generation decrease
               and the investments in low-carbon technologies increase considerably.
