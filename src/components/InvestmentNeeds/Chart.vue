@@ -227,7 +227,6 @@ export default {
       const { vis: el } = this.$refs
       if (el !== 'undefined') {
         this.width = el.clientWidth || el.parentNode.clientWidth
-        console.log(this.width)
       } else {
         // this.$nextTick(() => { this.calcSizes() })
       }

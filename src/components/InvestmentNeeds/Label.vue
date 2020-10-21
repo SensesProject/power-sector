@@ -1,8 +1,8 @@
 <template>
   <text
     ref="label"
-    :x="0"
-    :style="`transform: translateX(${x}px)`"
+    :x="x"
+    :x-style="`transform: translateX(${x}px)`"
     :y="height + 10"
     dominant-baseline="hanging"
     class="label"
