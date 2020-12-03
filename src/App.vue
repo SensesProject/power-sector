@@ -218,8 +218,7 @@
           <IntersectionObserver :step="1"  align="right">
             <p>This figure provides just a single example from a single model. For more insights on the
               uncertainty investment requirements see the module
-              <a class="not-available" href="#" target="_blank">"Investment Opportunities and Alignment"</a>
-              <i> (coming soon)</i>.
+              <a  id="link" href="https://climatescenarios.org/investment/" target="_blank">↗ Investment Opportunities and Alignment</a>.
             </p>
           </IntersectionObserver>
         </div>
@@ -234,7 +233,7 @@
           to facilitate the transition towards low-carbon technologies, investment needs provide an opportunity
           for the financial sector.
           The examples shown in this module are all based on a single Integrated Assessment Model.
-          For more information on uncertainty across models, see the <a class="not-available" href="#" target="_blank">Guided Explore Module</a> <i>(coming soon)</i>.
+          For more information on uncertainty across models, see the <a id="link" href="https://climatescenarios.org/gems/#/transition-risk" target="_blank">↗ Guided Explore Module</a>.
           </p>
       </div>
       <SensesMeta :id="'power-sector'"/>
@@ -319,6 +318,7 @@ export default {
   }
   #link {
     background: none;
+    outline: none;
   }
   .content {
     max-width: 900px;
